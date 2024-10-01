@@ -5,7 +5,7 @@ import multiuserdungeon.commands.Action;
 
 public class UnequipItemAction implements Action {
 
-	public UnequipItemAction(Game game, int bagPos, int itemPos) {
+	public UnequipItemAction(Game game, boolean weapon) {
 
 	}
 

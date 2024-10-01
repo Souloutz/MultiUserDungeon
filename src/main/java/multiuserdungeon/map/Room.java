@@ -20,16 +20,25 @@ public class Room {
 		return 0;
 	}
 
-	public boolean isGoal() {
-		return false; // TODO: change this
-	}
-
 	public void populate(Collection<Tile> tiles) {
 
 	}
 
-	public void handleMove(Compass direction) {
+	public void handleExitRoom(Compass direction) {
 
+	}
+
+	public Tile getPlayerTile() {
+		return null;
+	}
+
+	public void setPlayerTile() {
+
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 
 }

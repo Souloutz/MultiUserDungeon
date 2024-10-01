@@ -28,6 +28,10 @@ public class Game {
 
 	}
 
+	public Map getMap() {
+		return null;
+	}
+
 	public Map handleLoadMap(String uri) {
 		return null;
 	}
@@ -48,7 +52,7 @@ public class Game {
 
 	}
 
-	public void handleDisableTrap(Compass direction) {
+	public void handleDisarmTrap(Compass direction) {
 
 	}
 
@@ -68,7 +72,7 @@ public class Game {
 
 	}
 
-	public void handleUnequipItem(int bagPos, int itemPos) {
+	public void handleUnequipItem(boolean weapon) {
 
 	}
 

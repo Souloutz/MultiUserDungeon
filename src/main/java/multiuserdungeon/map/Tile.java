@@ -1,8 +1,10 @@
 package multiuserdungeon.map;
 
+import java.util.Collection;
+
 public class Tile {
 
-	public Tile(int x, int y) {
+	public Tile(int x, int y, TileObject object) {
 
 	}
 
@@ -28,6 +30,10 @@ public class Tile {
 
 	public boolean passable() {
 		return false;
+	}
+
+	public Collection<Tile> getAdjacent() {
+		return null;
 	}
     
 }

@@ -32,4 +32,9 @@ public class Food implements InventoryElement {
 		return 0;
 	}
 
+	@Override
+	public String toString() {
+		return "";
+	}
+
 }

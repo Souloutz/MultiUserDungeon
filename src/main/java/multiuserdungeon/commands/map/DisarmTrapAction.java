@@ -4,9 +4,9 @@ import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.map.Compass;
 
-public class DisableTrapAction implements Action {
+public class DisarmTrapAction implements Action {
 
-	public DisableTrapAction(Game game, Compass direction) {
+	public DisarmTrapAction(Game game, Compass direction) {
 
 	}
 

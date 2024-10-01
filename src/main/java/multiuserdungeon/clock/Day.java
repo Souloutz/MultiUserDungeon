@@ -16,4 +16,9 @@ public class Day implements Time {
 		return true;
 	}
 
+	@Override
+	public double getStatChange(CreatureBuff buff) {
+		return 0;
+	}
+
 }

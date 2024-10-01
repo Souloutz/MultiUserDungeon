@@ -27,4 +27,13 @@ public enum Compass {
 		return this.y;
 	}
 
+	public Compass getOpposite() {
+		for (Compass c : Compass.values()) {
+			if (c.getX() == this.x * -1 && c.getY() == this.y * -1) {
+				return c;
+			}
+		}
+		return null;
+	}
+
 }

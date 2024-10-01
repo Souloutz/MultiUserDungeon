@@ -6,4 +6,6 @@ public interface Time {
 
 	boolean isDay();
 
+	double getStatChange(CreatureBuff buff);
+
 }

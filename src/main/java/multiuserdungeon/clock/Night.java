@@ -16,4 +16,9 @@ public class Night implements Time {
 		return false;
 	}
 
+	@Override
+	public double getStatChange(CreatureBuff buff) {
+		return 0;
+	}
+
 }

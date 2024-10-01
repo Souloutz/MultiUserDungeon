@@ -48,12 +48,21 @@ public class Inventory implements InventoryElement {
 
 	}
 
+	public InventoryElement getItem(int bagPos, int itemPos) {
+		return null;
+	}
+
 	public Bag getBag(int bagPos) {
 		return null;
 	}
 
 	public List<Bag> bags() {
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "";
 	}
 
 }

@@ -52,4 +52,9 @@ public class Bag implements InventoryElement {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		return "";
+	}
+
 }
