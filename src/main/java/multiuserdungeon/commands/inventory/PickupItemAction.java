@@ -6,13 +6,16 @@ import multiuserdungeon.inventory.InventoryElement;
 
 public class PickupItemAction implements Action {
 
-	public PickupItemAction(Game game, InventoryElement item) {
+	Game receiver;
+	InventoryElement item;
 
+	public PickupItemAction(Game game, InventoryElement item) {
+		receiver = game;
+		this.item = item;
 	}
 
 	@Override
 	public void execute() {
-
+		receiver.handlePickupItem(item);
 	}
-
 }

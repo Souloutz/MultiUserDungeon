@@ -6,13 +6,16 @@ import multiuserdungeon.map.Compass;
 
 public class DisarmTrapAction implements Action {
 
-	public DisarmTrapAction(Game game, Compass direction) {
+	Game receiver;
+	Compass direction;
 
+	public DisarmTrapAction(Game game, Compass direction) {
+		receiver = game;
+		this.direction = direction;
 	}
 
 	@Override
 	public void execute() {
-
+		receiver.handleDisarmTrap(direction);
 	}
-
 }

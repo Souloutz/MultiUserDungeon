@@ -6,13 +6,16 @@ import multiuserdungeon.map.Compass;
 
 public class MoveAction implements Action {
 
-	public MoveAction(Game game, Compass direction) {
+	Game receiver;
+	Compass direction;
 
+	public MoveAction(Game game, Compass direction) {
+		receiver = game;
+		this.direction = direction;
 	}
 
 	@Override
 	public void execute() {
-
+		receiver.handleMove(direction);
 	}
-
 }

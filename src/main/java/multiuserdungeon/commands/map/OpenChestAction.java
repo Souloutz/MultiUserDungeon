@@ -5,13 +5,14 @@ import multiuserdungeon.commands.Action;
 
 public class OpenChestAction implements Action {
 
-	public OpenChestAction(Game game) {
+	Game receiver;
 
+	public OpenChestAction(Game game) {
+		receiver = game;
 	}
 
 	@Override
 	public void execute() {
-
+		receiver.handleOpenChest();
 	}
-
 }

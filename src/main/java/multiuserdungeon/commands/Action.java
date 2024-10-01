@@ -1,7 +1,5 @@
 package multiuserdungeon.commands;
 
 public interface Action {
-
-	void execute();
-
+	public abstract void execute();
 }
