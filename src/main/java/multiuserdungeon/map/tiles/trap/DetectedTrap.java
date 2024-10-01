@@ -22,7 +22,13 @@ public class DetectedTrap implements TrapStatus {
 			Game.getInstance().getPlayer().attacked(Compass.NORTH, this.trap.getDamage());
 		}
 
-		this.trap.setStatus(new DisarmedTrap(this.trap));
+		this.trap.setStatus(new DisarmedTrap());
 	}
+
+	@Override
+	public boolean isDetected() {
+		return true;
+	}
+
 
 }

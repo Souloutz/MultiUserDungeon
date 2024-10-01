@@ -15,6 +15,7 @@ public class UndetectedTrap implements TrapStatus {
 	public void handleDetected() {
 		if(Game.getInstance().getMap().getPlayerRoom().getPlayerTile().equals(this.trap.getTile())) {
 			Game.getInstance().getPlayer().attacked(Compass.NORTH, this.trap.getDamage());
+			this.trap.setStatus(new DisarmedTrap());
 		} else if(Math.random() <= 0.5) {
 			this.trap.setStatus(new DetectedTrap(this.trap));
 		}
@@ -24,5 +25,11 @@ public class UndetectedTrap implements TrapStatus {
 	public void handleDisarmAttempt() {
 		// Nothing happens
 	}
+
+	@Override
+	public boolean isDetected() {
+		return false;
+	}
+
 
 }

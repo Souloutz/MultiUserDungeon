@@ -27,8 +27,8 @@ public class Trap implements TileObject {
 		this.status.handleDisarmAttempt();
 	}
 
-	public TrapStatus getStatus() {
-		return this.status;
+	public boolean isDetected() {
+		return this.status.isDetected();
 	}
 
 	public void setStatus(TrapStatus status) {
