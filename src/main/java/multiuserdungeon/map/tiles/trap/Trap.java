@@ -40,6 +40,11 @@ public class Trap implements TileObject {
 	}
 
 	@Override
+	public void setTile(Tile tile) {
+
+	}
+
+	@Override
 	public boolean passable() {
 		return true;
 	}
