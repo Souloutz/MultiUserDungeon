@@ -6,6 +6,8 @@ public interface TileObject {
 
 	Tile getTile();
 
+	void setTile(Tile tile);
+
 	boolean passable();
 
 	boolean isTrap();

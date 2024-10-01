@@ -16,6 +16,11 @@ public class Obstacle implements TileObject {
 	}
 
 	@Override
+	public void setTile(Tile tile) {
+
+	}
+
+	@Override
 	public boolean passable() {
 		return false;
 	}

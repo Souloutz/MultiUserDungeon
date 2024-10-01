@@ -34,6 +34,11 @@ public class NPC extends Character {
 	}
 
 	@Override
+	public void setTile(Tile tile) {
+
+	}
+
+	@Override
 	public boolean passable() {
 		return false;
 	}
