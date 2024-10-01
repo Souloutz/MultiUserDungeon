@@ -25,7 +25,7 @@ hs_err_pid*
 target/**
 
 # Ignore tool files
-.vscode
+.vscode/
 
 # Ignore IntelliJ
 .idea/
