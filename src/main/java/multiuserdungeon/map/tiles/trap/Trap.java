@@ -5,10 +5,12 @@ import multiuserdungeon.map.TileObject;
 
 public class Trap implements TileObject {
 
+	private Tile tile;
 	private final int damage;
 	private TrapStatus status;
 
-	public Trap(int damage) {
+	public Trap(Tile tile, int damage) {
+		this.tile = tile;
 		this.damage = damage;
 		this.status = new UndetectedTrap(this);
 	}
@@ -36,12 +38,12 @@ public class Trap implements TileObject {
 
 	@Override
 	public Tile getTile() {
-		return null;
+		return this.tile;
 	}
 
 	@Override
 	public void setTile(Tile tile) {
-
+		this.tile = tile;
 	}
 
 	@Override
