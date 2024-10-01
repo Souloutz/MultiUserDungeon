@@ -9,13 +9,19 @@ import multiuserdungeon.progress.ProgressDB;
 public class Game {
 
 	private static Game instance;
+	private final Player player;
 
 	public Game(Player player) {
 		instance = this;
+		this.player = player;
 	}
 
 	public static Game getInstance() {
 		return instance;
+	}
+
+	public Player getPlayer() {
+		return this.player;
 	}
 
 	public void generateNewMap() {
