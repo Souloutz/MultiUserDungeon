@@ -2,8 +2,14 @@ package multiuserdungeon.clock;
 
 public class Day implements Time {
 
-	public Day(Clock clock) {
+	private Clock clock;
 
+	public Day(Clock clock) {
+		this.clock = clock;
+	}
+
+	public Clock getClock() {
+		return this.clock;
 	}
 
 	@Override
@@ -18,7 +24,17 @@ public class Day implements Time {
 
 	@Override
 	public double getStatChange(CreatureBuff buff) {
-		return 0;
+		if (buff == CreatureBuff.DIURNAL) {
+			return 1 + buff.getStatChange();
+		}
+		return 1 - buff.getStatChange();
 	}
+
+	@Override
+	public String toString() {
+		int turnsToFlip = 9 - this.clock.getTurn();
+		return "Day : " + turnsToFlip;
+	}
+
 
 }

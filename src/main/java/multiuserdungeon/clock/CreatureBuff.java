@@ -2,15 +2,17 @@ package multiuserdungeon.clock;
 
 public enum CreatureBuff {
 
-	NOCTURNAL(0.20),
-	DIURNAL(0.10);
+	DIURNAL(0.1),
+	NOCTURNAL(0.2);
 
-	CreatureBuff(double statChange) {
+	private final double buff;
 
+	CreatureBuff(double buff) {
+		this.buff = buff;
 	}
 
 	public double getStatChange() {
-		return 0;
+		return buff;
 	}
 
 }
