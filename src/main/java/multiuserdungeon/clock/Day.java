@@ -12,10 +12,6 @@ public class Day implements Time {
 		return this.clock;
 	}
 
-	@Override
-	public void handle() {
-
-	}
 
 	@Override
 	public boolean isDay() {

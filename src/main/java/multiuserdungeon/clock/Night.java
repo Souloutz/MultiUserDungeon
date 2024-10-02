@@ -13,11 +13,6 @@ public class Night implements Time {
 	}
 
 	@Override
-	public void handle() {
-
-	}
-
-	@Override
 	public boolean isDay() {
 		return false;
 	}

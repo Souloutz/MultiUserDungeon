@@ -15,19 +15,19 @@ public class Clock {
 	}
 
 	public void completeTurn() {
-		if (this.turnCounter >= 9) {
-			if (this.time.isDay()) {
-				this.time = new Night(this);
-			} else {
-				this.time = new Day(this);
-			}
-			this.turnCounter = 0;
-		} else {
-			this.turnCounter ++;
-		}
+		this.time.handle(this);
+	}
 
-		this.time.handle();
-		// TODO: call other turn ending logic
+	public void incrementTurn() {
+		this.turnCounter ++;
+	}
+
+	public void resetTurn() {
+		this.turnCounter = 0;
+	}
+
+	public void setCurrentTime(Time time) {
+		this.time = time;
 	}
 
 	public int getTurn() {
@@ -46,6 +46,14 @@ public class Clock {
 	//Testing purposes
 	public static void main(String[] args) {
 		Clock c = new Clock();
+
+		System.out.println(c);
+
+		for (int i = 0; i < 50; i ++) {
+			c.completeTurn();
+			System.out.println(c);
+
+		}
 
 		System.out.println(c);
 
