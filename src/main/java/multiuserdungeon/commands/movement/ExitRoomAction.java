@@ -6,8 +6,8 @@ import multiuserdungeon.map.Compass;
 
 public class ExitRoomAction implements Action {
 
-	Game receiver;
-	Compass direction;
+	private Game receiver;
+	private Compass direction;
 
 	public ExitRoomAction(Game game, Compass direction) {
 		receiver = game;

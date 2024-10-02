@@ -5,9 +5,9 @@ import multiuserdungeon.commands.Action;
 
 public class SwapBagAction implements Action {
 
-	Game receiver;
-	int sourceBagPos;
-	int destBagPos;
+	private Game receiver;
+	private int sourceBagPos;
+	private int destBagPos;
 
 	public SwapBagAction(Game game, int sourceBagPos, int destBagPos) {
 		receiver = game;

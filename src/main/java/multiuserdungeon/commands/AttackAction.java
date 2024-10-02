@@ -5,8 +5,8 @@ import multiuserdungeon.map.Compass;
 
 public class AttackAction implements Action {
 
-	Game receiver;
-	Compass direction;
+	private Game receiver;
+	private Compass direction;
 
 	public AttackAction(Game game, Compass direction) {
 		receiver = game;

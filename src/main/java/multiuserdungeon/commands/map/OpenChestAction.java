@@ -5,7 +5,7 @@ import multiuserdungeon.commands.Action;
 
 public class OpenChestAction implements Action {
 
-	Game receiver;
+	private Game receiver;
 
 	public OpenChestAction(Game game) {
 		receiver = game;

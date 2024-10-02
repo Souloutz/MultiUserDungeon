@@ -5,8 +5,8 @@ import multiuserdungeon.commands.Action;
 
 public class UnequipItemAction implements Action {
 
-	Game receiver;
-	boolean isWeapon; // Can only equip weapons or armor
+	private Game receiver;
+	private boolean isWeapon; // Can only equip weapons or armor
 
 	public UnequipItemAction(Game game, boolean isWeapon) {
 		receiver = game;

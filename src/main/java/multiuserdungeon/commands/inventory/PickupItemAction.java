@@ -6,8 +6,8 @@ import multiuserdungeon.inventory.InventoryElement;
 
 public class PickupItemAction implements Action {
 
-	Game receiver;
-	InventoryElement item;
+	private Game receiver;
+	private InventoryElement item;
 
 	public PickupItemAction(Game game, InventoryElement item) {
 		receiver = game;

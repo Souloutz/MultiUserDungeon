@@ -5,9 +5,9 @@ import multiuserdungeon.commands.Action;
 
 public class DestroyItemAction implements Action {
 
-	Game receiver;
-	int bagPos;
-	int itemPos;
+	private Game receiver;
+	private int bagPos;
+	private int itemPos;
 
 	public DestroyItemAction(Game game, int bagPos, int itemPos) {
 		receiver = game;

@@ -4,13 +4,14 @@ import multiuserdungeon.Game;
 
 public class QuitGameAction implements Action {
 
-	public QuitGameAction(Game game) {
+	private Game receiver;
 
+	public QuitGameAction(Game game) {
+		receiver = game;
 	}
 
 	@Override
 	public void execute() {
-
+		receiver.handleQuitGame();
 	}
-
 }

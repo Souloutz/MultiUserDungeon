@@ -6,8 +6,8 @@ import multiuserdungeon.map.Compass;
 
 public class DisarmTrapAction implements Action {
 
-	Game receiver;
-	Compass direction;
+	private Game receiver;
+	private Compass direction;
 
 	public DisarmTrapAction(Game game, Compass direction) {
 		receiver = game;
