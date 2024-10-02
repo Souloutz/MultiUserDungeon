@@ -79,6 +79,11 @@ public class Player extends Character {
 	}
 
 	@Override
+	public void setTile(Tile tile) {
+
+	}
+
+	@Override
 	public boolean passable() {
 		return false;
 	}

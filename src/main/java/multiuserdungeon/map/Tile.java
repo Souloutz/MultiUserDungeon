@@ -12,6 +12,10 @@ public class Tile {
 		return null;
 	}
 
+	public void setObject(TileObject object) {
+
+	}
+
 	public String getObjectName() {
 		return "";
 	}
