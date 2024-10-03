@@ -4,7 +4,7 @@ import multiuserdungeon.map.Map;
 
 public interface ProgressDB {
 
-	void load(String uri);
+	Map load(String uri);
 
 	String save(Map map);
 

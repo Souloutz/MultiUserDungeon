@@ -6,4 +6,6 @@ public interface TrapStatus {
 
 	void handleDisarmAttempt();
 
+	boolean isDetected();
+
 }
