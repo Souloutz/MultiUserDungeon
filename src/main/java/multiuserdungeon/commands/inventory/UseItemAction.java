@@ -3,7 +3,7 @@ package multiuserdungeon.commands.inventory;
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 
-public class UseItemAction implements Action {
+public class UseItemAction implements Action<Void> {
 
 	private Game receiver;
 	private int bagPos;
@@ -16,7 +16,8 @@ public class UseItemAction implements Action {
 	}
 
 	@Override
-	public void execute() {
+	public Void execute() {
 		receiver.handleUseItem(bagPos, itemPos);
+		return null;
 	}
 }

@@ -2,7 +2,7 @@ package multiuserdungeon.commands;
 
 import multiuserdungeon.Game;
 
-public class QuitGameAction implements Action {
+public class QuitGameAction implements Action<Void> {
 
 	private Game receiver;
 
@@ -11,7 +11,8 @@ public class QuitGameAction implements Action {
 	}
 
 	@Override
-	public void execute() {
+	public Void execute() {
 		receiver.handleQuitGame();
+		return null;
 	}
 }

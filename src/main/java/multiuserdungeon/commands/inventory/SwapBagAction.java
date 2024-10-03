@@ -3,7 +3,7 @@ package multiuserdungeon.commands.inventory;
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 
-public class SwapBagAction implements Action {
+public class SwapBagAction implements Action<Void> {
 
 	private Game receiver;
 	private int sourceBagPos;
@@ -16,7 +16,8 @@ public class SwapBagAction implements Action {
 	}
 
 	@Override
-	public void execute() {
+	public Void execute() {
 		receiver.handleSwapBag(sourceBagPos, destBagPos);
+		return null;
 	}
 }

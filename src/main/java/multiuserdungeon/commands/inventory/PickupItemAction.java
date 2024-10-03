@@ -4,7 +4,7 @@ import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.inventory.InventoryElement;
 
-public class PickupItemAction implements Action {
+public class PickupItemAction implements Action<Void> {
 
 	private Game receiver;
 	private InventoryElement item;
@@ -15,7 +15,8 @@ public class PickupItemAction implements Action {
 	}
 
 	@Override
-	public void execute() {
+	public Void execute() {
 		receiver.handlePickupItem(item);
+		return null;
 	}
 }

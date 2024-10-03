@@ -2,8 +2,9 @@ package multiuserdungeon.commands.map;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
+import multiuserdungeon.commands.responses.OpenChestResponse;
 
-public class OpenChestAction implements Action {
+public class OpenChestAction implements Action<OpenChestResponse> {
 
 	private Game receiver;
 
@@ -12,7 +13,9 @@ public class OpenChestAction implements Action {
 	}
 
 	@Override
-	public void execute() {
+	public OpenChestResponse execute() {
 		receiver.handleOpenChest();
+
+		return new OpenChestResponse(null); // TODO !!!?!??
 	}
 }
