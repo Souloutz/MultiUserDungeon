@@ -1,6 +1,5 @@
 package multiuserdungeon.map;
 
-import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Map;
 import multiuserdungeon.map.tiles.*;
@@ -20,6 +19,17 @@ public class Tile {
 		this.objects.add(object);
 		this.adjacent = adjacent;
 
+	}
+
+	public Tile getTile(Compass compass){
+		int i = 0;
+		for (Compass dir : Compass.values()){
+			if (dir == compass){
+				return this.getAdjacent().get(i);
+			}
+			i++;
+		}
+		return null;
 	}
 
 	public ArrayList<TileObject> getObjects() {
@@ -74,7 +84,7 @@ public class Tile {
 		return true;
 	}
 
-	public Collection<Tile> getAdjacent() {
+	public ArrayList<Tile> getAdjacent() {
 		return null;
 	}
 
