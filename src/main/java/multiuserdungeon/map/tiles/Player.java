@@ -45,6 +45,14 @@ public class Player extends Character {
 		return null;
 	}
 
+	public void equipWeapon(InventoryElement item) {
+
+	}
+
+	public void equipArmor(InventoryElement item) {
+
+	}
+
 	public void unequipWeapon() {
 
 	}
