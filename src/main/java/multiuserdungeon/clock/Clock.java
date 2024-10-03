@@ -43,24 +43,4 @@ public class Clock {
 		return this.time.toString();
 	}
 
-	//Testing purposes
-	public static void main(String[] args) {
-		Clock c = new Clock();
-
-		System.out.println(c);
-
-		for (int i = 0; i < 50; i ++) {
-			c.completeTurn();
-			System.out.println(c);
-
-		}
-
-		System.out.println(c);
-
-
-
-		//System.out.println("Current Time: " + c.getCurrentTime());
-
-	}
-
 }
