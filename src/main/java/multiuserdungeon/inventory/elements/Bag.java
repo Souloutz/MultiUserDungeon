@@ -9,7 +9,7 @@ public class Bag implements InventoryElement {
     private String description;
     private int goldValue;
     private int occupancy = 0;
-    private int capacity;
+    private final int capacity;
 	private List<InventoryElement> items;
 
 	public Bag(String name, String description, int goldValue, int capacity) {
@@ -48,11 +48,18 @@ public class Bag implements InventoryElement {
 	}
 
 	public void addItem(InventoryElement item) {
+		if(items.size()>=capacity){ //checks if bag is full
+			return;
+		}
+		items.add(item);
 		occupancy++;
 	}
 
 	public void removeItem(int itemPos) {
-
+		if(itemPos >= items.size() || itemPos < 0){ //checks if item index exists
+			return;
+		}
+		items.remove(itemPos);
 	}
 
 	public InventoryElement getItem(int itemPos) {
@@ -66,7 +73,7 @@ public class Bag implements InventoryElement {
 	/*
 	 * displays all items in the bag's names seperated by commas
 	 * e.g.)
-	 * apple, sword, spear
+	 * Apple, Sword, Spear
 	 */
 	public String listItems(){
 		String itemsString = "";
