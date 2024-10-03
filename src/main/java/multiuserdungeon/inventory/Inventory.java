@@ -145,7 +145,7 @@ public class Inventory implements InventoryElement {
 		String bagsString = "";
 		int bagNum = 0;
 		for(Bag bag : bags){
-			bagsString += "Bag " + bagNum + ": " + bag.listItems();
+			bagsString += "Bag " + bagNum + ": " + bag.listItems() + "\n";
 			bagNum++;
 		}
 		return bagsString;
@@ -153,7 +153,7 @@ public class Inventory implements InventoryElement {
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\n" + listBags();
+		return name + "\n" + description + "\n" + listBags() + "Gold Value: " + goldValue + "\nOccupancy: " + getOccupancy() + "/" + getCapacity();
 	}
 
 }
