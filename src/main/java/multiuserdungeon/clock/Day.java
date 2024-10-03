@@ -2,7 +2,7 @@ package multiuserdungeon.clock;
 
 public class Day implements Time {
 
-	private Clock clock;
+	private final Clock clock;
 
 	public Day(Clock clock) {
 		this.clock = clock;
