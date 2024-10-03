@@ -14,8 +14,10 @@ public class Map {
 	Room goal;
 
 
-	public Map() {
-		
+	public Map(Clock time) {
+		this.rooms = new ArrayList<Room>();
+		this.time = time;
+		// Code here to create hardcoded map
 	}
 
 	public Room getStart() {
@@ -43,7 +45,7 @@ public class Map {
 	}
 
 	public void handleExitRoom(Compass direction) {
-		
+
 	}
 
 	public Room getPlayerRoom() {
