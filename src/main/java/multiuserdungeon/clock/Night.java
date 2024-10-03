@@ -2,13 +2,14 @@ package multiuserdungeon.clock;
 
 public class Night implements Time {
 
-	public Night(Clock clock) {
+	private final Clock clock;
 
+	public Night(Clock clock) {
+		this.clock = clock;
 	}
 
-	@Override
-	public void handle() {
-
+	public Clock getClock() {
+		return this.clock;
 	}
 
 	@Override
@@ -18,7 +19,16 @@ public class Night implements Time {
 
 	@Override
 	public double getStatChange(CreatureBuff buff) {
-		return 0;
+		if (buff == CreatureBuff.NOCTURNAL) {
+			return 1 + buff.getStatChange();
+		}
+		return 1 - buff.getStatChange();
+	}
+
+	@Override
+	public String toString() {
+		int turnsToFlip = 9 - this.clock.getTurn();
+		return "Night : " + turnsToFlip;
 	}
 
 }
