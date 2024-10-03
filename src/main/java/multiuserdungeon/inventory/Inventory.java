@@ -84,7 +84,7 @@ public class Inventory implements InventoryElement {
 	}
 
 	public boolean bagExists(int bagPos){
-		return (bagPos < bags.size() && bagPos > 0);
+		return (bagPos < bags.size() && bagPos >= 0);
 	}
 
 	public void addBag(Bag bag) {
@@ -97,7 +97,6 @@ public class Inventory implements InventoryElement {
 		}
 		bags.add(bag);
 	}
-
 
 	public void removeBag(int bagPos) {
 		//TODO:return response

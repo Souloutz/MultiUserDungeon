@@ -47,27 +47,26 @@ public class Bag implements InventoryElement {
 		return capacity;
 	}
 
-	public void addItem(InventoryElement item) {
-		if(items.size()>=capacity){ //checks if bag is full
-			return;
-		}
-		items.add(item);
-		occupancy++;
-	}
-
-	public void removeItem(int itemPos) {
-		if(itemPos >= items.size() || itemPos < 0){ //checks if item index exists
-			return;
-		}
-		items.remove(itemPos);
-	}
-
 	public InventoryElement getItem(int itemPos) {
 		return items.get(itemPos);
 	}
 
 	public List<InventoryElement> items() {
 		return items;
+	}
+
+	public void addItem(InventoryElement item) {
+		if(items.size()>=capacity){ //checks if bag is full
+			return;
+		}
+		items.add(item);
+	}
+
+	public void removeItem(int itemPos) {
+		if(itemPos < items.size() && itemPos >= 0){ //checks if item index exists
+			items.remove(itemPos);
+		}
+		return; //return if item position is invalid
 	}
 
 	/*

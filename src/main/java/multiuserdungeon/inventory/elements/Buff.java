@@ -49,7 +49,7 @@ public class Buff implements InventoryElement {
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\nGold Value: " + goldValue + "\n" + stat.name() + " Points: +" + statAmount;
+		return name + "\n" + description + "\nGold Value: " + goldValue + "\n" + stat.toString() + " Points: +" + statAmount;
 	}
 
 }
