@@ -150,11 +150,11 @@ public class Game {
 		newEmptyTile.setTile(playerTile);
 
 		// set new player tile
-		// what if chest is in that tile????
+		// TODO what if chest is in that tile????
 		player.setTile(newTile);
 		newTile.setObject(player);
 		
-		// setPlayerTile takes no parameters???
+		// TODO setPlayerTile takes no parameters???
 		playerRoom.setPlayerTile();
 
 		endTurn();
