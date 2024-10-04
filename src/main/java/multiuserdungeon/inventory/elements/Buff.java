@@ -4,12 +4,12 @@ import multiuserdungeon.inventory.BuffStat;
 import multiuserdungeon.inventory.InventoryElement;
 
 public class Buff implements InventoryElement {
-	private String name;
-    private String description;
-    private int goldValue;
-    private int occupancy = 1;
-    private BuffStat stat;
-    private int statAmount;
+
+	private final String name;
+    private final String description;
+    private final int goldValue;
+    private final BuffStat stat;
+    private final int statAmount;
 
 	public Buff(String name, String description, int goldValue, BuffStat stat, int statAmount) {
 		this.name = name;
@@ -36,7 +36,7 @@ public class Buff implements InventoryElement {
 
 	@Override
 	public int getOccupancy() {
-		return occupancy;
+		return 1;
 	}
 
 	public BuffStat getStat() {

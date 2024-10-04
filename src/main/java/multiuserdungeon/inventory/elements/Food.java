@@ -3,19 +3,17 @@ package multiuserdungeon.inventory.elements;
 import multiuserdungeon.inventory.InventoryElement;
 
 public class Food implements InventoryElement {
-	private String name;
-    private String description;
-    private int goldValue;
-    private int occupancy = 1;
-	private int health;
 
+	private final String name;
+    private final String description;
+    private final int goldValue;
+	private final int health;
 
 	public Food(String name, String description, int goldValue, int health) {
 		this.name = name;
 		this.description = description;
 		this.goldValue = goldValue;
 		this.health = health;
-		
 	}
 
 	@Override
@@ -35,7 +33,7 @@ public class Food implements InventoryElement {
 
 	@Override
 	public int getOccupancy() {
-		return occupancy;
+		return 1;
 	}
 
 	public int getHealth() {

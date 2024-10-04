@@ -2,17 +2,17 @@ package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.InventoryElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Bag implements InventoryElement {
-	private String name;
-    private String description;
-    private int goldValue;
-    private int occupancy = 1;
+
+	private final String name;
+    private final String description;
+    private final int goldValue;
     private final int capacity;
 	private boolean isEquipped;
-	private List<InventoryElement> items;
-
+	private final List<InventoryElement> items;
 
 	public Bag(String name, String description, int goldValue, int capacity) {
 		this.name = name;
@@ -20,6 +20,7 @@ public class Bag implements InventoryElement {
 		this.goldValue = goldValue;
 		this.capacity = capacity;
 		this.isEquipped = false;
+		this.items = new ArrayList<>();
 	}
 
 	@Override
@@ -35,7 +36,7 @@ public class Bag implements InventoryElement {
 	@Override
 	public int getGoldValue() {
 		int totalGV = goldValue;
-		for(InventoryElement item : items){
+		for(InventoryElement item : items) {
 			totalGV += item.getGoldValue();
 		}
 		return totalGV;
@@ -43,10 +44,10 @@ public class Bag implements InventoryElement {
 
 	@Override
 	public int getOccupancy() {
-		if(isEquipped){
+		if(isEquipped) {
 			return items.size();
 		}
-		return occupancy;
+		return 1;
 	}
 
 	public int getCapacity() {
@@ -90,16 +91,16 @@ public class Bag implements InventoryElement {
 	 */
 	public String listItems(){
 		String itemsString = "";
-		for (int i =0; i<items.size()-1;i++){
-			itemsString=items.get(i).getName() + ", ";
+		for(int i =0; i<items.size()-1;i++) {
+			itemsString = items.get(i).getName() + ", ";
 		}
-		itemsString+=items.get(items.size()-1).getName();
+		itemsString += items.get(items.size()-1).getName();
 		return itemsString;
 	}
+
 	@Override
 	public String toString() {
 		return name + "\n" + description + "\nItems: " + listItems() + "\nGold Value: " + getGoldValue()+ "\nOccupancy: " + getOccupancy() + "/" + capacity;
 	}
-
 	
 }

@@ -6,17 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory implements InventoryElement {
-	private String name;
-    private String description;
-    private int goldValue;
-    private int occupancy;
-    private int capacity;
 
-	private final List<Bag> bags = new ArrayList<>();
+	private final String name;
+    private final String description;
+	private final List<Bag> bags;
 
 	public Inventory(String name, String description) {
 		this.name = name;
 		this.description = description;
+		this.bags = new ArrayList<>();
 		addBag(new Bag("Starter bag","Default bag you start with", 0, 6));
 	}
 
@@ -33,7 +31,7 @@ public class Inventory implements InventoryElement {
 	@Override
 	public int getGoldValue() {
 		int totalGV = 0;
-		for(Bag bag : bags){
+		for(Bag bag : bags) {
 			totalGV += bag.getGoldValue();
 		}
 		return totalGV;
@@ -42,7 +40,7 @@ public class Inventory implements InventoryElement {
 	@Override
 	public int getOccupancy() {
 		int totalOccupancy = 0;
-		for(Bag bag : bags){
+		for(Bag bag : bags) {
 			totalOccupancy += bag.getOccupancy();
 		}
 		return totalOccupancy;
@@ -50,7 +48,7 @@ public class Inventory implements InventoryElement {
 
 	public int getCapacity() {
 		int totalCapacity = 0;
-		for(Bag bag : bags){
+		for(Bag bag : bags) {
 			totalCapacity += bag.getCapacity();
 		}
 		return totalCapacity;
@@ -65,7 +63,7 @@ public class Inventory implements InventoryElement {
 	}
 
 	public InventoryElement getItem(int bagPos, int itemPos) {
-		return bags.get(itemPos).getItem(itemPos);
+		return bags.get(bagPos).getItem(itemPos);
 	}
 
 	/**
@@ -74,8 +72,8 @@ public class Inventory implements InventoryElement {
 	 * @return true if item is added, false if inventory completely full
 	 */
 	public boolean addItem(InventoryElement item){
-		for(Bag bag : bags){
-			if(bag.getOccupancy()<bag.getCapacity()){ 
+		for(Bag bag : bags) {
+			if(bag.getOccupancy()<bag.getCapacity()) {
 				bag.addItem(item);
 				return true;
 			}
@@ -88,8 +86,8 @@ public class Inventory implements InventoryElement {
 	}
 
 	public void addBag(Bag bag) {
-		if(bags.size() >= 6){
-			if(addItem(bag)){
+		if(bags.size() >= 6) {
+			if(addItem(bag)) {
 				return; //returns if empty bag has been stored away
 			}
 			return; //returns if both inventory and all bags are full;
@@ -105,15 +103,14 @@ public class Inventory implements InventoryElement {
 	 * @param destItemPos
 	 */
 	public void swapBag(int sourceBagPos, int destBagPos, int destItemPos) {
-		if(bagExists(sourceBagPos) && bagExists(destBagPos) && getBag(destBagPos).itemExists(destItemPos)){
+		if(bagExists(sourceBagPos) && bagExists(destBagPos) && getBag(destBagPos).itemExists(destItemPos)) {
 
 			Bag sourceBag = getBag(sourceBagPos);
 			Bag destBag = (Bag) getItem(destBagPos, destItemPos);
-			if( destBag.getCapacity() < sourceBag.getCapacity()){ 
+			if(destBag.getCapacity() < sourceBag.getCapacity()) {
 				return; //return if new bag is smaller than source bag
-			}
-			else{
-				for(InventoryElement item : sourceBag.items()){
+			} else {
+				for(InventoryElement item : sourceBag.items()) {
 					destBag.addItem(item);
 				}
 				bags.remove(sourceBagPos);
@@ -124,8 +121,7 @@ public class Inventory implements InventoryElement {
 				sourceBag.setIsEquipped(false);
 				destBag.setIsEquipped(true);
 			}
-		}
-		else{
+		} else {
 			return; //return if either bags or item don't exist
 		}
 	}
@@ -136,7 +132,7 @@ public class Inventory implements InventoryElement {
 		Bag 0: Apple, Sword, Spear
 		Bag 1:
 		*/
-	public String listBags(){
+	public String listBags() {
 		String bagsString = "";
 		int bagNum = 0;
 		for(Bag bag : bags){

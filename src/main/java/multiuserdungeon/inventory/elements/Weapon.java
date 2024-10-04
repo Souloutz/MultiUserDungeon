@@ -4,11 +4,10 @@ import multiuserdungeon.inventory.InventoryElement;
 
 public class Weapon implements InventoryElement {
 
-	private String name;
-    private String description;
-    private int goldValue;
-    private int occupancy = 1;
-    private int attack;
+	private final String name;
+    private final String description;
+    private final int goldValue;
+    private final int attack;
 
 	public Weapon(String name, String description, int goldValue, int attack) {
 		this.name = name;
@@ -34,7 +33,7 @@ public class Weapon implements InventoryElement {
 
 	@Override
 	public int getOccupancy() {
-		return occupancy;
+		return 1;
 	}
 
 	public int getAttack() {
