@@ -1,9 +1,6 @@
 package multiuserdungeon;
 
-import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
 import java.util.Scanner;
 
 import multiuserdungeon.commands.Action;
