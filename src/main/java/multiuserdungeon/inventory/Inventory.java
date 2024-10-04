@@ -8,9 +8,9 @@ import java.util.List;
 public class Inventory implements InventoryElement {
 	private String name;
     private String description;
-    private int goldValue = 0;
-    private int occupancy = 0;
-    private int capacity = 0;
+    private int goldValue;
+    private int occupancy;
+    private int capacity;
 
 	private final List<Bag> bags = new ArrayList<>();
 
@@ -96,17 +96,7 @@ public class Inventory implements InventoryElement {
 			return; //returns if both inventory and all bags are full;
 		}
 		bags.add(bag);
-	}
-
-	public void removeBag(int bagPos) {
-		//TODO:return response
-		if(bagExists(bagPos)){ 
-			bags.remove(bagPos);
-		}
-		else{
-			return; //return when bagPos invalid
-		}
-
+		bag.setIsEquipped(true);
 	}
 
 	/**
@@ -131,6 +121,8 @@ public class Inventory implements InventoryElement {
 			getBag(destBagPos).removeItem(destItemPos);
 			sourceBag.items().clear();
 			additem(sourceBag); 
+			sourceBag.setIsEquipped(false);
+			destBag.setIsEquipped(true);
 		}
 	}
 
@@ -152,7 +144,7 @@ public class Inventory implements InventoryElement {
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\n" + listBags() + "Gold Value: " + goldValue + "\nOccupancy: " + getOccupancy() + "/" + getCapacity();
+		return name + "\n" + description + "\n" + listBags() + "Gold Value: " + getGoldValue() + "\nOccupancy: " + getOccupancy() + "/" + getCapacity();
 	}
 
 }

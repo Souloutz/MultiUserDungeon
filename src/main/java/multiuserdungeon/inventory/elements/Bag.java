@@ -8,15 +8,18 @@ public class Bag implements InventoryElement {
 	private String name;
     private String description;
     private int goldValue;
-    private int occupancy = 0;
+    private int occupancy = 1;
     private final int capacity;
+	private boolean isEquipped;
 	private List<InventoryElement> items;
+
 
 	public Bag(String name, String description, int goldValue, int capacity) {
 		this.name = name;
 		this.description = description;
 		this.goldValue = goldValue;
 		this.capacity = capacity;
+		this.isEquipped = false;
 	}
 
 	@Override
@@ -40,7 +43,10 @@ public class Bag implements InventoryElement {
 
 	@Override
 	public int getOccupancy() {
-		return items.size();
+		if(isEquipped){
+			return items.size();
+		}
+		return occupancy;
 	}
 
 	public int getCapacity() {
@@ -53,6 +59,10 @@ public class Bag implements InventoryElement {
 
 	public List<InventoryElement> items() {
 		return items;
+	}
+
+	public void setIsEquipped(boolean equipped){
+		isEquipped = equipped;
 	}
 
 	public void addItem(InventoryElement item) {
