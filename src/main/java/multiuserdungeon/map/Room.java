@@ -33,7 +33,7 @@ public class Room {
 		return null;
 	}
 
-	public void setPlayerTile() {
+	public void setPlayerTile(Tile tile) {
 
 	}
 

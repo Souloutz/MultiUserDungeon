@@ -153,9 +153,8 @@ public class Game {
 		// TODO what if chest is in that tile????
 		player.setTile(newTile);
 		newTile.setObject(player);
-		
-		// TODO setPlayerTile takes no parameters???
-		playerRoom.setPlayerTile();
+	
+		playerRoom.setPlayerTile(playerTile);
 
 		endTurn();
 	}
