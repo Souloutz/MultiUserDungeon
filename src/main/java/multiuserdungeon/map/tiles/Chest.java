@@ -1,5 +1,8 @@
 package multiuserdungeon.map.tiles;
 
+import java.util.Collection;
+
+import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.TileObject;
 
@@ -33,5 +36,8 @@ public class Chest implements TileObject {
 	public boolean isTrap() {
 		return false;
 	}
-
+	
+	public Collection<InventoryElement> loot() {
+		return null; // TODO
+	}
 }
