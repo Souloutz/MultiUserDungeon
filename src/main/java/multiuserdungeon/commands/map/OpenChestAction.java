@@ -1,13 +1,12 @@
 package multiuserdungeon.commands.map;
 
-import java.util.Collection;
+import java.util.List;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
-import multiuserdungeon.commands.responses.OpenChestResponse;
 import multiuserdungeon.inventory.InventoryElement;
 
-public class OpenChestAction implements Action<OpenChestResponse> {
+public class OpenChestAction implements Action<String> {
 
 	private Game receiver;
 
@@ -16,9 +15,14 @@ public class OpenChestAction implements Action<OpenChestResponse> {
 	}
 
 	@Override
-	public OpenChestResponse execute() {
-		Collection<InventoryElement> chestContents = receiver.handleOpenChest();
+	public String execute() {
+		List<InventoryElement> chestContents = receiver.handleOpenChest();
 
-		return new OpenChestResponse(); // TODO !!!?!??
+		int index = 0;
+		String chestString = "";
+		for (InventoryElement content : chestContents)
+			chestString += index++ + ". " + content.getName() + "\n";
+
+		return chestString;
 	}
 }
