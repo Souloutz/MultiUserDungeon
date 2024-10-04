@@ -173,6 +173,10 @@ public class Game {
 		int playerY = playerTile.getY();
 
 		Tile tileTrap = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
+		
+		if (!tileTrap.getObject().isTrap())
+			return;
+
 		Trap trap = (Trap) tileTrap.getObject();
 
 		if (trap.isDetected())
