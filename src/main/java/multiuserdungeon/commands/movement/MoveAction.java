@@ -2,10 +2,9 @@ package multiuserdungeon.commands.movement;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
-import multiuserdungeon.commands.responses.MoveResponse;
 import multiuserdungeon.map.Compass;
 
-public class MoveAction implements Action<MoveResponse> {
+public class MoveAction implements Action<Void> {
 
 	private Game receiver;
 	private Compass direction;
@@ -16,10 +15,8 @@ public class MoveAction implements Action<MoveResponse> {
 	}
 
 	@Override
-	public MoveResponse execute() {
+	public Void execute() {
 		receiver.handleMove(direction);
-		
-		// TODO 
-		return MoveResponse.SUCCESS;
+		return null;
 	}
 }
