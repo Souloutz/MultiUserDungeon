@@ -46,11 +46,11 @@ public class Player extends Character {
 	}
 
 	public void equipWeapon(InventoryElement item) {
-
+		// TODO
 	}
 
 	public void equipArmor(InventoryElement item) {
-
+		// TODO
 	}
 
 	public void unequipWeapon() {
