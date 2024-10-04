@@ -1,6 +1,7 @@
 package multiuserdungeon.map;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class Room {
 
@@ -32,13 +33,25 @@ public class Room {
 		return null;
 	}
 
-	public void setPlayerTile() {
+	public void setPlayerTile(Tile tile) {
 
+	}
+
+	public Map<Tile, Room> getConnections() {
+		return null;
+	}
+
+	@Override
+	public boolean equals(Object otherRoom) {
+		if (!(otherRoom instanceof Room))
+			return false;
+
+		// TODO
+		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "";
 	}
-
 }

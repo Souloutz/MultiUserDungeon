@@ -8,6 +8,14 @@ public class Tile {
 
 	}
 
+	public int getX() {
+		return 0; // TODO
+	}
+
+	public int getY() {
+		return 0; // TODO
+	}
+
 	public TileObject getObject() {
 		return null;
 	}

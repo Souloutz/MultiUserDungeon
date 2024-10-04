@@ -44,5 +44,8 @@ public class Map {
 
 	}
 
-
+	public boolean playerReachedGoal() {
+		// TODO
+		return getPlayerRoom().equals(getGoal());
+	}
 }
