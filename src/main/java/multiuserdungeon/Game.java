@@ -223,7 +223,7 @@ public class Game {
 	}
 
 	public String handleViewItem(int bagPos, int itemPos) {
-		return player.getInventory().getBag(bagPos).getItem(itemPos).toString();
+		return player.getInventory().getItem(bagPos, itemPos).toString();
 	}
 
 	public void handleEquipItem(int bagPos, int itemPos, boolean isWeapon) {
