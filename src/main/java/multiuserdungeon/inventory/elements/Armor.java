@@ -3,38 +3,47 @@ package multiuserdungeon.inventory.elements;
 import multiuserdungeon.inventory.InventoryElement;
 
 public class Armor implements InventoryElement {
+	private String name;
+    private String description;
+    private int goldValue;
+    private int occupancy = 1;
+    private int defense;
 
 	public Armor(String name, String description, int goldValue, int defense) {
+		this.name = name;
+        this.description = description;
+        this.goldValue = goldValue;
+        this.defense = defense;
 
 	}
 
 	@Override
 	public String getName() {
-		return "";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "";
+		return description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return 0;
+		return goldValue;
 	}
 
 	@Override
 	public int getOccupancy() {
-		return 0;
+		return occupancy;
 	}
 
 	public int getDefense() {
-		return 0;
+		return defense;
 	}
 
 	@Override
 	public String toString() {
-		return "";
+		return name + "\n" + description + "\nGold Value: " + goldValue + "\nDefense Points: +" + defense;
 	}
 
 }
