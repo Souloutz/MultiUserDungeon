@@ -64,7 +64,7 @@ public class Game {
 			---------------------------------
             Directions
             ---------------------------------
-                NORTH, SOUTH, EAST, WEST, NORTHWEST, NORTHEAST, SOUTHWEST, SOUTHEAST
+                NORTH, SOUTH, EAST, WEST, NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH_EAST
 
             ---------------------------------
             Turn Commands
@@ -114,7 +114,7 @@ public class Game {
                 UNEQUIP [WEAPON/ARMOR]
                 USE [BAG] [ITEM]
                 DESTROY [BAG] [ITEM]
-                SWAP [BAG] [BAG]
+                SWAP [OLD BAG] [NEW BAG] [ITEM]
 
 			----------------------------------
 			Game Commands
