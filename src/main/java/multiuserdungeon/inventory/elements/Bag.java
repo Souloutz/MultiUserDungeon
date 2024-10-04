@@ -61,19 +61,23 @@ public class Bag implements InventoryElement {
 		return items;
 	}
 
+	public boolean itemExists(int itemPos){
+		return (itemPos < items.size() && itemPos >= 0);
+	}
+
 	public void setIsEquipped(boolean equipped){
 		isEquipped = equipped;
 	}
 
 	public void addItem(InventoryElement item) {
-		if(items.size()>=capacity){ //checks if bag is full
-			return;
+		if(items.size()>=capacity){ 
+			return; //returns if bag is full
 		}
 		items.add(item);
 	}
 
 	public void removeItem(int itemPos) {
-		if(itemPos < items.size() && itemPos >= 0){ //checks if item index exists
+		if(itemExists(itemPos)){ 
 			items.remove(itemPos);
 		}
 		return; //return if item position is invalid

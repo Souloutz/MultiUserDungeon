@@ -88,7 +88,6 @@ public class Inventory implements InventoryElement {
 	}
 
 	public void addBag(Bag bag) {
-		//TODO:return response
 		if(bags.size() >= 6){
 			if(additem(bag)){
 				return; //returns if empty bag has been stored away
@@ -106,23 +105,28 @@ public class Inventory implements InventoryElement {
 	 * @param destItemPos
 	 */
 	public void swapBag(int sourceBagPos, int destBagPos, int destItemPos) {
-		//TODO:return response
-		Bag sourceBag = getBag(sourceBagPos);
-		Bag destBag = (Bag) getItem(destBagPos, destItemPos);
-		if( destBag.getCapacity() < sourceBag.getCapacity()){ 
-			return; //return if new bag is smaller than source bag
+		if(bagExists(sourceBagPos) && bagExists(destBagPos) && getBag(destBagPos).itemExists(destItemPos)){
+
+			Bag sourceBag = getBag(sourceBagPos);
+			Bag destBag = (Bag) getItem(destBagPos, destItemPos);
+			if( destBag.getCapacity() < sourceBag.getCapacity()){ 
+				return; //return if new bag is smaller than source bag
+			}
+			else{
+				for(InventoryElement item : sourceBag.items()){
+					destBag.addItem(item);
+				}
+				bags.remove(sourceBagPos);
+				bags.add(sourceBagPos,destBag);
+				getBag(destBagPos).removeItem(destItemPos);
+				sourceBag.items().clear();
+				additem(sourceBag); 
+				sourceBag.setIsEquipped(false);
+				destBag.setIsEquipped(true);
+			}
 		}
 		else{
-			for(InventoryElement item : sourceBag.items()){
-				destBag.addItem(item);
-			}
-			bags.remove(sourceBagPos);
-			bags.add(sourceBagPos,destBag);
-			getBag(destBagPos).removeItem(destItemPos);
-			sourceBag.items().clear();
-			additem(sourceBag); 
-			sourceBag.setIsEquipped(false);
-			destBag.setIsEquipped(true);
+			return; //return if either bags or item don't exist
 		}
 	}
 
