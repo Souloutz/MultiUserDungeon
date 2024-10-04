@@ -262,8 +262,8 @@ public class Game {
 		player.destroyItem(bagPos, itemPos);
 	}
 
-	public void handleSwapBag(int sourceBagPos, int destBagPos) {
-		player.getInventory().swapBag(sourceBagPos, destBagPos);
+	public void handleSwapBag(int sourceBagPos, int destBagPos, int destItemPos) {
+		player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
 	}
 
 	// Game Methods
