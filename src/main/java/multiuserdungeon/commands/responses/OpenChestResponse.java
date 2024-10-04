@@ -3,10 +3,8 @@ package multiuserdungeon.commands.responses;
 import multiuserdungeon.map.tiles.Chest;
 
 public class OpenChestResponse {
-    
-    Chest chest;
 
-    public OpenChestResponse(Chest chest) {
+    public OpenChestResponse() {
         this.chest = chest;
     }
 

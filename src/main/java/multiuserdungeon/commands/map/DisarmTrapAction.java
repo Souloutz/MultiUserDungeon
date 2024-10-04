@@ -5,7 +5,7 @@ import multiuserdungeon.commands.Action;
 import multiuserdungeon.commands.responses.DisarmTrapResponse;
 import multiuserdungeon.map.Compass;
 
-public class DisarmTrapAction implements Action<DisarmTrapResponse> {
+public class DisarmTrapAction implements Action<Void> {
 
 	private Game receiver;
 	private Compass direction;
@@ -16,10 +16,10 @@ public class DisarmTrapAction implements Action<DisarmTrapResponse> {
 	}
 
 	@Override
-	public DisarmTrapResponse execute() {
+	public Void execute() {
 		receiver.handleDisarmTrap(direction);
-
+		return null;
 		// TODO if success return success, if not, return fail
-		return DisarmTrapResponse.SUCCESS;
+		// return DisarmTrapResponse.SUCCESS;
 	}
 }

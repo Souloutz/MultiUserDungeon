@@ -1,8 +1,11 @@
 package multiuserdungeon.commands.map;
 
+import java.util.Collection;
+
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.commands.responses.OpenChestResponse;
+import multiuserdungeon.inventory.InventoryElement;
 
 public class OpenChestAction implements Action<OpenChestResponse> {
 
@@ -14,8 +17,8 @@ public class OpenChestAction implements Action<OpenChestResponse> {
 
 	@Override
 	public OpenChestResponse execute() {
-		receiver.handleOpenChest();
+		Collection<InventoryElement> chestContents = receiver.handleOpenChest();
 
-		return new OpenChestResponse(null); // TODO !!!?!??
+		return new OpenChestResponse(); // TODO !!!?!??
 	}
 }

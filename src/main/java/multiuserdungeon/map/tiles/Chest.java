@@ -1,12 +1,14 @@
 package multiuserdungeon.map.tiles;
 
-import java.util.Collection;
+import java.util.List;
 
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.TileObject;
 
 public class Chest implements TileObject {
+
+	List<InventoryElement> contents; // TODO
 
 	public Chest(int size) {
 
@@ -37,7 +39,11 @@ public class Chest implements TileObject {
 		return false;
 	}
 	
-	public Collection<InventoryElement> loot() {
+	public List<InventoryElement> loot() {
 		return null; // TODO
+	}
+
+	public List<InventoryElement> getContents() {
+		return contents; 
 	}
 }

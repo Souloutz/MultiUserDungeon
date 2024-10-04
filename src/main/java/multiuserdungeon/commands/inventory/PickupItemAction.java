@@ -2,21 +2,20 @@ package multiuserdungeon.commands.inventory;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
-import multiuserdungeon.inventory.InventoryElement;
 
 public class PickupItemAction implements Action<Void> {
 
 	private Game receiver;
-	private InventoryElement item;
+	private int index;
 
-	public PickupItemAction(Game game, InventoryElement item) {
+	public PickupItemAction(Game game, int index) {
 		receiver = game;
-		this.item = item;
+		this.index = index;
 	}
 
 	@Override
 	public Void execute() {
-		receiver.handlePickupItem(item);
+		receiver.handlePickupItem(index);
 		return null;
 	}
 }
