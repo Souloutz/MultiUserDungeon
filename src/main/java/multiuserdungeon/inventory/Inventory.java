@@ -73,7 +73,7 @@ public class Inventory implements InventoryElement {
 	 * @param item
 	 * @return true if item is added, false if inventory completely full
 	 */
-	public boolean additem(InventoryElement item){
+	public boolean addItem(InventoryElement item){
 		for(Bag bag : bags){
 			if(bag.getOccupancy()<bag.getCapacity()){ 
 				bag.addItem(item);
@@ -89,7 +89,7 @@ public class Inventory implements InventoryElement {
 
 	public void addBag(Bag bag) {
 		if(bags.size() >= 6){
-			if(additem(bag)){
+			if(addItem(bag)){
 				return; //returns if empty bag has been stored away
 			}
 			return; //returns if both inventory and all bags are full;
@@ -120,7 +120,7 @@ public class Inventory implements InventoryElement {
 				bags.add(sourceBagPos,destBag);
 				getBag(destBagPos).removeItem(destItemPos);
 				sourceBag.items().clear();
-				additem(sourceBag); 
+				addItem(sourceBag); 
 				sourceBag.setIsEquipped(false);
 				destBag.setIsEquipped(true);
 			}
