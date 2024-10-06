@@ -20,4 +20,5 @@ public class PickupItemAction implements Action<List<InventoryElement>> {
 	public List<InventoryElement> execute() {
 		return this.receiver.handlePickupItem(this.index);
 	}
+
 }

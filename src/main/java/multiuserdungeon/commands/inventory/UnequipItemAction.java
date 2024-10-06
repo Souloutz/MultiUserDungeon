@@ -3,19 +3,19 @@ package multiuserdungeon.commands.inventory;
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 
-public class UnequipItemAction implements Action<Void> {
+public class UnequipItemAction implements Action<Boolean> {
 
-	private Game receiver;
-	private boolean isWeapon; // Can only equip weapons or armor
+	private final Game receiver;
+	private final boolean isWeapon;
 
 	public UnequipItemAction(Game game, boolean isWeapon) {
-		receiver = game;
+		this.receiver = game;
 		this.isWeapon = isWeapon;
 	}
 
 	@Override
-	public Void execute() {
-		receiver.handleUnequipItem(isWeapon);
-		return null;
+	public Boolean execute() {
+		return this.receiver.handleUnequipItem(this.isWeapon);
 	}
+
 }

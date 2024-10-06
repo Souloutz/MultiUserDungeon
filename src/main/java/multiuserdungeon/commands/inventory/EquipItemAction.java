@@ -17,7 +17,6 @@ public class EquipItemAction implements Action<Boolean> {
 
 	@Override
 	public Boolean execute() {
-		receiver.handleEquipItem(bagPos, itemPos);
-		return null;
+		return this.receiver.handleEquipItem(this.bagPos, this.itemPos);
 	}
 }

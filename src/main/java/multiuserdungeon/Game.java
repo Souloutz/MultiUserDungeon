@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import multiuserdungeon.clock.Clock;
+import multiuserdungeon.clock.Time;
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.inventory.elements.Bag;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.Map;
 import multiuserdungeon.map.Room;
@@ -19,10 +21,9 @@ public class Game {
 
 	private static Game instance;
 	private final Player player;
+	private Map map;
 	private final Clock clock;
 	private ProgressDB progressDB;
-	private Map map;
-	private boolean gameQuit;
 
 	public Game(Player player) {
 		instance = this;
@@ -30,7 +31,6 @@ public class Game {
 		this.clock = new Clock();
 		this.progressDB = null;
 		this.map = null;
-		this.gameQuit = false;
 	}
 
 	public static Game getInstance() {
@@ -45,9 +45,16 @@ public class Game {
 		return this.map;
 	}
 
-	// Setter Methods
+	public Time getCurrentTime() {
+		return this.clock.getCurrentTime();
+	}
+
 	public void setProgressDB(ProgressDB progressDB) {
 		this.progressDB = progressDB;
+	}
+
+	public void handleLoadMap(String uri) {
+		this.map = this.progressDB.load(uri);
 	}
 
 	// TODO get the direction from player tile?
@@ -69,7 +76,7 @@ public class Game {
 		for (Tile tile : playerTile.getAdjacent()) {
 			if (tile.getNPC() != null)
 				commandSet.add(1);
-	
+
 			else if (tile.passable())
 				commandSet.add(2);
 
@@ -78,7 +85,7 @@ public class Game {
 
 			else if (tile.getTrap() != null) {
 				if (tile.getTrap().isDetected())
-					commandSet.add(4);		
+					commandSet.add(4);
 			}
 		}
 
@@ -117,44 +124,63 @@ public class Game {
 		return availableCommands;
 	}
 
-	public void handleAttack(Compass direction) {
-		player.attack(direction);
-		endTurn();
+	public boolean handleAttack(Compass direction) {
+		if(this.player.attack(direction)) {
+			endTurn();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public void handleMove(Compass direction) {
+	public boolean handleMove(Compass direction) {
 		Room playerRoom = this.map.getPlayerRoom();
 		Tile playerTile = this.player.getTile();
 		int playerX = playerTile.getX();
 		int playerY = playerTile.getY();
 
 		Tile newTile = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
+		if(newTile == null || !newTile.passable()) return false;
+
 		playerTile.removeObjects();
 		newTile.addObject(this.player);
 		this.player.setTile(newTile);
 		playerRoom.setPlayerTile(playerTile);
 
+		for(Tile adjacent : newTile.getAdjacent()) {
+			Trap trap = adjacent.getTrap();
+			if(trap != null && !trap.isDetected()) {
+				trap.detected();
+			}
+		}
+
 		endTurn();
+		return true;
 	}
 
-	public void handleExitRoom(Compass direction) {
-		map.getPlayerRoom().handleExitRoom(direction);
-
-		endTurn();
+	public boolean handleExitRoom(Compass direction) {
+		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
+			endTurn();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public void handleDisarmTrap(Compass direction) {
+	public boolean handleDisarmTrap(Compass direction) {
 		Tile playerTile = player.getTile();
 		Room playerRoom = map.getPlayerRoom();
 		int playerX = playerTile.getX();
 		int playerY = playerTile.getY();
 
 		Tile tile = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
+		if(tile == null) return false;
 		Trap trap = tile.getTrap();
-		if(trap == null || !trap.isDetected()) return; // TODO: pretend like there's no trap there
+		if(trap == null || !trap.isDetected()) return false;
 
 		trap.disarmAttempt();
 		endTurn();
+		return true;
 	}
 
 	public List<InventoryElement> handleOpenChest() {
@@ -163,32 +189,29 @@ public class Game {
 		return chest.getContents();
 	}
 
-	public List<InventoryElement> handlePickupItem(int index) {
-		Chest chest = player.getTile().getChest();
-		if(chest == null) return null;
-
-		player.pickupItem(chest.getContents().get(index));
-		return chest.getContents();
-	}
-
 	public void handleCloseChest() {
 		endTurn();
 	}
 
-	public String handleViewInventory() {
-		return player.getInventory().toString();
-	}
+	public List<InventoryElement> handlePickupItem(int index) {
+		Chest chest = this.player.getTile().getChest();
+		if(chest == null) return null;
 
-	public String handleViewBag(int bagPos) {
-		return player.getInventory().getBag(bagPos).toString();
-	}
+		InventoryElement pickedUp = chest.handleLoot(index);
+		if(pickedUp == null) return null;
 
-	public String handleViewItem(int bagPos, int itemPos) {
-		return player.getInventory().getItem(bagPos, itemPos).toString();
+		if(pickedUp instanceof Bag bag) {
+			this.player.getInventory().addBag(bag);
+		} else {
+			this.player.getInventory().addItem(pickedUp);
+		}
+
+		return chest.getContents();
 	}
 
 	public boolean handleEquipItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
+		if(item == null) return false;
 		return item.handleEquip(this.player);
 	}
 
@@ -196,42 +219,37 @@ public class Game {
 		return isWeapon ? this.player.unequipWeapon() : this.player.unequipArmor();
 	}
 
-	public void handleUseItem(int bagPos, int itemPos) {
-		InventoryElement item = player.getInventory().getItem(bagPos, itemPos); 
-		boolean success = item.handleUse(this.player);
+	public boolean handleUseItem(int bagPos, int itemPos) {
+		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
+		if(item == null) return false;
 
-		if(success) {
+		if(item.handleUse(this.player)) {
 			handleDestroyItem(bagPos, itemPos);
 			endTurn();
+			return true;
 		} else {
-			// TODO: return not usable
+			return false;
 		}
 	}
 
 	public boolean handleDestroyItem(int bagPos, int itemPos) {
-		return player.destroyItem(bagPos, itemPos);
+		return this.player.getInventory().removeItem(bagPos, itemPos);
 	}
 
-	public void handleSwapBag(int sourceBagPos, int destBagPos, int destItemPos) {
-		player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
+	public boolean handleSwapBag(int sourceBagPos, int destBagPos, int destItemPos) {
+		return this.player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
 	}
 
 	public void handleQuitGame() {
-		this.gameQuit = true;
-		progressDB.save(map);
-	}
-
-	public boolean hasGameEnd() {
-		return gameQuit || player.getHealth() == 0 || map.playerReachedGoal();
+		this.progressDB.save(this.map);
 	}
 	
 	private void endTurn() {
 		this.clock.completeTurn();
 	}
 
-	public Map handleLoadMap(String uri) {
-		this.map = progressDB.load(uri);
-		return this.map;
+	public boolean isOver() {
+		return player.getHealth() == 0 || map.playerReachedGoal();
 	}
 
 }

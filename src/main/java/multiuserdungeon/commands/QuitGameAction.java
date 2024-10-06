@@ -4,15 +4,16 @@ import multiuserdungeon.Game;
 
 public class QuitGameAction implements Action<Void> {
 
-	private Game receiver;
+	private final Game receiver;
 
 	public QuitGameAction(Game game) {
-		receiver = game;
+		this.receiver = game;
 	}
 
 	@Override
 	public Void execute() {
-		receiver.handleQuitGame();
+		this.receiver.handleQuitGame();
 		return null;
 	}
+
 }

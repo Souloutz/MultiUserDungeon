@@ -31,14 +31,7 @@ public class Tile {
 	}
 
 	public Tile getTile(Compass compass) {
-		int i = 0;
-		for (Compass dir : Compass.values()){
-			if (dir == compass){
-				return this.getAdjacent().get(i);
-			}
-			i++;
-		}
-		return null;
+		return this.adjacent.get(compass);
 	}
 
 	public List<TileObject> getObjects() {
@@ -57,8 +50,8 @@ public class Tile {
 	}
 
 	public boolean passable() {
-		for (TileObject object : objects) {
-			if (!object.passable()) {
+		for(TileObject object : this.objects) {
+			if(!object.passable()) {
 				return false;
 			}
 		}

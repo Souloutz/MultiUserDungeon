@@ -1,37 +1,71 @@
 package multiuserdungeon.map.tiles;
 
-import java.util.List;
-
 import multiuserdungeon.map.*;
 
 public abstract class Character implements TileObject {
 
-	Tile tile;
+	private final String name;
+	private final String description;
+	private int health;
+	private final int baseMaxHealth;
+	private final int baseAttack;
+	private final int baseDefense;
+	private Tile tile;
 
-	String name;
-	String description;
-
-	int maxHealth;
-	int health;
-	int attack;
-	int defense;
-
-	public Character(String name, String description, int baseHealth, int baseAttack, int baseDefense) {
+	public Character(String name, String description, int baseMaxHealth, int baseAttack, int baseDefense) {
 		this.name = name;
 		this.description = description;
-		this.maxHealth = baseHealth;
-		this.health = baseHealth;
-		this.attack = baseAttack;
-		this.defense = baseDefense;
+		this.health = baseMaxHealth;
+		this.baseMaxHealth = baseMaxHealth;
+		this.baseAttack = baseAttack;
+		this.baseDefense = baseDefense;
+		this.tile = null;
 	}
 
-	public void attack(Compass compass) {
-		List<TileObject> objects = getTile().getTile(compass).getObjects();
-		for (TileObject object : objects) {
-			if (object instanceof Character character) {
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public Tile getTile() {
+		return this.tile;
+	}
+
+	@Override
+	public void setTile(Tile tile) {
+		this.tile = tile;
+	}
+
+	@Override
+	public boolean passable() {
+		return false;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public boolean attack(Compass compass) {
+		Tile tile = getTile().getTile(compass);
+		if(tile == null) return false;
+
+		for(TileObject object : tile.getObjects()) {
+			if(object instanceof Character character) {
 				character.attacked(getAttack());
+				return true;
 			}
 		}
+
+		return false;
+	}
+
+	public int getHealth() {
+		return this.health;
+	}
+
+	public void replenishHealth(int amount) {
+		this.health += Math.min(amount, getMaxHealth());
 	}
 
 	public void attacked(int attack) {
@@ -39,30 +73,16 @@ public abstract class Character implements TileObject {
 		this.health = Math.max(0, this.health);
 	}
 
-	public String getDescription() {
-		return description;
+	public int getMaxHealth() {
+		return this.baseMaxHealth;
 	}
 
-	public int getBaseHealth() {
-		return maxHealth;
+	public int getAttack() {
+		return this.baseAttack;
 	}
 
-	public int getBaseAttack() {
-		return attack;
+	public int getDefense() {
+		return this.baseDefense;
 	}
-
-	public int getBaseDefense() {
-		return defense;
-	}
-
-	public void gainHealth(int health) {
-		this.health += Math.max(this.maxHealth - this.health, health);
-	}
-
-	abstract int getHealth();
-
-	abstract int getDefense();
-
-	abstract int getAttack();
 
 }

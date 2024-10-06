@@ -12,9 +12,6 @@ import multiuserdungeon.commands.inventory.PickupItemAction;
 import multiuserdungeon.commands.inventory.SwapBagAction;
 import multiuserdungeon.commands.inventory.UnequipItemAction;
 import multiuserdungeon.commands.inventory.UseItemAction;
-import multiuserdungeon.commands.inventory.ViewBagAction;
-import multiuserdungeon.commands.inventory.ViewInventoryAction;
-import multiuserdungeon.commands.inventory.ViewItemAction;
 import multiuserdungeon.commands.map.DisarmTrapAction;
 import multiuserdungeon.commands.map.LoadMapAction;
 import multiuserdungeon.commands.map.OpenChestAction;
@@ -23,7 +20,6 @@ import multiuserdungeon.commands.movement.MoveAction;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.progress.JSONProgressDB;
-import multiuserdungeon.progress.ProgressDB;
 
 public class UI {
 	

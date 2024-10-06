@@ -6,23 +6,17 @@ import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.inventory.InventoryElement;
 
-public class OpenChestAction implements Action<String> {
+public class OpenChestAction implements Action<List<InventoryElement>> {
 
-	private Game receiver;
+	private final Game receiver;
 
 	public OpenChestAction(Game game) {
-		receiver = game;
+		this.receiver = game;
 	}
 
 	@Override
-	public String execute() {
-		List<InventoryElement> chestContents = receiver.handleOpenChest();
-
-		int index = 0;
-		String chestString = "";
-		for (InventoryElement content : chestContents)
-			chestString += index++ + ". " + content.getName() + "\n";
-
-		return chestString;
+	public List<InventoryElement> execute() {
+		return this.receiver.handleOpenChest();
 	}
+
 }

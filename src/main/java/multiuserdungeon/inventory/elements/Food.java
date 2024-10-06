@@ -6,8 +6,8 @@ import multiuserdungeon.map.tiles.Player;
 public class Food implements InventoryElement {
 
 	private final String name;
-    private final String description;
-    private final int goldValue;
+	private final String description;
+	private final int goldValue;
 	private final int health;
 
 	public Food(String name, String description, int goldValue, int health) {

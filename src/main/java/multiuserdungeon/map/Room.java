@@ -86,14 +86,21 @@ public class Room {
 		// to fill with random TileObjects
 	}
 
-	public void handleExitRoom(Compass direction) {
+	public boolean handleExitRoom(Compass direction) {
 		Player player = Game.getInstance().getPlayer();
+
 		Room newRoom = this.connections.get(this.doorways.get(direction));
-		Tile oldTile = player.getTile();
+		if(newRoom == null) return false;
 		Tile newTile = newRoom.getDoorways().get(direction.getOpposite());
-		oldTile.getObjects().remove(player);
-		newTile.getObjects().add(player);
+		if(newTile == null) return false;
+		newRoom.setPlayerTile(newTile);
+
+		player.getTile().removeObjects();
+		newTile.addObject(player);
 		player.setTile(newTile);
+		this.playerTile = null;
+
+		return true;
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.elements.Armor;
 import multiuserdungeon.inventory.elements.Weapon;
-import multiuserdungeon.map.Tile;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.inventory.*;
 
@@ -24,8 +23,47 @@ public class Player extends Character {
 		this.buffs = new ArrayList<>();
 	}
 
+	@Override
+	public int getMaxHealth() {
+		int health = super.getMaxHealth();
+
+		for(Buff buff : this.buffs) {
+			if(buff.getStat() == BuffStat.HEALTH) {
+				health += buff.getStatAmount();
+			}
+		}
+
+		return health;
+	}
+
+	@Override
+	public int getAttack() {
+		int attack = super.getAttack();
+
+		for(Buff buff : this.buffs) {
+			if(buff.getStat() == BuffStat.ATTACK) {
+				attack += buff.getStatAmount();
+			}
+		}
+
+		return attack;
+	}
+
+	@Override
+	public int getDefense() {
+		int defense = super.getDefense();
+
+		for(Buff buff : this.buffs) {
+			if(buff.getStat() == BuffStat.DEFENSE) {
+				defense += buff.getStatAmount();
+			}
+		}
+
+		return defense;
+	}
+
 	public Inventory getInventory() {
-		return inventory;
+		return this.inventory;
 	}
 
 	public void equipWeapon(Weapon weapon) {
@@ -41,7 +79,7 @@ public class Player extends Character {
 	}
 
 	public void useFood(Food food) {
-		this.gainHealth(food.getHealth());
+		this.replenishHealth(food.getHealth());
 	}
 
 	public boolean unequipWeapon() {
@@ -56,53 +94,6 @@ public class Player extends Character {
 		this.inventory.addItem(this.armor);
 		this.armor = null;
 		return true;
-	}
-
-	@Override
-	public int getHealth() {
-		return 0;
-	}
-
-	@Override
-	int getDefense() {
-		int buffDefense = 0;
-		for (Buff buff : buffs){
-			if (buff.getStat() == BuffStat.DEFENSE) {
-				buffDefense += buff.getStatAmount();
-			}
-		}
-		return defense + buffDefense + armor.getDefense();
-	}
-
-	@Override
-	int getAttack() {
-		int buffAttack = 0;
-		for (Buff buff : buffs){
-			if (buff.getStat() == BuffStat.ATTACK) {
-				buffAttack += buff.getStatAmount();
-			}
-		}
-		return attack + buffAttack + weapon.getAttack();
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public Tile getTile() {
-		return tile;
-	}
-
-	@Override
-	public void setTile(Tile tile) {
-		this.tile = tile;
-	}
-
-	@Override
-	public boolean passable() {
-		return false;
 	}
 
 }
