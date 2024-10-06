@@ -32,9 +32,4 @@ public class Obstacle implements TileObject {
 		return false;
 	}
 
-	@Override
-	public boolean isTrap() {
-		return false;
-	}
-
 }

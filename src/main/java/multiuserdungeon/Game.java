@@ -13,7 +13,6 @@ import multiuserdungeon.map.Map;
 import multiuserdungeon.map.Room;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.tiles.Chest;
-import multiuserdungeon.map.tiles.EmptyTile;
 import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.progress.ProgressDB;
@@ -75,7 +74,7 @@ public class Game {
 		Set<Integer> commandSet = new HashSet<>(4);
 
 		for (Tile tile : playerTile.getAdjacent()) {
-			if (tile.hasCharacter())
+			if (tile.getNPC() != null)
 				commandSet.add(1);
 	
 			else if (tile.passable())
@@ -84,10 +83,8 @@ public class Game {
 			else if (map.getPlayerRoom().getConnections().containsKey(tile))
 				commandSet.add(3);
 
-			else if (tile.getObject().isTrap()) {
-				Trap tileTrap = ((Trap) tile.getObject());
-
-				if (tileTrap.isDetected())
+			else if (tile.getTrap() != null) {
+				if (tile.getTrap().isDetected())
 					commandSet.add(4);		
 			}
 		}
@@ -98,7 +95,7 @@ public class Game {
 			availableCommands += "\tMOVE [DIRECTION]\n";
 		if (commandSet.contains(3))
 			availableCommands += "\tEXIT [DIRECTION]\n";
-		if (playerTile.hasChest())
+		if (playerTile.getChest() != null)
 			availableCommands += "\tLOOT\n";
 		if (commandSet.contains(4))
 			availableCommands += "\tDISARM [DIRECTION]\n";
@@ -127,33 +124,21 @@ public class Game {
 		return availableCommands;
 	}
 
-
-	// Turn Handle Methods
 	public void handleAttack(Compass direction) {
 		player.attack(direction);
-	
 		endTurn();
 	}
 
 	public void handleMove(Compass direction) {
-
-		Tile playerTile = player.getTile();
-		Room playerRoom = map.getPlayerRoom();
+		Room playerRoom = this.map.getPlayerRoom();
+		Tile playerTile = this.player.getTile();
 		int playerX = playerTile.getX();
 		int playerY = playerTile.getY();
 
 		Tile newTile = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
-
-		EmptyTile newEmptyTile = new EmptyTile();
-		// reset old tile
-		playerTile.setObject(newEmptyTile);
-		newEmptyTile.setTile(playerTile);
-
-		// set new player tile
-		// TODO what if chest is in that tile????
-		player.setTile(newTile);
-		newTile.setObject(player);
-	
+		playerTile.removeObjects();
+		newTile.addObject(this.player);
+		this.player.setTile(newTile);
 		playerRoom.setPlayerTile(playerTile);
 
 		endTurn();
@@ -166,54 +151,37 @@ public class Game {
 	}
 
 	public void handleDisarmTrap(Compass direction) {
-
 		Tile playerTile = player.getTile();
 		Room playerRoom = map.getPlayerRoom();
 		int playerX = playerTile.getX();
 		int playerY = playerTile.getY();
 
-		Tile tileTrap = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
-		
-		if (!tileTrap.getObject().isTrap())
-			return;
+		Tile tile = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
+		Trap trap = tile.getTrap();
+		if(trap == null || !trap.isDetected()) return; // TODO: pretend like there's no trap there
 
-		Trap trap = (Trap) tileTrap.getObject();
-
-		if (trap.isDetected())
-			trap.disarmAttempt();
-	
+		trap.disarmAttempt();
 		endTurn();
 	}
 
 	public List<InventoryElement> handleOpenChest() {
-
-		if (player.getTile().hasChest()) {
-			Chest tileChest = (Chest) player.getTile().getObject();
-
-			return tileChest.loot();
-		}
-
-		return null; // no chest on tile
+		Chest chest = player.getTile().getChest();
+		if(chest == null) return null;
+		return chest.getContents();
 	}
 
 	public List<InventoryElement> handlePickupItem(int index) {
-		Chest tileChest = (Chest) player.getTile().getObject();
-		List<InventoryElement> chestContents = tileChest.getContents();
+		Chest chest = player.getTile().getChest();
+		if(chest == null) return null;
 
-		if (chestContents.size() != 0) {
-			player.pickupItem(chestContents.get(index));
-			chestContents.remove(index);
-		}
-
-		return chestContents;
+		player.pickupItem(chest.getContents().get(index));
+		return chest.getContents();
 	}
 
 	public void handleCloseChest() {
 		endTurn();
 	}
 
-
-	// Inventory Handle Methods
 	public String handleViewInventory() {
 		return player.getInventory().toString();
 	}
@@ -284,11 +252,9 @@ public class Game {
 		clock.completeTurn();
 	}
 
-	public void generateNewMap() {
-		this.map = new Map();
+	public Map handleLoadMap(String uri) {
+		this.map = progressDB.load(uri);
+		return this.map;
 	}
 
-	public Map handleLoadMap(String uri) {
-		return progressDB.load(uri);
-	}
 }

@@ -6,29 +6,18 @@ import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.inventory.InventoryElement;
 
-public class PickupItemAction implements Action<String> {
+public class PickupItemAction implements Action<List<InventoryElement>> {
 
-	private Game receiver;
-	private int index;
+	private final Game receiver;
+	private final int index;
 
 	public PickupItemAction(Game game, int index) {
-		receiver = game;
+		this.receiver = game;
 		this.index = index;
 	}
 
 	@Override
-	public String execute() {
-		List<InventoryElement> chestContents = receiver.handlePickupItem(index);
-
-		String chestString = "";
-		if (chestContents.size() == 0)
-			chestString += "Chest is empty";
-		else {
-			int chestIndex = 0;
-			for (InventoryElement content : chestContents)
-				chestString += chestIndex++ + ". " + content.getName() + "\n";
-		}
-
-		return chestString;
+	public List<InventoryElement> execute() {
+		return this.receiver.handlePickupItem(this.index);
 	}
 }

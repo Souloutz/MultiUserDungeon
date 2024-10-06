@@ -29,9 +29,4 @@ public class EmptyTile implements TileObject {
 		return true;
 	}
 
-	@Override
-	public boolean isTrap() {
-		return false;
-	}
-
 }

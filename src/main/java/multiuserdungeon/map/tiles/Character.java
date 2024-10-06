@@ -1,8 +1,6 @@
 package multiuserdungeon.map.tiles;
 
-import multiuserdungeon.map.Compass;
-
-import java.util.ArrayList;
+import java.util.List;
 
 import multiuserdungeon.map.*;
 
@@ -28,17 +26,17 @@ public abstract class Character implements TileObject {
 	}
 
 	public void attack(Compass compass) {
-		ArrayList<TileObject> objects = getTile().getTile(compass).getObjects();
-		for (TileObject object : objects){
-			if (object instanceof Character) {
-				Character character = (Character)object;
-				character.attacked(compass.getOpposite(),getAttack());
+		List<TileObject> objects = getTile().getTile(compass).getObjects();
+		for (TileObject object : objects) {
+			if (object instanceof Character character) {
+				character.attacked(getAttack());
 			}
 		}
 	}
 
-	public void attacked(Compass direction, int attack) {
-		this.health = health - attack;
+	public void attacked(int attack) {
+		this.health -= Math.max(1, attack - getDefense());
+		this.health = Math.max(0, this.health);
 	}
 
 	public String getDescription() {

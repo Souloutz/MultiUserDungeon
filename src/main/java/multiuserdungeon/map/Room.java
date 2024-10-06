@@ -1,27 +1,32 @@
 package multiuserdungeon.map;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.map.tiles.Player;
 
-public class Room implements Iterable<Tile> {
+public class Room {
 
-	private int length;
-	private int width;
-	private HashMap<Compass,Tile> doorways;
-	private HashMap<Tile,Room> connections;
-	private Tile[][] layout;
+	private final int length;
+	private final int width;
+	private final Map<Compass, Tile> doorways;
+	private final Map<Tile, Room> connections;
+	private final Tile[][] layout;
+	private Tile playerTile;
 
 	public Room(int width, int length) {
-		layout = new Tile[width][length];
 		this.length = length;
 		this.width = width;
-		this.doorways = new HashMap<Compass,Tile>();
-		this.connections = new HashMap<Tile,Room>();
+		this.doorways = new HashMap<>();
+		this.connections = new HashMap<>();
+		this.layout = new Tile[width][length];
+		this.playerTile = null;
+
 		for (int x = 0; x < width; x++){
 			for (int y = 0; y < length; y++){
-				layout[x][y] = new Tile(x,y,new HashMap<>());
+				layout[x][y] = new Tile(x,y);
 			}
 		}
 		for (int x = 0; x < width; x++) {
@@ -35,78 +40,60 @@ public class Room implements Iterable<Tile> {
 		}
 	}
 
-	public RoomIterator iterator() {
-		return new RoomIterator(this);
+	public int getWidth() {
+		return this.width;
+	}
+
+	public int getLength() {
+		return this.length;
+	}
+
+	public Map<Compass, Tile> getDoorways() {
+		return doorways;
+	}
+
+	public Map<Tile, Room> getConnections() {
+		return connections;
 	}
 
 	public Tile getTile(int x, int y) {
 		try {
-			return layout[x][y];
+			return this.layout[x][y];
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
 	}
 
-	public int getWidth() {
-		return width;
+	public Tile[][] getLayout() {
+		return this.layout;
 	}
 
-	public int getLength() {
-		return length;
+	private Tile[] getAllTiles() {
+		return Arrays.stream(this.layout).flatMap(Arrays::stream).toArray(Tile[]::new);
 	}
 
-	//Whole function will be better utilized once we are reading from json files
+	public Tile getPlayerTile() {
+		return this.playerTile;
+	}
+
+	public void setPlayerTile(Tile playerTile) {
+		this.playerTile = playerTile;
+	}
+
+	// Whole function will be better utilized once we are reading from json files
 	public void populate(TileObject[][] tiles) {
+		// TODO
 		// to fill with random TileObjects
 	}
 
 	public void handleExitRoom(Compass direction) {
 		Player player = Game.getInstance().getPlayer();
-		Room newRoom = connections.get(doorways.get(direction));
+		Room newRoom = this.connections.get(this.doorways.get(direction));
 		Tile oldTile = player.getTile();
 		Tile newTile = newRoom.getDoorways().get(direction.getOpposite());
 		oldTile.getObjects().remove(player);
 		newTile.getObjects().add(player);
 		player.setTile(newTile);
-	}
-
-	public Tile getPlayerTile() {
-		for (Tile tile : this) {
-			if (tile.hasPlayer()) {
-				return tile;
-			}
-		}
-		return null;
-	}
-
-	public void setPlayerTile(Player player, int x, int y) {
-		Tile tile = getTile(x,y);
-		tile.addObject(player);
-	}
-
-	public HashMap<Compass,Tile> getDoorways () {
-		return doorways;
-	}
-
-	public HashMap<Tile, Room> getConnections() {
-		return connections;
-	}
-
-	public boolean isDoorway (Tile tile) {
-		for(Tile doorway : doorways.values()) {
-			if (tile == doorway) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public Tile[][] getLayout() {
-		return layout;
-	}
-
-	public Map<Tile, Room> getConnections() {
-		return null;
 	}
 
 	@Override
@@ -121,7 +108,7 @@ public class Room implements Iterable<Tile> {
 	@Override
 	public String toString() {
 		String room = "";
-		for (Tile tile : this) {
+		for (Tile tile : getAllTiles()) {
 			room += tile + ", ";
 			if (tile.x == width - 1) {
 				room += "\n";
@@ -129,4 +116,5 @@ public class Room implements Iterable<Tile> {
 		}
 		return room;
 	}
+
 }

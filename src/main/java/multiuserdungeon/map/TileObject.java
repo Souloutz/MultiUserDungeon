@@ -9,7 +9,5 @@ public interface TileObject {
 	void setTile(Tile tile);
 
 	boolean passable();
-
-	boolean isTrap();
     
 }

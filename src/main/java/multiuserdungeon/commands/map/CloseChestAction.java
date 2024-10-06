@@ -5,15 +5,16 @@ import multiuserdungeon.commands.Action;
 
 public class CloseChestAction implements Action<Void> {
     
-    Game receiver;
+    private final Game receiver;
 
     public CloseChestAction(Game game) {
-        receiver = game;
+        this.receiver = game;
     }
 
     @Override
     public Void execute() {
-        receiver.handleCloseChest();
+        this.receiver.handleCloseChest();
         return null;
     }
+
 }

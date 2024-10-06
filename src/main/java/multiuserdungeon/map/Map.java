@@ -8,7 +8,6 @@ import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.EmptyTile;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
-import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.inventory.BuffStat;
 import multiuserdungeon.inventory.InventoryElement;
@@ -26,7 +25,7 @@ public class Map {
 	Room goal;
 
 	public Map(Clock time) {
-		this.rooms = new HashMap<Room,HashMap<Compass,Room>>();
+		this.rooms = new HashMap<>();
 		this.time = time;
 		
 

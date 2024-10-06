@@ -144,9 +144,4 @@ public class Player extends Character {
 		return false;
 	}
 
-	@Override
-	public boolean isTrap() {
-		return false;
-	}
-
 }

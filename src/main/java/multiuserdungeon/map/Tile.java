@@ -1,26 +1,36 @@
 package multiuserdungeon.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import multiuserdungeon.map.tiles.*;
+import multiuserdungeon.map.tiles.trap.Trap;
 
 public class Tile {
 
-	
-	private ArrayList<TileObject> objects;
-	private Map<Compass,Tile> adjacent;
-	public int x;
-	public int y;
+	public final int x;
+	public final int y;
+	private List<TileObject> objects;
+	private Map<Compass, Tile> adjacent;
 
-	public Tile(int x, int y, Map<Compass,Tile> adjacent) {
+	public Tile(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.objects = new ArrayList<TileObject>();
-		this.adjacent = adjacent;
-
+		this.objects = new ArrayList<>();
+		this.adjacent = new HashMap<>();
 	}
 
-	public Tile getTile(Compass compass){
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
+	}
+
+	public Tile getTile(Compass compass) {
 		int i = 0;
 		for (Compass dir : Compass.values()){
 			if (dir == compass){
@@ -31,68 +41,23 @@ public class Tile {
 		return null;
 	}
 
-	public ArrayList<TileObject> getObjects() {
-		return objects;
+	public List<TileObject> getObjects() {
+		return this.objects;
 	}
 
 	public void addObject(TileObject object) {
-		objects.add(object);
+		this.objects.add(object);
 	}
 
 	public void removeObjects() {
-		objects = new ArrayList<TileObject>();
-	}
-
-	public String getObjectName() {
-		String names = "";
-		for (TileObject object: objects) {
-			names += object.getName();
-		}
-		return names;
-	}
-
-	public boolean hasPlayer() {
-		for (TileObject object: objects) {
-			if (object instanceof Player) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean hasTrap() {
-		for (TileObject object: objects) {
-			if (object.isTrap()) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean hasNPC() {
-		for (TileObject object: objects) {
-			if (object instanceof NPC) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public boolean hasChest() {
-		for (TileObject object: objects) {
-			if (object instanceof Chest) {
-				return true;
-			}
-		}
-
-		return false;
+		this.objects = new ArrayList<>();
+		EmptyTile empty = new EmptyTile();
+		empty.setTile(this);
+		this.objects.add(empty);
 	}
 
 	public boolean passable() {
-		for (TileObject object: objects) {
+		for (TileObject object : objects) {
 			if (!object.passable()) {
 				return false;
 			}
@@ -101,20 +66,56 @@ public class Tile {
 		return true;
 	}
 
-	public ArrayList<Tile> getAdjacent() {
-		ArrayList<Tile> tiles = new ArrayList<>();
-		for (Compass compass : Compass.values()) {
-			tiles.add(adjacent.get(compass));
-		}
-		return tiles;
+	public List<Tile> getAdjacent() {
+		return this.adjacent.values().stream().toList();
 	}
 
-	public void setAdjacent(Map<Compass,Tile> adjacent) {
+	public void setAdjacent(Map<Compass, Tile> adjacent) {
 		this.adjacent = adjacent;
 	}
 
-	public boolean isAdjacent(Tile tile){
+	public boolean isAdjacent(Tile tile) {
 		return adjacent.containsValue(tile);
 	}
-    
+
+	public Player getPlayer() {
+		for (TileObject object : objects) {
+			if (object instanceof Player player) {
+				return player;
+			}
+		}
+
+		return null;
+	}
+
+	public Trap getTrap() {
+		for (TileObject object : objects) {
+			if (object instanceof Trap trap) {
+				return trap;
+			}
+		}
+
+		return null;
+	}
+
+	public NPC getNPC() {
+		for (TileObject object : objects) {
+			if (object instanceof NPC npc) {
+				return npc;
+			}
+		}
+
+		return null;
+	}
+
+	public Chest getChest() {
+		for (TileObject object : objects) {
+			if (object instanceof Chest chest) {
+				return chest;
+			}
+		}
+
+		return null;
+	}
+
 }

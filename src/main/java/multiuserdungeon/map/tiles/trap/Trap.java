@@ -55,9 +55,4 @@ public class Trap implements TileObject {
 		return true;
 	}
 
-	@Override
-	public boolean isTrap() {
-		return true;
-	}
-
 }

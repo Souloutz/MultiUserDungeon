@@ -53,9 +53,4 @@ public class NPC extends Character {
 		return false;
 	}
 
-	@Override
-	public boolean isTrap() {
-		return false;
-	}
-
 }
