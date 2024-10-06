@@ -12,6 +12,15 @@ public class Day implements Time {
 		return this.clock;
 	}
 
+	@Override
+	public void handle() {
+		if(this.clock.getTurn() >= 9) {
+			this.clock.setCurrentTime(new Night(this.clock));
+			this.clock.resetTurn();
+		} else {
+			this.clock.incrementTurn();
+		}
+	}
 
 	@Override
 	public boolean isDay() {
@@ -29,7 +38,7 @@ public class Day implements Time {
 	@Override
 	public String toString() {
 		int turnsToFlip = 9 - this.clock.getTurn();
-		return "Day : " + turnsToFlip;
+		return "Day: " + turnsToFlip;
 	}
 
 

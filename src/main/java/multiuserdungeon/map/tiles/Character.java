@@ -56,10 +56,7 @@ public abstract class Character implements TileObject {
 	}
 
 	public void gainHealth(int health) {
-		this.health += health;
-		if (this.health > maxHealth){
-			this.health = maxHealth;
-		}
+		this.health += Math.max(this.maxHealth - this.health, health);
 	}
 
 	abstract int getHealth();

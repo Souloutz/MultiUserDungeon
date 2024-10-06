@@ -40,7 +40,7 @@ public class UI {
 	// alternative to returning object type?
 	public static Object parseInput(String input) {
 		String[] parsedInput = input.split(" ");
-		Object commandAction = null;
+		Object commandAction;
 
 		String commandString = parsedInput[0].toLowerCase();
 
@@ -82,7 +82,7 @@ public class UI {
 				break;
 
 			case "equip":
-				commandAction = new EquipItemAction(game, Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2]), Boolean.parseBoolean(parsedInput[3]));
+				commandAction = new EquipItemAction(game, Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2]));
 				break;
 
 			case "unequip":
@@ -116,19 +116,17 @@ public class UI {
 		return commandAction;
 	}
 
-	public static void main(String[] commandLine) {
+	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
+
 		System.out.println("Hello adventurer! What is your name?");
 		String playerName = scanner.nextLine();
 
 		System.out.println("Describe your character in a sentence.");
 		String playerDescription = scanner.nextLine();
 
-
-		Player player = new Player(playerName, playerDescription);
-		ProgressDB progressDB = new JSONProgressDB();
-
-		game = new Game(player, progressDB);
+		game = new Game(new Player(playerName, playerDescription));
+		game.setProgressDB(new JSONProgressDB());
 
         while (!game.hasGameEnd()) {
 			System.out.println(displayInformation());
@@ -153,4 +151,5 @@ public class UI {
 
 		scanner.close();
 	}
+
 }

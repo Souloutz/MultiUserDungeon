@@ -1,6 +1,7 @@
 package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.map.tiles.Player;
 
 public class Food implements InventoryElement {
 
@@ -34,6 +35,17 @@ public class Food implements InventoryElement {
 	@Override
 	public int getOccupancy() {
 		return 1;
+	}
+
+	@Override
+	public boolean handleEquip(Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		player.useFood(this);
+		return true;
 	}
 
 	public int getHealth() {

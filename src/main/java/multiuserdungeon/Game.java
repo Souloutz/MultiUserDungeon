@@ -6,8 +6,6 @@ import java.util.Set;
 
 import multiuserdungeon.clock.Clock;
 import multiuserdungeon.inventory.InventoryElement;
-import multiuserdungeon.inventory.elements.Buff;
-import multiuserdungeon.inventory.elements.Food;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.Map;
 import multiuserdungeon.map.Room;
@@ -20,22 +18,21 @@ import multiuserdungeon.progress.ProgressDB;
 public class Game {
 
 	private static Game instance;
-	private static Clock clock;
 	private final Player player;
+	private final Clock clock;
 	private ProgressDB progressDB;
 	private Map map;
 	private boolean gameQuit;
 
-	public Game(Player player, ProgressDB progressDB) {
+	public Game(Player player) {
 		instance = this;
-		clock = new Clock();
 		this.player = player;
-		this.progressDB = progressDB;
-		map = null;
-		gameQuit = false;
+		this.clock = new Clock();
+		this.progressDB = null;
+		this.map = null;
+		this.gameQuit = false;
 	}
 
-	// Getter Methods
 	public static Game getInstance() {
 		return instance;
 	}
@@ -45,16 +42,12 @@ public class Game {
 	}
 
 	public Map getMap() {
-		return map;
+		return this.map;
 	}
 
 	// Setter Methods
 	public void setProgressDB(ProgressDB progressDB) {
 		this.progressDB = progressDB;
-	}
-
-	private void setGameQuit(boolean hasGameQuit) {
-		gameQuit = hasGameQuit;
 	}
 
 	// TODO get the direction from player tile?
@@ -194,54 +187,38 @@ public class Game {
 		return player.getInventory().getItem(bagPos, itemPos).toString();
 	}
 
-	public void handleEquipItem(int bagPos, int itemPos, boolean isWeapon) {
-		InventoryElement item = player.getInventory().getItem(bagPos, itemPos);
-		
-		// Item is weapon
-		player.equipWeapon(item);
-
-		// Item is armor
-		player.equipArmor(item);
+	public boolean handleEquipItem(int bagPos, int itemPos) {
+		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
+		return item.handleEquip(this.player);
 	}
 
-	public void handleUnequipItem(boolean isWeapon) {
-		InventoryElement weapon = player.getEquippedWeapon();
-		InventoryElement armor = player.getEquippedArmor();
-
-		// Equipped item is weapon
-		if (weapon != null && isWeapon)
-			player.unequipWeapon();
-
-		// Equipped item is armor
-		if (armor != null && !isWeapon)
-			player.getEquippedArmor();
+	public boolean handleUnequipItem(boolean isWeapon) {
+		return isWeapon ? this.player.unequipWeapon() : this.player.unequipArmor();
 	}
 
 	public void handleUseItem(int bagPos, int itemPos) {
 		InventoryElement item = player.getInventory().getItem(bagPos, itemPos); 
+		boolean success = item.handleUse(this.player);
 
-		// add isBuff or isFood methods to InventoryElement?
-		if (item instanceof Buff)
-			player.useBuff(bagPos, itemPos);
-
-		else if (item instanceof Food)
-			player.useFood(bagPos, itemPos);
-
-		endTurn();
+		if(success) {
+			handleDestroyItem(bagPos, itemPos);
+			endTurn();
+		} else {
+			// TODO: return not usable
+		}
 	}
 
-	public void handleDestroyItem(int bagPos, int itemPos) {
-		player.destroyItem(bagPos, itemPos);
+	public boolean handleDestroyItem(int bagPos, int itemPos) {
+		return player.destroyItem(bagPos, itemPos);
 	}
 
 	public void handleSwapBag(int sourceBagPos, int destBagPos, int destItemPos) {
 		player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
 	}
 
-	// Game Methods
 	public void handleQuitGame() {
+		this.gameQuit = true;
 		progressDB.save(map);
-		setGameQuit(true);
 	}
 
 	public boolean hasGameEnd() {
@@ -249,7 +226,7 @@ public class Game {
 	}
 	
 	private void endTurn() {
-		clock.completeTurn();
+		this.clock.completeTurn();
 	}
 
 	public Map handleLoadMap(String uri) {

@@ -19,7 +19,7 @@ public class DetectedTrap implements TrapStatus {
 	@Override
 	public void handleDisarmAttempt() {
 		if(Math.random() <= 0.5) {
-			Game.getInstance().getPlayer().attacked(Compass.NORTH, this.trap.getDamage());
+			Game.getInstance().getPlayer().attacked(this.trap.getDamage());
 		}
 
 		this.trap.setStatus(new DisarmedTrap());

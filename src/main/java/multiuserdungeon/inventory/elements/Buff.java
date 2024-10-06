@@ -2,6 +2,7 @@ package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.BuffStat;
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.map.tiles.Player;
 
 public class Buff implements InventoryElement {
 
@@ -37,6 +38,17 @@ public class Buff implements InventoryElement {
 	@Override
 	public int getOccupancy() {
 		return 1;
+	}
+
+	@Override
+	public boolean handleEquip(Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		player.useBuff(this);
+		return true;
 	}
 
 	public BuffStat getStat() {

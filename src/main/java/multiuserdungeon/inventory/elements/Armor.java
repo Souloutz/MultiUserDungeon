@@ -1,6 +1,7 @@
 package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.map.tiles.Player;
 
 public class Armor implements InventoryElement {
 
@@ -34,6 +35,17 @@ public class Armor implements InventoryElement {
 	@Override
 	public int getOccupancy() {
 		return 1;
+	}
+
+	@Override
+	public boolean handleEquip(Player player) {
+		player.equipArmor(this);
+		return true;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		return false;
 	}
 
 	public int getDefense() {

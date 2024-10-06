@@ -1,6 +1,7 @@
 package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.map.tiles.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ public class Bag implements InventoryElement {
     private final int goldValue;
     private final int capacity;
 	private boolean isEquipped;
-	private final List<InventoryElement> items;
+	private List<InventoryElement> items;
 
 	public Bag(String name, String description, int goldValue, int capacity) {
 		this.name = name;
@@ -25,18 +26,18 @@ public class Bag implements InventoryElement {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		int totalGV = goldValue;
-		for(InventoryElement item : items) {
+		int totalGV = this.goldValue;
+		for(InventoryElement item : this.items) {
 			totalGV += item.getGoldValue();
 		}
 		return totalGV;
@@ -44,44 +45,48 @@ public class Bag implements InventoryElement {
 
 	@Override
 	public int getOccupancy() {
-		if(isEquipped) {
-			return items.size();
+		if(this.isEquipped) {
+			return this.items.size();
 		}
 		return 1;
 	}
 
+	@Override
+	public boolean handleEquip(Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		return false;
+	}
+
 	public int getCapacity() {
-		return capacity;
-	}
-
-	public InventoryElement getItem(int itemPos) {
-		return items.get(itemPos);
-	}
-
-	public List<InventoryElement> items() {
-		return items;
-	}
-
-	public boolean itemExists(int itemPos){
-		return (itemPos < items.size() && itemPos >= 0);
+		return this.capacity;
 	}
 
 	public void setIsEquipped(boolean equipped){
-		isEquipped = equipped;
+		this.isEquipped = equipped;
+	}
+
+	public List<InventoryElement> items() {
+		return this.items;
+	}
+
+	public InventoryElement getItem(int itemPos) {
+		return this.items.get(itemPos);
 	}
 
 	public void addItem(InventoryElement item) {
-		if(items.size()>=capacity){ 
-			return; //returns if bag is full
-		}
-		items.add(item);
+		this.items.add(item);
 	}
 
 	public void removeItem(int itemPos) {
-		if(itemExists(itemPos)){ 
-			items.remove(itemPos);
-		}
-		return; //return if item position is invalid
+		this.items.remove(itemPos);
+	}
+
+	public void clearItems() {
+		this.items = new ArrayList<>();
 	}
 
 	/*
@@ -91,16 +96,16 @@ public class Bag implements InventoryElement {
 	 */
 	public String listItems(){
 		String itemsString = "";
-		for(int i =0; i<items.size()-1;i++) {
-			itemsString = items.get(i).getName() + ", ";
+		for(int i =0; i < this.items.size()-1;i++) {
+			itemsString = this.items.get(i).getName() + ", ";
 		}
-		itemsString += items.get(items.size()-1).getName();
+		itemsString += this.items.get(this.items.size() - 1).getName();
 		return itemsString;
 	}
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\nItems: " + listItems() + "\nGold Value: " + getGoldValue()+ "\nOccupancy: " + getOccupancy() + "/" + capacity;
+		return this.name + "\n" + this.description + "\nItems: " + listItems() + "\nGold Value: " + getGoldValue()+ "\nOccupancy: " + getOccupancy() + "/" + this.capacity;
 	}
 	
 }

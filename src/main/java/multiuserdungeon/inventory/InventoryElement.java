@@ -1,5 +1,7 @@
 package multiuserdungeon.inventory;
 
+import multiuserdungeon.map.tiles.Player;
+
 public interface InventoryElement {
 
 	String getName();
@@ -9,5 +11,9 @@ public interface InventoryElement {
 	int getGoldValue();
 
 	int getOccupancy();
+
+	boolean handleEquip(Player player);
+
+	boolean handleUse(Player player);
     
 }

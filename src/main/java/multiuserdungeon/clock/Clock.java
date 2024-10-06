@@ -15,7 +15,7 @@ public class Clock {
 	}
 
 	public void completeTurn() {
-		this.time.handle(this);
+		this.time.handle();
 	}
 
 	public void incrementTurn() {
