@@ -1,41 +1,51 @@
 package multiuserdungeon.map.tiles;
 
+import multiuserdungeon.Game;
+import multiuserdungeon.clock.Night;
 import multiuserdungeon.map.Tile;
 
 public class NPC extends Character {
 
-	public NPC(String name, String description, boolean nocturnal) {
+	private boolean nocturnal;
+	private int nightBonus;
+
+	public NPC(String name, String description, boolean nocturnal, int nightBonus) {
 		super(name, description, 0, 0, 0);
+		this.nocturnal = nocturnal;
+		this.nightBonus = nightBonus;
 	}
 
 	@Override
 	int getHealth() {
-		return 0;
+		return health;
 	}
 
 	@Override
 	int getDefense() {
-		return 0;
+		return defense;
 	}
 
 	@Override
 	int getAttack() {
-		return 0;
+		if (Game.getInstance().getTime() instanceof Night && nocturnal) {
+			return attack + nightBonus;
+		}
+		return attack;
 	}
 
 	@Override
 	public String getName() {
-		return "";
+		return name;
 	}
 
 	@Override
 	public Tile getTile() {
-		return null;
+		return tile;
 	}
 
 	@Override
 	public void setTile(Tile tile) {
-
+		this.tile = tile;
 	}
 
 	@Override
