@@ -12,11 +12,10 @@ public class Tile {
 	public int x;
 	public int y;
 
-	public Tile(int x, int y, TileObject object, Map<Compass,Tile> adjacent) {
+	public Tile(int x, int y, Map<Compass,Tile> adjacent) {
 		this.x = x;
 		this.y = y;
 		this.objects = new ArrayList<TileObject>();
-		this.objects.add(object);
 		this.adjacent = adjacent;
 
 	}
@@ -40,8 +39,26 @@ public class Tile {
 		objects.add(object);
 	}
 
+	public void removeObjects() {
+		objects = new ArrayList<TileObject>();
+	}
+
 	public String getObjectName() {
-		return objects.get(0).getName();
+		String names = "";
+		for (TileObject object: objects) {
+			names += object.getName();
+		}
+		return names;
+	}
+
+	public boolean hasPlayer() {
+		for (TileObject object: objects) {
+			if (object instanceof Player) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public boolean hasTrap() {
@@ -85,7 +102,15 @@ public class Tile {
 	}
 
 	public ArrayList<Tile> getAdjacent() {
-		return null;
+		ArrayList<Tile> tiles = new ArrayList<>();
+		for (Compass compass : Compass.values()) {
+			tiles.add(adjacent.get(compass));
+		}
+		return tiles;
+	}
+
+	public void setAdjacent(Map<Compass,Tile> adjacent) {
+		this.adjacent = adjacent;
 	}
 
 	public boolean isAdjacent(Tile tile){

@@ -1,6 +1,9 @@
 package multiuserdungeon.map.tiles;
 
 import multiuserdungeon.map.Compass;
+
+import java.util.ArrayList;
+
 import multiuserdungeon.map.*;
 
 public abstract class Character implements TileObject {
@@ -15,7 +18,6 @@ public abstract class Character implements TileObject {
 	int attack;
 	int defense;
 
-
 	public Character(String name, String description, int baseHealth, int baseAttack, int baseDefense) {
 		this.name = name;
 		this.description = description;
@@ -26,19 +28,25 @@ public abstract class Character implements TileObject {
 	}
 
 	public void attack(Compass compass) {
-
+		ArrayList<TileObject> objects = getTile().getTile(compass).getObjects();
+		for (TileObject object : objects){
+			if (object instanceof Character) {
+				Character character = (Character)object;
+				character.attacked(compass.getOpposite(),getAttack());
+			}
+		}
 	}
 
 	public void attacked(Compass direction, int attack) {
-
+		this.health = health - attack;
 	}
 
 	public String getDescription() {
-		return null;
+		return description;
 	}
 
 	public int getBaseHealth() {
-		return 0;
+		return maxHealth;
 	}
 
 	public int getBaseAttack() {
