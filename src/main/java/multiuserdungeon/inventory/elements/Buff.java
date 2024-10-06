@@ -5,41 +5,51 @@ import multiuserdungeon.inventory.InventoryElement;
 
 public class Buff implements InventoryElement {
 
-	public Buff(String name, String description, int goldValue, BuffStat stat, int statAmount) {
+	private final String name;
+    private final String description;
+    private final int goldValue;
+    private final BuffStat stat;
+    private final int statAmount;
 
+	public Buff(String name, String description, int goldValue, BuffStat stat, int statAmount) {
+		this.name = name;
+        this.description = description;
+        this.goldValue = goldValue;
+        this.stat = stat;
+        this.statAmount = statAmount;
 	}
 
 	@Override
 	public String getName() {
-		return "";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "";
+		return description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return 0;
+		return goldValue;
 	}
 
 	@Override
 	public int getOccupancy() {
-		return 0;
+		return 1;
 	}
 
 	public BuffStat getStat() {
-		return null;
+		return stat;
 	}
 
 	public int getStatAmount() {
-		return 0;
+		return statAmount;
 	}
 
 	@Override
 	public String toString() {
-		return "";
+		return name + "\n" + description + "\nGold Value: " + goldValue + "\n" + stat.toString() + " Points: +" + statAmount;
 	}
 
 }

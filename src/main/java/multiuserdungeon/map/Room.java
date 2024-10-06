@@ -105,6 +105,19 @@ public class Room implements Iterable<Tile> {
 		return layout;
 	}
 
+	public Map<Tile, Room> getConnections() {
+		return null;
+	}
+
+	@Override
+	public boolean equals(Object otherRoom) {
+		if (!(otherRoom instanceof Room))
+			return false;
+
+		// TODO
+		return true;
+	}
+
 	@Override
 	public String toString() {
 		String room = "";
@@ -116,5 +129,4 @@ public class Room implements Iterable<Tile> {
 		}
 		return room;
 	}
-
 }

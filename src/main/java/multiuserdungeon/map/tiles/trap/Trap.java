@@ -5,49 +5,59 @@ import multiuserdungeon.map.TileObject;
 
 public class Trap implements TileObject {
 
-	public Trap(int damage) {
+	private Tile tile;
+	private final int damage;
+	private TrapStatus status;
 
+	public Trap(Tile tile, int damage) {
+		this.tile = tile;
+		this.damage = damage;
+		this.status = new UndetectedTrap(this);
 	}
 
 	public int getDamage() {
-		return 0;
+		return this.damage;
 	}
 
 	public void detected() {
-
+		this.status.handleDetected();
 	}
 
 	public void disarmAttempt() {
+		this.status.handleDisarmAttempt();
+	}
 
+	public boolean isDetected() {
+		return this.status.isDetected();
 	}
 
 	public void setStatus(TrapStatus status) {
-
+		this.status = status;
 	}
 
 	@Override
 	public String getName() {
-		return "";
+		return "Trap";
 	}
 
 	@Override
 	public Tile getTile() {
-		return null;
+		return this.tile;
 	}
 
 	@Override
 	public void setTile(Tile tile) {
-
+		this.tile = tile;
 	}
 
 	@Override
 	public boolean passable() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isTrap() {
-		return false;
+		return true;
 	}
 
 }

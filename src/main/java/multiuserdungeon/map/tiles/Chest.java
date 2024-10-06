@@ -49,5 +49,12 @@ public class Chest implements TileObject {
 	public boolean isTrap() {
 		return false;
 	}
+	
+	public List<InventoryElement> loot() {
+		return null; // TODO
+	}
 
+	public List<InventoryElement> getContents() {
+		return contents; 
+	}
 }

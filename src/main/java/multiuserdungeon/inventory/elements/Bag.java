@@ -2,59 +2,105 @@ package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.InventoryElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Bag implements InventoryElement {
 
+	private final String name;
+    private final String description;
+    private final int goldValue;
+    private final int capacity;
+	private boolean isEquipped;
 	private final List<InventoryElement> items;
 
 	public Bag(String name, String description, int goldValue, int capacity) {
-		this.items = null; // TODO: change this
+		this.name = name;
+		this.description = description;
+		this.goldValue = goldValue;
+		this.capacity = capacity;
+		this.isEquipped = false;
+		this.items = new ArrayList<>();
 	}
 
 	@Override
 	public String getName() {
-		return "";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "";
+		return description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return 0;
+		int totalGV = goldValue;
+		for(InventoryElement item : items) {
+			totalGV += item.getGoldValue();
+		}
+		return totalGV;
 	}
 
 	@Override
 	public int getOccupancy() {
-		return 0;
+		if(isEquipped) {
+			return items.size();
+		}
+		return 1;
 	}
 
 	public int getCapacity() {
-		return 0;
-	}
-
-	public void addItem(InventoryElement item) {
-
-	}
-
-	public void removeItem(int itemPos) {
-
+		return capacity;
 	}
 
 	public InventoryElement getItem(int itemPos) {
-		return null;
+		return items.get(itemPos);
 	}
 
 	public List<InventoryElement> items() {
-		return null;
+		return items;
+	}
+
+	public boolean itemExists(int itemPos){
+		return (itemPos < items.size() && itemPos >= 0);
+	}
+
+	public void setIsEquipped(boolean equipped){
+		isEquipped = equipped;
+	}
+
+	public void addItem(InventoryElement item) {
+		if(items.size()>=capacity){ 
+			return; //returns if bag is full
+		}
+		items.add(item);
+	}
+
+	public void removeItem(int itemPos) {
+		if(itemExists(itemPos)){ 
+			items.remove(itemPos);
+		}
+		return; //return if item position is invalid
+	}
+
+	/*
+	 * displays all items in the bag's names seperated by commas
+	 * e.g.)
+	 * Apple, Sword, Spear
+	 */
+	public String listItems(){
+		String itemsString = "";
+		for(int i =0; i<items.size()-1;i++) {
+			itemsString = items.get(i).getName() + ", ";
+		}
+		itemsString += items.get(items.size()-1).getName();
+		return itemsString;
 	}
 
 	@Override
 	public String toString() {
-		return "";
+		return name + "\n" + description + "\nItems: " + listItems() + "\nGold Value: " + getGoldValue()+ "\nOccupancy: " + getOccupancy() + "/" + capacity;
 	}
-
+	
 }

@@ -79,6 +79,14 @@ public class Player extends Character {
 		return armor;
 	}
 
+	public void equipWeapon(InventoryElement item) {
+		// TODO
+	}
+
+	public void equipArmor(InventoryElement item) {
+		// TODO
+	}
+
 	public void unequipWeapon() {
 		pickupItem(weapon);
 		weapon = null;
@@ -90,7 +98,7 @@ public class Player extends Character {
 	}
 
 	@Override
-	int getHealth() {
+	public int getHealth() {
 		return 0;
 	}
 

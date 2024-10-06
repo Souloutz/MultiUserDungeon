@@ -170,5 +170,8 @@ public class Map {
 		this.playerLocation = room;
 	}
 
-
+	public boolean playerReachedGoal() {
+		// TODO
+		return getPlayerRoom().equals(getGoal());
+	}
 }

@@ -2,18 +2,23 @@ package multiuserdungeon.map.tiles.trap;
 
 public class DisarmedTrap implements TrapStatus {
 
-	public DisarmedTrap(Trap trap) {
+	public DisarmedTrap() {
 
 	}
 
 	@Override
 	public void handleDetected() {
-
+		// Final state - nothing happens
 	}
 
 	@Override
 	public void handleDisarmAttempt() {
+		// Final state - nothing happens
+	}
 
+	@Override
+	public boolean isDetected() {
+		return true;
 	}
 
 }

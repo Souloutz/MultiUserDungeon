@@ -4,37 +4,45 @@ import multiuserdungeon.inventory.InventoryElement;
 
 public class Food implements InventoryElement {
 
-	public Food(String name, String description, int goldValue, int health) {
+	private final String name;
+    private final String description;
+    private final int goldValue;
+	private final int health;
 
+	public Food(String name, String description, int goldValue, int health) {
+		this.name = name;
+		this.description = description;
+		this.goldValue = goldValue;
+		this.health = health;
 	}
 
 	@Override
 	public String getName() {
-		return "";
+		return name;
 	}
 
 	@Override
 	public String getDescription() {
-		return "";
+		return description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return 0;
+		return goldValue;
 	}
 
 	@Override
 	public int getOccupancy() {
-		return 0;
+		return 1;
 	}
 
 	public int getHealth() {
-		return 0;
+		return health;
 	}
 
 	@Override
 	public String toString() {
-		return "";
+		return name + "\n" + description + "\nGold Value: " + goldValue + "\nHealth Points: +" + health;
 	}
 
 }
