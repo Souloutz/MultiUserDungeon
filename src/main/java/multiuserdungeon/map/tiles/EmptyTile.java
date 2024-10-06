@@ -5,9 +5,11 @@ import multiuserdungeon.map.TileObject;
 
 public class EmptyTile implements TileObject {
 
-	public EmptyTile () {}
-
 	private Tile tile;
+
+	public EmptyTile() {
+		this.tile = null;
+	}
 
 	@Override
 	public String getName() {

@@ -67,10 +67,6 @@ public class Tile {
 		this.adjacent = adjacent;
 	}
 
-	public boolean isAdjacent(Tile tile) {
-		return adjacent.containsValue(tile);
-	}
-
 	public Player getPlayer() {
 		for (TileObject object : objects) {
 			if (object instanceof Player player) {
@@ -81,20 +77,20 @@ public class Tile {
 		return null;
 	}
 
-	public Trap getTrap() {
+	public NPC getNPC() {
 		for (TileObject object : objects) {
-			if (object instanceof Trap trap) {
-				return trap;
+			if (object instanceof NPC npc) {
+				return npc;
 			}
 		}
 
 		return null;
 	}
 
-	public NPC getNPC() {
+	public Trap getTrap() {
 		for (TileObject object : objects) {
-			if (object instanceof NPC npc) {
-				return npc;
+			if (object instanceof Trap trap) {
+				return trap;
 			}
 		}
 

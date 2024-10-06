@@ -24,14 +24,14 @@ public class Room {
 		this.layout = new Tile[width][length];
 		this.playerTile = null;
 
-		for (int x = 0; x < width; x++){
-			for (int y = 0; y < length; y++){
-				layout[x][y] = new Tile(x,y);
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < length; y++){
+				this.layout[x][y] = new Tile(x,y);
 			}
 		}
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < length; y++) {
-				HashMap<Compass,Tile> adjacent = new HashMap<>();
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y < length; y++) {
+				Map<Compass,Tile> adjacent = new HashMap<>();
 				for (Compass compass : Compass.values()) {
 					adjacent.put(compass,getTile(x + compass.getX(), y + compass.getY()));
 				}
@@ -78,12 +78,6 @@ public class Room {
 
 	public void setPlayerTile(Tile playerTile) {
 		this.playerTile = playerTile;
-	}
-
-	// Whole function will be better utilized once we are reading from json files
-	public void populate(TileObject[][] tiles) {
-		// TODO
-		// to fill with random TileObjects
 	}
 
 	public boolean handleExitRoom(Compass direction) {

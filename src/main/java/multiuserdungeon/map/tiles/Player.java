@@ -46,7 +46,8 @@ public class Player extends Character {
 			}
 		}
 
-		return attack;
+		int weaponBuff = this.weapon != null ? this.weapon.getAttack() : 0;
+		return attack + weaponBuff;
 	}
 
 	@Override
@@ -59,7 +60,8 @@ public class Player extends Character {
 			}
 		}
 
-		return defense;
+		int armorBuff = this.armor != null ? this.armor.getDefense() : 0;
+		return defense + armorBuff;
 	}
 
 	public Inventory getInventory() {

@@ -19,17 +19,17 @@ public class Food implements InventoryElement {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return goldValue;
+		return this.goldValue;
 	}
 
 	@Override
@@ -49,12 +49,12 @@ public class Food implements InventoryElement {
 	}
 
 	public int getHealth() {
-		return health;
+		return this.health;
 	}
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\nGold Value: " + goldValue + "\nHealth Points: +" + health;
+		return this.name + "\n" + this.description + "\nGold Value: " + this.goldValue + "\nHealth Points: +" + this.health;
 	}
 
 }

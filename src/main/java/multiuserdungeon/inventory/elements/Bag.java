@@ -96,7 +96,7 @@ public class Bag implements InventoryElement {
 	 */
 	public String listItems(){
 		String itemsString = "";
-		for(int i =0; i < this.items.size()-1;i++) {
+		for(int i = 0; i < this.items.size() - 1;i++) {
 			itemsString = this.items.get(i).getName() + ", ";
 		}
 		itemsString += this.items.get(this.items.size() - 1).getName();

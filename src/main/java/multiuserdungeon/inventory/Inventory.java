@@ -21,18 +21,18 @@ public class Inventory implements InventoryElement {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
 		int totalGV = 0;
-		for(Bag bag : bags) {
+		for(Bag bag : this.bags) {
 			totalGV += bag.getGoldValue();
 		}
 		return totalGV;
@@ -41,7 +41,7 @@ public class Inventory implements InventoryElement {
 	@Override
 	public int getOccupancy() {
 		int totalOccupancy = 0;
-		for(Bag bag : bags) {
+		for(Bag bag : this.bags) {
 			totalOccupancy += bag.getOccupancy();
 		}
 		return totalOccupancy;

@@ -28,9 +28,9 @@ public class Game {
 	public Game(Player player) {
 		instance = this;
 		this.player = player;
+		this.map = new Map();
 		this.clock = new Clock();
 		this.progressDB = null;
-		this.map = null;
 	}
 
 	public static Game getInstance() {
@@ -168,8 +168,8 @@ public class Game {
 	}
 
 	public boolean handleDisarmTrap(Compass direction) {
-		Tile playerTile = player.getTile();
-		Room playerRoom = map.getPlayerRoom();
+		Tile playerTile = this.player.getTile();
+		Room playerRoom = this.map.getPlayerRoom();
 		int playerX = playerTile.getX();
 		int playerY = playerTile.getY();
 
@@ -184,7 +184,7 @@ public class Game {
 	}
 
 	public List<InventoryElement> handleOpenChest() {
-		Chest chest = player.getTile().getChest();
+		Chest chest = this.player.getTile().getChest();
 		if(chest == null) return null;
 		return chest.getContents();
 	}
@@ -249,7 +249,7 @@ public class Game {
 	}
 
 	public boolean isOver() {
-		return player.getHealth() == 0 || map.playerReachedGoal();
+		return this.player.getHealth() == 0 || this.map.playerReachedGoal();
 	}
 
 }

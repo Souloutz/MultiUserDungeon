@@ -5,7 +5,7 @@ import multiuserdungeon.map.TileObject;
 
 public class Obstacle implements TileObject {
 
-	private String name;
+	private final String name;
 	private Tile tile;
 
 	public Obstacle (String name) {
@@ -14,12 +14,12 @@ public class Obstacle implements TileObject {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public Tile getTile() {
-		return tile;
+		return this.tile;
 	}
 
 	@Override

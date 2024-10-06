@@ -19,15 +19,12 @@ public class Map {
 
 	HashMap<Room,HashMap<Compass,Room>> rooms;
 	Room playerLocation;
-	Clock time;
 	int roomCount;
 	Room start;
 	Room goal;
 
-	public Map(Clock time) {
+	public Map() {
 		this.rooms = new HashMap<>();
-		this.time = time;
-		
 
 		Room room1 = new Room(5,5);
 		setStart(room1);
@@ -136,12 +133,8 @@ public class Map {
 		return goal;
 	}
 
-	public Clock getClock() {
-		return time;
-	}
-
 	public void addRoom(Room room) {
-		rooms.put(room,new HashMap<Compass,Room>());
+		rooms.put(room, new HashMap<>());
 	}
 
 	public void connectRooms(Room room1, int x1, int y1, Room room2, int x2, int y2, Compass direction) {
@@ -156,11 +149,6 @@ public class Map {
 		room2.getConnections().put(room2.getTile(x2,y2),room1);
 	}
 
-	public void handleExitRoom(Compass direction) {
-		this.playerLocation = rooms.get(playerLocation).get(direction);
-		// check to see if we moved to goal room?
-	}
-
 	public Room getPlayerRoom() {
 		return playerLocation;
 	}
@@ -170,7 +158,7 @@ public class Map {
 	}
 
 	public boolean playerReachedGoal() {
-		// TODO
 		return getPlayerRoom().equals(getGoal());
 	}
+
 }

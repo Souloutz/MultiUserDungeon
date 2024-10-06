@@ -22,17 +22,17 @@ public class Buff implements InventoryElement {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return goldValue;
+		return this.goldValue;
 	}
 
 	@Override
@@ -52,16 +52,16 @@ public class Buff implements InventoryElement {
 	}
 
 	public BuffStat getStat() {
-		return stat;
+		return this.stat;
 	}
 
 	public int getStatAmount() {
-		return statAmount;
+		return this.statAmount;
 	}
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\nGold Value: " + goldValue + "\n" + stat.toString() + " Points: +" + statAmount;
+		return this.name + "\n" + this.description + "\nGold Value: " + this.goldValue + "\n" + this.stat.toString() + " Points: +" + this.statAmount;
 	}
 
 }

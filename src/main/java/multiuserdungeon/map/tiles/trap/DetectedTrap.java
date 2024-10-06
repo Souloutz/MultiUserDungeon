@@ -1,7 +1,6 @@
 package multiuserdungeon.map.tiles.trap;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.map.Compass;
 
 public class DetectedTrap implements TrapStatus {
 
@@ -29,6 +28,5 @@ public class DetectedTrap implements TrapStatus {
 	public boolean isDetected() {
 		return true;
 	}
-
 
 }
