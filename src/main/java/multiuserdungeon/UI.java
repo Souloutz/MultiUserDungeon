@@ -55,14 +55,13 @@ public class UI {
 	}
 
 	private static void printBlock(String msg) {
-		System.out.println(DIVIDER + "\n" + msg);
+		System.out.println(msg + "\n" + DIVIDER);
 	}
 
 	private static void printWelcomeMsg() {
-		printBlock("WELCOME TO THE MULTI-USER DUNGEON (R1)\n" +
-						"\tCreated by Team 5:\n" +
-						"\t\tJack Barter, Quinton Miller, Luke Edwards, Mandy Yu, and Howard Kong\n" +
-						DIVIDER);
+		printBlock(DIVIDER + "\nWELCOME TO THE MULTI-USER DUNGEON (R1)\n" +
+				"\tCreated by Team 5:\n" +
+				"\t\tJack Barter, Quinton Miller, Luke Edwards, Mandy Yu, and Howard Kong");
 	}
 
 	private static Player createPlayer() {
@@ -70,6 +69,7 @@ public class UI {
 		String name = scanner.nextLine();
 		System.out.print("Enter your adventurer's description: ");
 		String description = scanner.nextLine();
+		System.out.println(DIVIDER);
 		return new Player(name, description);
 	}
 

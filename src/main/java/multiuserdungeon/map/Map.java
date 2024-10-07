@@ -3,6 +3,7 @@ package multiuserdungeon.map;
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.CreatureBuff;
 import multiuserdungeon.map.tiles.NPC;
+import multiuserdungeon.map.tiles.Obstacle;
 import multiuserdungeon.map.tiles.trap.Trap;
 
 public class Map {
@@ -16,6 +17,9 @@ public class Map {
 		NPC room1npc = new NPC("Oager", "Deals heavy attack, try to avoid them at all costs!", CreatureBuff.NOCTURNAL);
 		room1npc.setTile(room1.getTile(1, 1));
 		room1.getTile(1, 1).addObject(room1npc);
+		Obstacle room1obstacle = new Obstacle("Boulder");
+		room1obstacle.setTile(room1.getTile(3, 2));
+		room1.getTile(3, 2).addObject(room1obstacle);
 
 		// Room 2
 		Room room2 = new Room(4, 3, "Labyrinth");
