@@ -83,6 +83,7 @@ public class UI {
 	}
 
 	public static void printAllCommands() {
+		// TODO: Cut down to only contextual relevant commands
 		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
 		printBlock("ALL COMMANDS\n\nDirections: " + directions + "\n\n" +
 				"\tinventory -=- Views all of your bags and inventory stats.\n" +
@@ -212,6 +213,7 @@ public class UI {
 				}
 			}
 			case "attack" -> {
+				// TODO: Find a way to add more information on who they attacked in response
 				Compass direction = Compass.valueOf(args[1].toUpperCase());
 				int damage = new AttackAction(game, direction).execute();
 				if(damage != -1) {
