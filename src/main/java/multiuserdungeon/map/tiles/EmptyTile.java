@@ -31,4 +31,9 @@ public class EmptyTile implements TileObject {
 		return true;
 	}
 
+	@Override
+	public char getASCII() {
+		return '-';
+	}
+
 }

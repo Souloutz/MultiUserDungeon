@@ -98,4 +98,9 @@ public class Player extends Character {
 		return true;
 	}
 
+	@Override
+	public char getASCII() {
+		return 'P';
+	}
+
 }

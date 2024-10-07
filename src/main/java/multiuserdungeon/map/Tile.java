@@ -1,7 +1,6 @@
 package multiuserdungeon.map;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,24 +9,24 @@ import multiuserdungeon.map.tiles.trap.Trap;
 
 public class Tile {
 
-	public final int x;
-	public final int y;
-	private List<TileObject> objects;
+	public final int row;
+	public final int col;
+	private LinkedList<TileObject> objects;
 	private Map<Compass, Tile> adjacent;
 
-	public Tile(int x, int y) {
-		this.x = x;
-		this.y = y;
-		this.objects = new ArrayList<>();
-		this.adjacent = new HashMap<>();
+	public Tile(int row, int col) {
+		this.row = row;
+		this.col = col;
+		removeObjects();
+		this.adjacent = null;
 	}
 
-	public int getX() {
-		return this.x;
+	public int getRow() {
+		return this.row;
 	}
 
-	public int getY() {
-		return this.y;
+	public int getCol() {
+		return this.col;
 	}
 
 	public Tile getTile(Compass compass) {
@@ -43,7 +42,7 @@ public class Tile {
 	}
 
 	public void removeObjects() {
-		this.objects = new ArrayList<>();
+		this.objects = new LinkedList<>();
 		EmptyTile empty = new EmptyTile();
 		empty.setTile(this);
 		this.objects.add(empty);
@@ -65,6 +64,10 @@ public class Tile {
 
 	public void setAdjacent(Map<Compass, Tile> adjacent) {
 		this.adjacent = adjacent;
+	}
+
+	public char getASCII() {
+		return this.objects.getLast().getASCII();
 	}
 
 	public Player getPlayer() {
@@ -98,13 +101,18 @@ public class Tile {
 	}
 
 	public Chest getChest() {
-		for (TileObject object : objects) {
-			if (object instanceof Chest chest) {
+		for(TileObject object : objects) {
+			if(object instanceof Chest chest) {
 				return chest;
 			}
 		}
 
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return this.objects.getLast().toString();
 	}
 
 }

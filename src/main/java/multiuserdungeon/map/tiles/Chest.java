@@ -39,6 +39,11 @@ public class Chest implements TileObject {
 		return true;
 	}
 
+	@Override
+	public char getASCII() {
+		return 'C';
+	}
+
 	public List<InventoryElement> getContents() {
 		return this.contents;
 	}
@@ -46,6 +51,11 @@ public class Chest implements TileObject {
 	public InventoryElement handleLoot(int index) {
 		if(index >= this.contents.size()) return null;
 		return this.contents.remove(index);
+	}
+
+	@Override
+	public String toString() {
+		return "A chest containing " + this.contents.size() + " unknown items.";
 	}
 
 }

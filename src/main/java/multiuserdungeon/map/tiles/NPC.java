@@ -3,34 +3,34 @@ package multiuserdungeon.map.tiles;
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.CreatureBuff;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class NPC extends Character {
 
 	private final CreatureBuff creatureBuff;
 
 	public NPC(String name, String description, CreatureBuff creatureBuff) {
-		super(name, description, 0, 0, 0);
+		super(name, description, ThreadLocalRandom.current().nextInt(50, 151), ThreadLocalRandom.current().nextInt(5, 16), ThreadLocalRandom.current().nextInt(0, 11));
 		this.creatureBuff = creatureBuff;
-	}
-
-	@Override
-	public int getMaxHealth() {
-		int health = super.getMaxHealth();
-		health *= (int) Game.getInstance().getCurrentTime().getStatChange(this.creatureBuff);
-		return health;
 	}
 
 	@Override
 	public int getAttack() {
 		int attack = super.getAttack();
-		attack *= (int) Game.getInstance().getCurrentTime().getStatChange(this.creatureBuff);
+		attack = (int) (attack * Game.getInstance().getCurrentTime().getStatChange(this.creatureBuff));
 		return attack;
 	}
 
 	@Override
 	public int getDefense() {
 		int defense = super.getDefense();
-		defense *= (int) Game.getInstance().getCurrentTime().getStatChange(this.creatureBuff);
+		defense = (int) (defense * Game.getInstance().getCurrentTime().getStatChange(this.creatureBuff));
 		return defense;
+	}
+
+	@Override
+	public char getASCII() {
+		return 'N';
 	}
 
 }

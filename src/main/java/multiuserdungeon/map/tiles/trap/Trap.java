@@ -19,6 +19,10 @@ public class Trap implements TileObject {
 		return this.damage;
 	}
 
+	public void setStatus(TrapStatus status) {
+		this.status = status;
+	}
+
 	public void detected() {
 		this.status.handleDetected();
 	}
@@ -31,8 +35,8 @@ public class Trap implements TileObject {
 		return this.status.isDetected();
 	}
 
-	public void setStatus(TrapStatus status) {
-		this.status = status;
+	public boolean isDisarmed() {
+		return this.status.isDisarmed();
 	}
 
 	@Override
@@ -53,6 +57,25 @@ public class Trap implements TileObject {
 	@Override
 	public boolean passable() {
 		return true;
+	}
+
+	@Override
+	public char getASCII() {
+		return '!';
+	}
+
+	@Override
+	public String toString() {
+		String type;
+		if(isDetected() && isDisarmed()) {
+			type = "A disarmed trap";
+		} else if(isDetected()) {
+			type = "A detected trap";
+		} else {
+			type = "An undetected trap";
+		}
+
+		return type + " (" + this.damage + " damage).";
 	}
 
 }

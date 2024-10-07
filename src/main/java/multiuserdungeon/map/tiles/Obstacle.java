@@ -8,7 +8,7 @@ public class Obstacle implements TileObject {
 	private final String name;
 	private Tile tile;
 
-	public Obstacle (String name) {
+	public Obstacle(String name) {
 		this.name = name;
 	}
 
@@ -30,6 +30,16 @@ public class Obstacle implements TileObject {
 	@Override
 	public boolean passable() {
 		return false;
+	}
+
+	@Override
+	public char getASCII() {
+		return 'O';
+	}
+
+	@Override
+	public String toString() {
+		return "A(n) " + this.name + ".";
 	}
 
 }

@@ -8,4 +8,6 @@ public interface TrapStatus {
 
 	boolean isDetected();
 
+	boolean isDisarmed();
+
 }

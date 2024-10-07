@@ -1,151 +1,83 @@
 package multiuserdungeon;
 
-import java.lang.reflect.Type;
-import java.util.Scanner;
-
-import multiuserdungeon.commands.Action;
-import multiuserdungeon.commands.AttackAction;
-import multiuserdungeon.commands.QuitGameAction;
-import multiuserdungeon.commands.inventory.DestroyItemAction;
-import multiuserdungeon.commands.inventory.EquipItemAction;
-import multiuserdungeon.commands.inventory.PickupItemAction;
-import multiuserdungeon.commands.inventory.SwapBagAction;
-import multiuserdungeon.commands.inventory.UnequipItemAction;
-import multiuserdungeon.commands.inventory.UseItemAction;
-import multiuserdungeon.commands.map.DisarmTrapAction;
-import multiuserdungeon.commands.map.LoadMapAction;
-import multiuserdungeon.commands.map.OpenChestAction;
-import multiuserdungeon.commands.movement.ExitRoomAction;
-import multiuserdungeon.commands.movement.MoveAction;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.progress.JSONProgressDB;
 
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class UI {
-	
-	public static Game game = null;
 
-	/*
-	 * Displays information about the current room, when player is attacked,
-	 * when stat changes occur
-	 */
-	public static String displayInformation() {
-		return "";
-	}
+	private static final String DIVIDER  = "=".repeat(150);
+	private static final Scanner scanner = new Scanner(System.in);
+	private static Game game;
 
-	// alternative to returning object type?
-	public static Object parseInput(String input) {
-		String[] parsedInput = input.split(" ");
-		Object commandAction;
-
-		String commandString = parsedInput[0].toLowerCase();
-
-		switch (commandString) {
-			case "attack":
-				commandAction = new AttackAction(game, Compass.valueOf(parsedInput[1].toUpperCase()));
-				break;
-
-			case "move":
-				commandAction = new MoveAction(game, Compass.valueOf(parsedInput[1].toUpperCase()));
-				break;
-
-			case "exit":
-				commandAction = new ExitRoomAction(game, Compass.valueOf(parsedInput[1].toUpperCase()));
-				break;
-
-			case "disarm":
-				commandAction = new DisarmTrapAction(game, Compass.valueOf(parsedInput[1].toUpperCase()));
-				break;
-
-			case "loot":
-				commandAction = new OpenChestAction(game);
-				break;
-
-			case "pickup":
-				commandAction = new PickupItemAction(game, Integer.parseInt(parsedInput[1]));
-				break;
-
-			case "view":
-				if (parsedInput.length == 1)
-					commandAction = new ViewInventoryAction(game);
-				else if (parsedInput.length == 2)
-					commandAction = new ViewBagAction(game, Integer.parseInt(parsedInput[1]));
-				else if (parsedInput.length == 3)
-					commandAction = new ViewItemAction(game, Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2]));
-				else
-					commandAction = null;
-				
-				break;
-
-			case "equip":
-				commandAction = new EquipItemAction(game, Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2]));
-				break;
-
-			case "unequip":
-				commandAction = new UnequipItemAction(game, Boolean.parseBoolean(parsedInput[1]));
-				break;
-
-			case "use":
-				commandAction = new UseItemAction(game, Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2]));
-				break;
-
-			case "destroy":
-				commandAction = new DestroyItemAction(game, Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2]));
-				break;
-
-			case "swap":
-				commandAction = new SwapBagAction(game, Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2]));
-				break;
-
-			case "load":
-				commandAction = new LoadMapAction(game, parsedInput[1].toLowerCase());
-				break;
-
-			case "quit":
-				commandAction = new QuitGameAction(game);
-				break;
-
-			default:
-				commandAction = null;
-		}
-
-		return commandAction;
-	}
-
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-
-		System.out.println("Hello adventurer! What is your name?");
-		String playerName = scanner.nextLine();
-
-		System.out.println("Describe your character in a sentence.");
-		String playerDescription = scanner.nextLine();
-
-		game = new Game(new Player(playerName, playerDescription));
+	public static void main(String[] args) throws InterruptedException {
+		printWelcomeMsg();
+		game = new Game(createPlayer());
 		game.setProgressDB(new JSONProgressDB());
 
-        while (!game.hasGameEnd()) {
-			System.out.println(displayInformation());
+		System.out.println(DIVIDER + "\nYou enter the first narrow doorway to begin your journey...");
+		Thread.sleep(3000);
+		printRoomDescription();
+		printRoomLayout();
 
-			System.out.println(game.getAvailableCommands());
-
-            String input = scanner.nextLine();
-
-			// does this work
-            Action<Type> command = (Action<Type>) parseInput(input);
-
-            if (command == null)
-                System.out.println("Invalid input!");
-            else {
-				
-				Object executeReturn = command.execute();
-				
-				if (executeReturn != null)
-                	System.out.println(executeReturn);
-			}
+		while(!game.isOver()) {
+			printAllCommands();
+			processCommand();
 		}
 
 		scanner.close();
+	}
+
+	private static void printWelcomeMsg() {
+		System.out.println(DIVIDER + "\n" +
+						"WELCOME TO THE MULTI-USER DUNGEON (R1)\n" +
+						"\tCreated by Team 5:\n" +
+						"\t\tJack Barter, Quinton Miller, Luke Edwards, Mandy Yu, and Howard Kong\n" +
+						DIVIDER);
+	}
+
+	private static Player createPlayer() {
+		System.out.print("Enter your adventurer's name: ");
+		String name = scanner.nextLine();
+		System.out.print("Enter your adventurer's description: ");
+		String description = scanner.nextLine();
+		return new Player(name, description);
+	}
+
+	private static void printRoomDescription() {
+		System.out.println(DIVIDER + "\nThe room becomes clearer as you make your way through the doorway. You see: " + game.getMap().getPlayerRoom().getFullDescription());
+	}
+
+	private static void printRoomLayout() {
+		System.out.println(DIVIDER + "\nFrom a vantage point, the room looks like following:\n\n" + game.getMap().getPlayerRoom());
+	}
+
+	public static void printAllCommands() {
+		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
+		System.out.println(DIVIDER + "\nALL COMMANDS\n\nDirections: " + directions + "\n\n" +
+				"\tinventory -=- Views all of your bags and inventory stats.\n" +
+				"\tbag <bag num> -=- Views the specified bag and its stats.\n" +
+				"\tequip <bag num> <item num> -=- Equips the specified item (weapon/armor).\n" +
+				"\tunequip <weapon/armor> -=- Unequips the current weapon or armor.\n" +
+				"\tuse <bag num> <item num> -=- Uses the specified item (food/buffs).\n" +
+				"\tdestroy <bag num> <item num> -=- Destroys the specified item to clear space.\n" +
+				"\tswap <src bag num> <dest bag num> <dest bag num> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
+				"\tload <uri> -=-= Loads a different saved map.\n" +
+				"\topen -=- Opens the chest you are currently standing on.\n" +
+				"\tpickup <chest num> -=- Pickups an item from the currently open chest.\n" +
+				"\tclose -=- Closes the chest you are currently standing on.\n" +
+				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
+				"\texit <direction> -=- Exits the room with the given direction.\n" +
+				"\tattack <direction> -=- Attacks a nearby creature.\n" +
+				"\tquit -=- Quits the current game, saving all progress.\n");
+	}
+
+	private static void processCommand() {
+		System.out.print("Enter a command: ");
+		String command = scanner.nextLine();
 	}
 
 }

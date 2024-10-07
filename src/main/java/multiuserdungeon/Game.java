@@ -1,8 +1,6 @@
 package multiuserdungeon;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import multiuserdungeon.clock.Clock;
 import multiuserdungeon.clock.Time;
@@ -57,73 +55,6 @@ public class Game {
 		this.map = this.progressDB.load(uri);
 	}
 
-	// TODO get the direction from player tile?
-	public String getAvailableCommands() {
-		String availableCommands = """
-			---------------------------------
-            Directions
-            ---------------------------------
-                NORTH, SOUTH, EAST, WEST, NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH_EAST
-
-            ---------------------------------
-            Turn Commands
-            ---------------------------------
-		""";
-
-		Tile playerTile = player.getTile();
-		Set<Integer> commandSet = new HashSet<>(4);
-
-		for (Tile tile : playerTile.getAdjacent()) {
-			if (tile.getNPC() != null)
-				commandSet.add(1);
-
-			else if (tile.passable())
-				commandSet.add(2);
-
-			else if (map.getPlayerRoom().getConnections().containsKey(tile))
-				commandSet.add(3);
-
-			else if (tile.getTrap() != null) {
-				if (tile.getTrap().isDetected())
-					commandSet.add(4);
-			}
-		}
-
-		if (commandSet.contains(1))
-			availableCommands += "\tATTACK [DIRECTION]\n";
-		if (commandSet.contains(2))
-			availableCommands += "\tMOVE [DIRECTION]\n";
-		if (commandSet.contains(3))
-			availableCommands += "\tEXIT [DIRECTION]\n";
-		if (playerTile.getChest() != null)
-			availableCommands += "\tLOOT\n";
-		if (commandSet.contains(4))
-			availableCommands += "\tDISARM [DIRECTION]\n";
-
-		availableCommands += """
-			---------------------------------
-			Inventory Commands
-			--------------------------------
-                VIEW (INVENTORY)
-                VIEW [BAG]
-                VIEW [BAG] [ITEM]
-                EQUIP [BAG] [ITEM] [WEAPON/ARMOR]
-                UNEQUIP [WEAPON/ARMOR]
-                USE [BAG] [ITEM]
-                DESTROY [BAG] [ITEM]
-                SWAP [OLD BAG] [NEW BAG] [ITEM]
-
-			----------------------------------
-			Game Commands
-			----------------------------------
-                LOAD [MAP]
-                QUIT
-            ----------------------------------
-			""";
-
-		return availableCommands;
-	}
-
 	public boolean handleAttack(Compass direction) {
 		if(this.player.attack(direction)) {
 			endTurn();
@@ -136,10 +67,10 @@ public class Game {
 	public boolean handleMove(Compass direction) {
 		Room playerRoom = this.map.getPlayerRoom();
 		Tile playerTile = this.player.getTile();
-		int playerX = playerTile.getX();
-		int playerY = playerTile.getY();
+		int playerRow = playerTile.getRow();
+		int playerCol = playerTile.getCol();
 
-		Tile newTile = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
+		Tile newTile = playerRoom.getTile(playerRow + direction.getY(), playerCol + direction.getX());
 		if(newTile == null || !newTile.passable()) return false;
 
 		playerTile.removeObjects();
@@ -170,10 +101,10 @@ public class Game {
 	public boolean handleDisarmTrap(Compass direction) {
 		Tile playerTile = this.player.getTile();
 		Room playerRoom = this.map.getPlayerRoom();
-		int playerX = playerTile.getX();
-		int playerY = playerTile.getY();
+		int playerRow = playerTile.getRow();
+		int playerCol = playerTile.getCol();
 
-		Tile tile = playerRoom.getTile(playerX + direction.getX(), playerY + direction.getY());
+		Tile tile = playerRoom.getTile(playerRow + direction.getY(), playerCol + direction.getX());
 		if(tile == null) return false;
 		Trap trap = tile.getTrap();
 		if(trap == null || !trap.isDetected()) return false;

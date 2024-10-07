@@ -30,4 +30,9 @@ public class UndetectedTrap implements TrapStatus {
 		return false;
 	}
 
+	@Override
+	public boolean isDisarmed() {
+		return false;
+	}
+
 }

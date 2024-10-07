@@ -21,4 +21,9 @@ public class DisarmedTrap implements TrapStatus {
 		return true;
 	}
 
+	@Override
+	public boolean isDisarmed() {
+		return true;
+	}
+
 }
