@@ -17,7 +17,7 @@ public class Player extends Character {
 
 	public Player(String name, String description) {
 		super(name, description, 100, 10, 0);
-		this.inventory = new Inventory("Player's Inventory", "Filled with all of your wonderful items.");
+		this.inventory = new Inventory("Your Inventory", "Filled with all of your wonderful items.");
 		this.weapon = null;
 		this.armor = null;
 		this.buffs = new ArrayList<>();
@@ -68,8 +68,16 @@ public class Player extends Character {
 		return this.inventory;
 	}
 
+	public Weapon getWeapon() {
+		return this.weapon;
+	}
+
 	public void equipWeapon(Weapon weapon) {
 		this.weapon = weapon;
+	}
+
+	public Armor getArmor() {
+		return this.armor;
 	}
 
 	public void equipArmor(Armor armor) {

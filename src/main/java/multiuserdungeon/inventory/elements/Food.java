@@ -54,7 +54,7 @@ public class Food implements InventoryElement {
 
 	@Override
 	public String toString() {
-		return this.name + "\n" + this.description + "\nGold Value: " + this.goldValue + "\nHealth Points: +" + this.health;
+		return this.name + ", " + this.description + " (" + this.goldValue + "g, +" + this.health + " health)";
 	}
 
 }

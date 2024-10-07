@@ -17,7 +17,7 @@ public class Room {
 	private Tile playerTile;
 
 	public Room(int rows, int columns, String description) {
-		this.rows = columns;
+		this.rows = rows;
 		this.columns = columns;
 		this.description = description;
 		this.doorways = new HashMap<>();
@@ -35,7 +35,7 @@ public class Room {
 			for(int col = 0; col < this.columns; col++) {
 				Map<Compass, Tile> adjacent = new HashMap<>();
 				for(Compass compass : Compass.values()) {
-					Tile adjacentTile = getTile(row + compass.getY(), col + compass.getX());
+					Tile adjacentTile = getTile(row + compass.getRowOffset(), col + compass.getColOffset());
 					if(adjacentTile == null) continue;
 					adjacent.put(compass, adjacentTile);
 				}
@@ -85,21 +85,22 @@ public class Room {
 	}
 
 	public boolean handleExitRoom(Compass direction) {
-		Player player = Game.getInstance().getPlayer();
-
 		Room newRoom = this.connections.get(this.doorways.get(direction));
 		if(newRoom == null) return false;
 		Tile newTile = newRoom.getDoorway(direction.getOpposite());
-		if(newTile == null) return false;
+		if(newTile == null) {
+			System.out.println("newTile is null");
+			return false;
+		}
 
-		newRoom.setPlayerTile(newTile);
 		Game.getInstance().getMap().setPlayerRoom(newRoom);
+		newRoom.setPlayerTile(newTile);
+		this.playerTile = null;
 
+		Player player = Game.getInstance().getPlayer();
 		player.getTile().removeObjects();
 		newTile.addObject(player);
 		player.setTile(newTile);
-		this.playerTile = null;
-
 		return true;
 	}
 

@@ -89,23 +89,9 @@ public class Bag implements InventoryElement {
 		this.items = new ArrayList<>();
 	}
 
-	/*
-	 * displays all items in the bag's names seperated by commas
-	 * e.g.)
-	 * Apple, Sword, Spear
-	 */
-	public String listItems(){
-		String itemsString = "";
-		for(int i = 0; i < this.items.size() - 1;i++) {
-			itemsString = this.items.get(i).getName() + ", ";
-		}
-		itemsString += this.items.get(this.items.size() - 1).getName();
-		return itemsString;
-	}
-
 	@Override
 	public String toString() {
-		return this.name + "\n" + this.description + "\nItems: " + listItems() + "\nGold Value: " + getGoldValue()+ "\nOccupancy: " + getOccupancy() + "/" + this.capacity;
+		return this.name + ", " + this.description + " (" + getGoldValue() + "g, " + getOccupancy() + "/" + this.capacity + ")";
 	}
 	
 }

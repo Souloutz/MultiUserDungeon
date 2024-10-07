@@ -16,6 +16,7 @@ public class JSONProgressDB implements ProgressDB {
 
 	@Override
 	public Map load(String uri) {
+		// TODO: Reimplement
 		Map map = null;
 		try {
 			map = new Gson().fromJson(new BufferedReader(new FileReader(uri)), Map.class);
@@ -28,6 +29,7 @@ public class JSONProgressDB implements ProgressDB {
 
 	@Override
 	public String save(Map map) {
+		// TODO: Reimplement
 		try {
 			new Gson().toJson(map, new BufferedWriter(new FileWriter(FILE_NAME)));
 		} catch (IOException e) {

@@ -55,7 +55,7 @@ public class Chest implements TileObject {
 
 	@Override
 	public String toString() {
-		return "A chest containing " + this.contents.size() + " unknown items.";
+		return "A " + this.name + " containing " + this.contents.size() + " items.";
 	}
 
 }

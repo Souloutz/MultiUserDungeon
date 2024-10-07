@@ -1,15 +1,32 @@
 package multiuserdungeon;
 
+import multiuserdungeon.commands.AttackAction;
+import multiuserdungeon.commands.QuitGameAction;
+import multiuserdungeon.commands.inventory.DestroyItemAction;
+import multiuserdungeon.commands.inventory.EquipItemAction;
+import multiuserdungeon.commands.inventory.PickupItemAction;
+import multiuserdungeon.commands.inventory.SwapBagAction;
+import multiuserdungeon.commands.inventory.UnequipItemAction;
+import multiuserdungeon.commands.inventory.UseItemAction;
+import multiuserdungeon.commands.map.CloseChestAction;
+import multiuserdungeon.commands.map.LoadMapAction;
+import multiuserdungeon.commands.map.OpenChestAction;
+import multiuserdungeon.commands.movement.ExitRoomAction;
+import multiuserdungeon.commands.movement.MoveAction;
+import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.progress.JSONProgressDB;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class UI {
 
 	private static final String DIVIDER  = "=".repeat(150);
+	private static final int DELAY_MS = 3000;
 	private static final Scanner scanner = new Scanner(System.in);
 	private static Game game;
 
@@ -18,22 +35,31 @@ public class UI {
 		game = new Game(createPlayer());
 		game.setProgressDB(new JSONProgressDB());
 
-		System.out.println(DIVIDER + "\nYou enter the first narrow doorway to begin your journey...");
-		Thread.sleep(3000);
+		printBlock("You enter the first narrow doorway to begin your journey...");
+		Thread.sleep(DELAY_MS);
 		printRoomDescription();
-		printRoomLayout();
 
 		while(!game.isOver()) {
+			printRoomLayout();
 			printAllCommands();
-			processCommand();
+
+			try {
+				processCommand();
+			} catch(IndexOutOfBoundsException | IllegalArgumentException ignored) {
+				printBlock("Unable to parse command arguments, please try again.");
+			}
 		}
 
+		printBlock("Thank you for playing, " + game.getPlayer().getName() + "!");
 		scanner.close();
 	}
 
+	private static void printBlock(String msg) {
+		System.out.println(DIVIDER + "\n" + msg);
+	}
+
 	private static void printWelcomeMsg() {
-		System.out.println(DIVIDER + "\n" +
-						"WELCOME TO THE MULTI-USER DUNGEON (R1)\n" +
+		printBlock("WELCOME TO THE MULTI-USER DUNGEON (R1)\n" +
 						"\tCreated by Team 5:\n" +
 						"\t\tJack Barter, Quinton Miller, Luke Edwards, Mandy Yu, and Howard Kong\n" +
 						DIVIDER);
@@ -47,27 +73,28 @@ public class UI {
 		return new Player(name, description);
 	}
 
-	private static void printRoomDescription() {
-		System.out.println(DIVIDER + "\nThe room becomes clearer as you make your way through the doorway. You see: " + game.getMap().getPlayerRoom().getFullDescription());
+	private static void printRoomDescription() throws InterruptedException {
+		printBlock("The room becomes clearer as you make your way through the doorway. You see: " + game.getMap().getPlayerRoom().getFullDescription());
+		Thread.sleep(DELAY_MS);
 	}
 
 	private static void printRoomLayout() {
-		System.out.println(DIVIDER + "\nFrom a vantage point, the room looks like following:\n\n" + game.getMap().getPlayerRoom());
+		printBlock("From a vantage point, the room looks like following:\n\n" + game.getMap().getPlayerRoom());
 	}
 
 	public static void printAllCommands() {
 		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
-		System.out.println(DIVIDER + "\nALL COMMANDS\n\nDirections: " + directions + "\n\n" +
+		printBlock("ALL COMMANDS\n\nDirections: " + directions + "\n\n" +
 				"\tinventory -=- Views all of your bags and inventory stats.\n" +
-				"\tbag <bag num> -=- Views the specified bag and its stats.\n" +
-				"\tequip <bag num> <item num> -=- Equips the specified item (weapon/armor).\n" +
+				"\tbag <bag pos> -=- Views the specified bag and its stats.\n" +
+				"\tequip <bag pos> <item pos> -=- Equips the specified item (weapon/armor).\n" +
 				"\tunequip <weapon/armor> -=- Unequips the current weapon or armor.\n" +
-				"\tuse <bag num> <item num> -=- Uses the specified item (food/buffs).\n" +
-				"\tdestroy <bag num> <item num> -=- Destroys the specified item to clear space.\n" +
-				"\tswap <src bag num> <dest bag num> <dest bag num> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
+				"\tuse <bag pos> <item pos> -=- Uses the specified item (food/buffs).\n" +
+				"\tdestroy <bag pos> <item pos> -=- Destroys the specified item to clear space.\n" +
+				"\tswap <src bag pos> <dest bag pos> <dest bag pos> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
 				"\tload <uri> -=-= Loads a different saved map.\n" +
 				"\topen -=- Opens the chest you are currently standing on.\n" +
-				"\tpickup <chest num> -=- Pickups an item from the currently open chest.\n" +
+				"\tpickup <chest pos> -=- Pickups an item from the currently open chest.\n" +
 				"\tclose -=- Closes the chest you are currently standing on.\n" +
 				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
 				"\texit <direction> -=- Exits the room with the given direction.\n" +
@@ -75,9 +102,130 @@ public class UI {
 				"\tquit -=- Quits the current game, saving all progress.\n");
 	}
 
-	private static void processCommand() {
-		System.out.print("Enter a command: ");
-		String command = scanner.nextLine();
+	private static void processCommand() throws IndexOutOfBoundsException, IllegalArgumentException, InterruptedException {
+		System.out.print(">>> ");
+		String[] args = scanner.nextLine().toLowerCase().split(" ");
+
+		switch(args[0]) {
+			case "inventory" -> printBlock(game.getPlayer().getInventory() + "\n\n\tWeapon: " + game.getPlayer().getWeapon() + "\n\tArmor: " + game.getPlayer().getArmor());
+			case "bag" -> {
+				int bagPos = Integer.parseInt(args[1]);
+				String result = game.getPlayer().getInventory().viewBag(bagPos);
+				printBlock(Objects.requireNonNullElse(result, "Invalid bag specified, please try again."));
+			}
+			case "equip" -> {
+				int bagPos = Integer.parseInt(args[1]);
+				int itemPos = Integer.parseInt(args[2]);
+				boolean result = new EquipItemAction(game, bagPos, itemPos).execute();
+				if(result) {
+					printBlock("Successfully equipped the item.");
+				} else {
+					printBlock("Unknown item or item is not able to be equipped, please try again.");
+				}
+			}
+			case "unequip" -> {
+				boolean isWeapon = args[1].equals("weapon");
+				boolean result = new UnequipItemAction(game, isWeapon).execute();
+				if(result) {
+					printBlock("Successfully unequipped the item.");
+				} else {
+					printBlock("That type of item is not currently equipped.");
+				}
+			}
+			case "use" -> {
+				int bagPos = Integer.parseInt(args[1]);
+				int itemPos = Integer.parseInt(args[2]);
+				boolean result = new UseItemAction(game, bagPos, itemPos).execute();
+				if(result) {
+					printBlock("Successfully used the item.");
+				} else {
+					printBlock("Unknown item or item is not usable, please try again.");
+				}
+			}
+			case "destroy" -> {
+				int bagPos = Integer.parseInt(args[1]);
+				int itemPos = Integer.parseInt(args[2]);
+				boolean result = new DestroyItemAction(game, bagPos, itemPos).execute();
+				if(result) {
+					printBlock("Successfully destroyed the item.");
+				} else {
+					printBlock("Unknown item, please try again.");
+				}
+			}
+			case "swap" -> {
+				int sourceBagPos = Integer.parseInt(args[1]);
+				int destBagPos = Integer.parseInt(args[2]);
+				int destItemPos = Integer.parseInt(args[3]);
+				boolean result = new SwapBagAction(game, sourceBagPos, destBagPos, destItemPos).execute();
+				if(result) {
+					printBlock("Successfully swapped the bags.");
+				} else {
+					printBlock("Unknown bags or the destination bag is smaller than the source, please try again.");
+				}
+			}
+			case "load" -> {
+				new LoadMapAction(game, args[1]).execute();
+				printBlock("Successfully loaded the map.");
+			}
+			case "open" -> {
+				List<InventoryElement> contents = new OpenChestAction(game).execute();
+				if(contents != null) {
+					StringBuilder builder = new StringBuilder("Contents (" + contents.size() + " items)");
+					for(int i = 0; i < contents.size(); i++) {
+						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
+					}
+					printBlock(builder.toString());
+				} else {
+					printBlock("You are not currently on a chest tile, please try again.");
+				}
+			}
+			case "pickup" -> {
+				int chestPos = Integer.parseInt(args[1]);
+				boolean result = new PickupItemAction(game, chestPos).execute();
+				if(result) {
+					printBlock("Successfully picked up the item.");
+				} else {
+					printBlock("You are not currently on a chest tile, specified an unknown chest item, or your inventory is full, please try again.");
+				}
+			}
+			case "close" -> {
+				// TODO: Enforce having chest open & prevent other key commands from going through while chest is open
+				new CloseChestAction(game).execute();
+				printBlock("Successfully closed the chest.");
+			}
+			case "move" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				boolean result = new MoveAction(game, direction).execute();
+				if(result) {
+					printBlock("Successfully moved " + direction + ".");
+				} else {
+					printBlock("Unable to move in that direction, please try again.");
+				}
+			}
+			case "exit" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				boolean result = new ExitRoomAction(game, direction).execute();
+				if(result) {
+					printRoomDescription();
+				} else {
+					printBlock("A doorway in that direction does not exist, or you are not at a doorway, please try again.");
+				}
+			}
+			case "attack" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				int damage = new AttackAction(game, direction).execute();
+				if(damage != -1) {
+					printBlock("Successfully attacked " + direction + " and dealt " + damage + " damage.");
+				} else {
+					printBlock("Unable to attack that tile, please try again.");
+				}
+			}
+			case "quit" -> {
+				new QuitGameAction(game).execute();
+				printBlock("Successfully saved your progress.");
+			}
+			default -> printBlock("Unrecognized command, please try again.");
+		}
 	}
 
 }

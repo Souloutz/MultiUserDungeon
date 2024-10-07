@@ -54,7 +54,7 @@ public class Armor implements InventoryElement {
 
 	@Override
 	public String toString() {
-		return this.name + "\n" + this.description + "\nGold Value: " + this.goldValue + "\nDefense Points: +" + this.defense;
+		return this.name + ", " + this.description + " (" + this.goldValue + "g, +" + this.defense + " defense)";
 	}
 
 }

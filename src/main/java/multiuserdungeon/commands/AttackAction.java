@@ -3,7 +3,7 @@ package multiuserdungeon.commands;
 import multiuserdungeon.Game;
 import multiuserdungeon.map.Compass;
 
-public class AttackAction implements Action<Boolean> {
+public class AttackAction implements Action<Integer> {
 
 	private final Game receiver;
 	private final Compass direction;
@@ -14,7 +14,7 @@ public class AttackAction implements Action<Boolean> {
 	}
 
 	@Override
-	public Boolean execute() {
+	public Integer execute() {
 		return this.receiver.handleAttack(this.direction);
 	}
 

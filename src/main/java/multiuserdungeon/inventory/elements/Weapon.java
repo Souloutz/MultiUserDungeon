@@ -54,7 +54,7 @@ public class Weapon implements InventoryElement {
 
 	@Override
 	public String toString() {
-		return this.name + "\n" + this.description + "\nGold Value: " + this.goldValue + "\nAttack Points: +" + this.attack;
+		return this.name + ", " + this.description + " (" + this.goldValue + "g, +" + this.attack + " attack)";
 	}
 
 }

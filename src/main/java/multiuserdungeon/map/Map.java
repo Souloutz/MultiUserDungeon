@@ -40,6 +40,7 @@ public class Map {
 		this.playerRoom = room1;
 		this.playerRoom.setPlayerTile(this.playerRoom.getTile(4, 4)); // Starts in bottom right.
 		this.playerRoom.getPlayerTile().addObject(Game.getInstance().getPlayer());
+		Game.getInstance().getPlayer().setTile(this.playerRoom.getTile(4, 4));
 		this.goal = room3;
 	}
 

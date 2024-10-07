@@ -22,6 +22,7 @@ public class Game {
 	private Map map;
 	private final Clock clock;
 	private ProgressDB progressDB;
+	private boolean quit;
 
 	public Game(Player player) {
 		instance = this;
@@ -29,6 +30,7 @@ public class Game {
 		this.map = new Map();
 		this.clock = new Clock();
 		this.progressDB = null;
+		this.quit = false;
 	}
 
 	public static Game getInstance() {
@@ -55,13 +57,10 @@ public class Game {
 		this.map = this.progressDB.load(uri);
 	}
 
-	public boolean handleAttack(Compass direction) {
-		if(this.player.attack(direction)) {
-			endTurn();
-			return true;
-		} else {
-			return false;
-		}
+	public int handleAttack(Compass direction) {
+		int damage = this.player.attack(direction);
+		if(damage != -1) endTurn();
+		return damage;
 	}
 
 	public boolean handleMove(Compass direction) {
@@ -70,7 +69,7 @@ public class Game {
 		int playerRow = playerTile.getRow();
 		int playerCol = playerTile.getCol();
 
-		Tile newTile = playerRoom.getTile(playerRow + direction.getY(), playerCol + direction.getX());
+		Tile newTile = playerRoom.getTile(playerRow + direction.getRowOffset(), playerCol + direction.getColOffset());
 		if(newTile == null || !newTile.passable()) return false;
 
 		playerTile.removeObjects();
@@ -104,7 +103,7 @@ public class Game {
 		int playerRow = playerTile.getRow();
 		int playerCol = playerTile.getCol();
 
-		Tile tile = playerRoom.getTile(playerRow + direction.getY(), playerCol + direction.getX());
+		Tile tile = playerRoom.getTile(playerRow + direction.getRowOffset(), playerCol + direction.getColOffset());
 		if(tile == null) return false;
 		Trap trap = tile.getTrap();
 		if(trap == null || !trap.isDetected()) return false;
@@ -124,25 +123,24 @@ public class Game {
 		endTurn();
 	}
 
-	public List<InventoryElement> handlePickupItem(int index) {
+	public boolean handlePickupItem(int index) {
 		Chest chest = this.player.getTile().getChest();
-		if(chest == null) return null;
+		if(chest == null) return false;
 
 		InventoryElement pickedUp = chest.handleLoot(index);
-		if(pickedUp == null) return null;
+		if(pickedUp == null) return false;
 
 		if(pickedUp instanceof Bag bag) {
-			this.player.getInventory().addBag(bag);
+			return this.player.getInventory().addBag(bag);
 		} else {
-			this.player.getInventory().addItem(pickedUp);
+			return this.player.getInventory().addItem(pickedUp);
 		}
-
-		return chest.getContents();
 	}
 
 	public boolean handleEquipItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
 		if(item == null) return false;
+		this.player.getInventory().removeItem(bagPos, itemPos);
 		return item.handleEquip(this.player);
 	}
 
@@ -173,14 +171,16 @@ public class Game {
 
 	public void handleQuitGame() {
 		this.progressDB.save(this.map);
+		this.quit = true;
 	}
 	
 	private void endTurn() {
 		this.clock.completeTurn();
+		// TODO: Player is attached by adjacent NPCs
 	}
 
 	public boolean isOver() {
-		return this.player.getHealth() == 0 || this.map.playerReachedGoal();
+		return this.quit || this.player.getHealth() == 0 || this.map.playerReachedGoal();
 	}
 
 }

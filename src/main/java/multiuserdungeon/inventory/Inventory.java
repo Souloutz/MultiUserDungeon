@@ -1,6 +1,7 @@
 package multiuserdungeon.inventory;
 
 import multiuserdungeon.inventory.elements.Bag;
+import multiuserdungeon.inventory.elements.Weapon;
 import multiuserdungeon.map.tiles.Player;
 
 import java.util.ArrayList;
@@ -16,7 +17,8 @@ public class Inventory implements InventoryElement {
 		this.name = name;
 		this.description = description;
 		this.bags = new ArrayList<>();
-		addBag(new Bag("Starter bag","Default bag you start with", 0, 6));
+		addBag(new Bag("Starter Bag", "Default bag you start with", 0, 6));
+		addItem(new Weapon("Dagger", "A very sharp tool.", 10, 12)); // TODO: Remove, testing
 	}
 
 	@Override
@@ -125,25 +127,23 @@ public class Inventory implements InventoryElement {
 		return true;
 	}
 
-	/*
-		displays bag number and its items
-		e.g)
-		Bag 0: Apple, Sword, Spear
-		Bag 1:
-		*/
-	public String listBags() {
-		String bagsString = "";
-		int bagNum = 0;
-		for(Bag bag : this.bags){
-			bagsString += "Bag " + bagNum + ": " + bag.listItems() + "\n";
-			bagNum++;
+	public String viewBag(int bagPos) {
+		if(bagPos >= this.bags.size()) return null;
+		Bag bag = this.bags.get(bagPos);
+		StringBuilder builder = new StringBuilder(bag.toString());
+		for(int i = 0; i < bag.items().size(); i++) {
+			builder.append("\n\t").append(i).append(": ").append(bag.items().get(i).toString());
 		}
-		return bagsString;
+		return builder.toString();
 	}
 
 	@Override
 	public String toString() {
-		return this.name + "\n" + this.description + "\n" + listBags() + "Gold Value: " + getGoldValue() + "\nOccupancy: " + getOccupancy() + "/" + getCapacity();
+		StringBuilder builder = new StringBuilder(this.name + ", " + this.description + " (" + getGoldValue() + "g, " + getOccupancy() + "/" + getCapacity() + ")");
+		for(int i = 0; i < this.bags.size(); i++) {
+			builder.append("\n\t").append(i).append(": ").append(this.bags.get(i));
+		}
+		return builder.toString();
 	}
 
 }

@@ -46,18 +46,17 @@ public abstract class Character implements TileObject {
 		return this.description;
 	}
 
-	public boolean attack(Compass compass) {
+	public int attack(Compass compass) {
 		Tile tile = getTile().getTile(compass);
-		if(tile == null) return false;
+		if(tile == null) return -1;
 
 		for(TileObject object : tile.getObjects()) {
 			if(object instanceof Character character) {
-				character.attacked(getAttack());
-				return true;
+				return character.attacked(getAttack());
 			}
 		}
 
-		return false;
+		return -1;
 	}
 
 	public int getHealth() {
@@ -68,9 +67,11 @@ public abstract class Character implements TileObject {
 		this.health += Math.min(amount, getMaxHealth());
 	}
 
-	public void attacked(int attack) {
-		this.health -= Math.max(1, attack - getDefense());
+	public int attacked(int attack) {
+		int damage = Math.max(1, attack - getDefense());
+		this.health -= damage;
 		this.health = Math.max(0, this.health);
+		return damage;
 	}
 
 	public int getMaxHealth() {

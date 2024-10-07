@@ -61,7 +61,7 @@ public class Buff implements InventoryElement {
 
 	@Override
 	public String toString() {
-		return this.name + "\n" + this.description + "\nGold Value: " + this.goldValue + "\n" + this.stat.toString() + " Points: +" + this.statAmount;
+		return this.name + ", " + this.description + " (" + this.goldValue + "g, +" + this.statAmount + " " + this.stat + ")";
 	}
 
 }
