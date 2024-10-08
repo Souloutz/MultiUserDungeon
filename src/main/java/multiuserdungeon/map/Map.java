@@ -2,9 +2,16 @@ package multiuserdungeon.map;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.CreatureBuff;
+import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.inventory.elements.Food;
+import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
 import multiuserdungeon.map.tiles.trap.Trap;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Map {
 
@@ -26,6 +33,10 @@ public class Map {
 		NPC room2npc = new NPC("Troll", "Not really the smartest of guys.", CreatureBuff.DIURNAL);
 		room2npc.setTile(room2.getTile(1, 2));
 		room2.getTile(1, 2).addObject(room2npc);
+		List<InventoryElement> contents = new ArrayList<>(Collections.singletonList(new Food("Steak", "A hardy meal.", 4, 10)));
+		Chest room2chest = new Chest("Dirty Chest", contents);
+		room2chest.setTile(room2.getTile(3, 2));
+		room2.getTile(3, 2).addObject(room2chest);
 
 		// Room 3
 		Room room3 = new Room(6, 5, "Trophy Room");

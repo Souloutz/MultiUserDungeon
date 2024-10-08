@@ -64,7 +64,7 @@ public abstract class Character implements TileObject {
 	}
 
 	public void replenishHealth(int amount) {
-		this.health += Math.min(amount, getMaxHealth());
+		this.health += Math.min(amount, getMaxHealth() - this.health);
 	}
 
 	public int attacked(int attack) {

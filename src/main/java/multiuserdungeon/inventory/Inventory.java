@@ -90,7 +90,7 @@ public class Inventory implements InventoryElement {
 
 	private boolean itemExists(int bagPos, int itemPos) {
 		if(bagPos >= this.bags.size()) return false;
-		return itemPos < this.bags.get(itemPos).getOccupancy();
+		return itemPos < this.bags.get(bagPos).getOccupancy();
 	}
 
 	public boolean addBag(Bag bag) {

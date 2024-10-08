@@ -78,7 +78,6 @@ public class Game {
 
 		Tile newTile = playerRoom.getTile(playerRow + direction.getRowOffset(), playerCol + direction.getColOffset());
 		if(newTile == null || !newTile.passable()) return false;
-		endTurn();
 
 		playerTile.removeObjects();
 		newTile.addObject(this.player);
@@ -91,11 +90,18 @@ public class Game {
 				trap.detected();
 			}
 		}
+
+		endTurn();
 		return true;
 	}
 
 	public boolean handleExitRoom(Compass direction) {
-		return this.map.getPlayerRoom().handleExitRoom(direction);
+		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
+			endTurn();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public boolean handleDisarmTrap(Compass direction) {

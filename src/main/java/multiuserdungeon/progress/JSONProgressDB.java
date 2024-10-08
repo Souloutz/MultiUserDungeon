@@ -18,7 +18,6 @@ public class JSONProgressDB implements ProgressDB {
 	private static final GsonBuilder GSON = new GsonBuilder()
 			.setPrettyPrinting()
 			.registerTypeAdapter(Map.class, new MapTypeAdaptor())
-			.registerTypeAdapter(Tile.class, new TileTypeAdaptor())
 			.registerTypeAdapter(Clock.class, new ClockTypeAdaptor());
 
 	@Override

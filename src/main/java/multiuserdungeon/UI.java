@@ -46,7 +46,8 @@ public class UI {
 			try {
 				processCommand();
 			} catch(IndexOutOfBoundsException | IllegalArgumentException ignored) {
-				printBlock("Unable to parse command arguments, please try again.");
+				//printBlock("Unable to parse command arguments, please try again.");
+				ignored.printStackTrace();
 			}
 		}
 

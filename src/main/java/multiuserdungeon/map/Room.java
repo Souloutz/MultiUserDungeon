@@ -108,7 +108,6 @@ public class Room {
 			System.out.println("newTile is null");
 			return false;
 		}
-		Game.getInstance().endTurn();
 
 		Game.getInstance().getMap().setPlayerRoom(newRoom);
 		newRoom.setPlayerTile(newTile);
