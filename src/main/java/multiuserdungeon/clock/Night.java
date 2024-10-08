@@ -37,8 +37,8 @@ public class Night implements Time {
 
 	@Override
 	public String toString() {
-		int turnsToFlip = 9 - this.clock.getTurn();
-		return "Night: " + turnsToFlip;
+		int turnsToFlip = 10 - this.clock.getTurn();
+		return "Night (" + turnsToFlip + " more turns)";
 	}
 
 }

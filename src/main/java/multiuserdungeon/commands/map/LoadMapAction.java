@@ -3,7 +3,7 @@ package multiuserdungeon.commands.map;
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 
-public class LoadMapAction implements Action<Void> {
+public class LoadMapAction implements Action<Boolean> {
 
 	private final Game receiver;
 	private final String uri;
@@ -14,9 +14,8 @@ public class LoadMapAction implements Action<Void> {
 	}
 
 	@Override
-	public Void execute() {
-		this.receiver.handleLoadMap(this.uri);
-		return null;
+	public Boolean execute() {
+		return this.receiver.handleLoadMap(this.uri);
 	}
 
 }

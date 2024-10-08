@@ -1,11 +1,13 @@
 package multiuserdungeon.progress;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import multiuserdungeon.Game;
+import multiuserdungeon.clock.Clock;
 import multiuserdungeon.map.Map;
+import multiuserdungeon.map.Tile;
+import multiuserdungeon.progress.serialization.ClockTypeAdaptor;
+import multiuserdungeon.progress.serialization.MapTypeAdaptor;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,30 +15,37 @@ import java.io.IOException;
 public class JSONProgressDB implements ProgressDB {
 
 	private static final String FILE_NAME = "progress.json";
+	private static final GsonBuilder GSON = new GsonBuilder()
+			.setPrettyPrinting()
+			.registerTypeAdapter(Map.class, new MapTypeAdaptor())
+			.registerTypeAdapter(Tile.class, new TileTypeAdaptor())
+			.registerTypeAdapter(Clock.class, new ClockTypeAdaptor());
 
 	@Override
-	public Map load(String uri) {
-		// TODO: Reimplement
-		Map map = null;
+	public Game load(String uri) {
 		try {
-			map = new Gson().fromJson(new BufferedReader(new FileReader(uri)), Map.class);
-		} catch (FileNotFoundException e) {
-			System.err.println("Error loading map from " + uri);
+			FileReader reader = new FileReader(uri);
+			Game game = GSON.create().fromJson(reader, Game.class);
+			game.setProgressDB(this);
+			reader.close();
+			return game;
+		} catch(IOException e) {
+			return null;
 		}
-
-		return map;
 	}
 
 	@Override
-	public String save(Map map) {
-		// TODO: Reimplement
+	public String save(Game game) {
 		try {
-			new Gson().toJson(map, new BufferedWriter(new FileWriter(FILE_NAME)));
-		} catch (IOException e) {
-			System.err.println("Error saving map to " + FILE_NAME);
+			FileWriter writer = new FileWriter(FILE_NAME);
+			GSON.create().toJson(game, writer);
+			writer.flush();
+			writer.close();
+		} catch(IOException e) {
+			return "Error while saving game.";
 		}
 
-		return FILE_NAME;
+		return "Successfully saved to \"" + FILE_NAME + "\"!";
 	}
 
 }

@@ -75,7 +75,7 @@ public class Trap implements TileObject {
 			type = "An undetected trap";
 		}
 
-		return type + " (" + this.damage + " damage).";
+		return type + " (" + this.damage + " damage)";
 	}
 
 }

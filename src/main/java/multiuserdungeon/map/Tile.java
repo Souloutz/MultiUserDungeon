@@ -58,8 +58,8 @@ public class Tile {
 		return true;
 	}
 
-	public List<Tile> getAdjacent() {
-		return this.adjacent.values().stream().toList();
+	public Map<Compass, Tile> getAdjacent() {
+		return this.adjacent;
 	}
 
 	public void setAdjacent(Map<Compass, Tile> adjacent) {

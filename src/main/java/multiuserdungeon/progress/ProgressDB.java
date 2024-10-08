@@ -1,11 +1,11 @@
 package multiuserdungeon.progress;
 
-import multiuserdungeon.map.Map;
+import multiuserdungeon.Game;
 
 public interface ProgressDB {
 
-	Map load(String uri);
+	Game load(String uri);
 
-	String save(Map map);
+	String save(Game game);
 
 }

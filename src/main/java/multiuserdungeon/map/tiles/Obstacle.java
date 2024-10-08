@@ -39,7 +39,7 @@ public class Obstacle implements TileObject {
 
 	@Override
 	public String toString() {
-		return "A(n) " + this.name + ".";
+		return "A(n) " + this.name;
 	}
 
 }

@@ -74,12 +74,13 @@ public class UI {
 	}
 
 	private static void printRoomDescription() throws InterruptedException {
-		printBlock("The room becomes clearer as you make your way through the doorway. You see: " + game.getMap().getPlayerRoom().getFullDescription());
+		printBlock("The room becomes clearer as you make your way through the doorway. You see: " + game.getMap().getPlayerRoom().getFormattedDescription());
 		Thread.sleep(DELAY_MS);
 	}
 
 	private static void printRoomLayout() {
-		printBlock("From a vantage point, the room looks like following:\n\n" + game.getMap().getPlayerRoom());
+		printBlock("You, " + game.getPlayer() + ", find a vantage point of the room. The skylight reveals that it is currently " + game.getCurrentTime() + ".\n" +
+				"From above, the rooms appears to have the following:\n" + game.getMap().getPlayerRoom());
 	}
 
 	public static void printAllCommands() {
@@ -223,8 +224,8 @@ public class UI {
 				}
 			}
 			case "quit" -> {
-				new QuitGameAction(game).execute();
-				printBlock("Successfully saved your progress.");
+				String result = new QuitGameAction(game).execute();
+				printBlock(result);
 			}
 			default -> printBlock("Unrecognized command, please try again.");
 		}

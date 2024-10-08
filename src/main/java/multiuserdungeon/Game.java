@@ -11,6 +11,7 @@ import multiuserdungeon.map.Map;
 import multiuserdungeon.map.Room;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.tiles.Chest;
+import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.progress.ProgressDB;
@@ -19,7 +20,7 @@ public class Game {
 
 	private static Game instance;
 	private final Player player;
-	private Map map;
+	private final Map map;
 	private final Clock clock;
 	private ProgressDB progressDB;
 	private boolean quit;
@@ -53,8 +54,14 @@ public class Game {
 		this.progressDB = progressDB;
 	}
 
-	public void handleLoadMap(String uri) {
-		this.map = this.progressDB.load(uri);
+	public boolean handleLoadMap(String uri) {
+		Game loaded = this.progressDB.load(uri);
+		if(loaded != null) {
+			instance = loaded;
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public int handleAttack(Compass direction) {
@@ -71,30 +78,24 @@ public class Game {
 
 		Tile newTile = playerRoom.getTile(playerRow + direction.getRowOffset(), playerCol + direction.getColOffset());
 		if(newTile == null || !newTile.passable()) return false;
+		endTurn();
 
 		playerTile.removeObjects();
 		newTile.addObject(this.player);
 		this.player.setTile(newTile);
 		playerRoom.setPlayerTile(playerTile);
 
-		for(Tile adjacent : newTile.getAdjacent()) {
+		for(Tile adjacent : newTile.getAdjacent().values()) {
 			Trap trap = adjacent.getTrap();
 			if(trap != null && !trap.isDetected()) {
 				trap.detected();
 			}
 		}
-
-		endTurn();
 		return true;
 	}
 
 	public boolean handleExitRoom(Compass direction) {
-		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
-			endTurn();
-			return true;
-		} else {
-			return false;
-		}
+		return this.map.getPlayerRoom().handleExitRoom(direction);
 	}
 
 	public boolean handleDisarmTrap(Compass direction) {
@@ -154,7 +155,6 @@ public class Game {
 
 		if(item.handleUse(this.player)) {
 			handleDestroyItem(bagPos, itemPos);
-			endTurn();
 			return true;
 		} else {
 			return false;
@@ -169,14 +169,19 @@ public class Game {
 		return this.player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
 	}
 
-	public void handleQuitGame() {
-		this.progressDB.save(this.map);
+	public String handleQuitGame() {
 		this.quit = true;
+		return this.progressDB.save(this);
 	}
 	
-	private void endTurn() {
+	public void endTurn() {
+		this.player.getTile().getAdjacent().forEach((direction, tile) -> {
+			NPC npc = tile.getNPC();
+			if(npc == null) return;
+			npc.attack(direction.getOpposite());
+		});
+
 		this.clock.completeTurn();
-		// TODO: Player is attached by adjacent NPCs
 	}
 
 	public boolean isOver() {

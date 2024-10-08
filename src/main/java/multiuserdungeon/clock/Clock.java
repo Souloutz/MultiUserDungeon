@@ -6,32 +6,36 @@ public class Clock {
 	private Time time;
 
 	public Clock() {
-		this.turnCounter = 0;
+		this(0);
+	}
+
+	public Clock(int turnCounter) {
+		this.turnCounter = turnCounter;
 		this.time = new Day(this);
 	}
 
-	public Time getCurrentTime() {
-		return this.time;
-	}
-
-	public void completeTurn() {
-		this.time.handle();
+	public int getTurn() {
+		return this.turnCounter;
 	}
 
 	public void incrementTurn() {
-		this.turnCounter ++;
+		this.turnCounter++;
 	}
 
 	public void resetTurn() {
 		this.turnCounter = 0;
 	}
 
-	public void setCurrentTime(Time time) {
-		this.time = time;
+	public void completeTurn() {
+		this.time.handle();
 	}
 
-	public int getTurn() {
-		return this.turnCounter;
+	public Time getCurrentTime() {
+		return this.time;
+	}
+
+	public void setCurrentTime(Time time) {
+		this.time = time;
 	}
 
 	public boolean isDay() {

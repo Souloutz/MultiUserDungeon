@@ -44,6 +44,18 @@ public class Room {
 		}
 	}
 
+	public int getRows() {
+		return this.rows;
+	}
+
+	public int getColumns() {
+		return this.columns;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
 	public Tile getDoorway(Compass compass) {
 		return this.doorways.get(compass);
 	}
@@ -68,10 +80,14 @@ public class Room {
 		this.connections.put(tile, targetRoom);
 	}
 
+	public Map<Tile, Room> getConnections() {
+		return this.connections;
+	}
+
 	public Tile getTile(int row, int col) {
 		try {
 			return this.layout[row][col];
-		} catch (IndexOutOfBoundsException e) {
+		} catch(IndexOutOfBoundsException e) {
 			return null;
 		}
 	}
@@ -92,6 +108,7 @@ public class Room {
 			System.out.println("newTile is null");
 			return false;
 		}
+		Game.getInstance().endTurn();
 
 		Game.getInstance().getMap().setPlayerRoom(newRoom);
 		newRoom.setPlayerTile(newTile);
@@ -104,7 +121,7 @@ public class Room {
 		return true;
 	}
 
-	public String getFullDescription() {
+	public String getFormattedDescription() {
 		String fullDescription = "A " + this.rows + "x" + this.columns + " " + this.description + " with " + this.doorways.size() + " exit(s). You see the following:";
 
 		StringBuilder builder = new StringBuilder();

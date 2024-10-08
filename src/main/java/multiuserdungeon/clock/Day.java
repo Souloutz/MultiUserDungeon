@@ -37,8 +37,8 @@ public class Day implements Time {
 
 	@Override
 	public String toString() {
-		int turnsToFlip = 9 - this.clock.getTurn();
-		return "Day: " + turnsToFlip;
+		int turnsToFlip = 10 - this.clock.getTurn();
+		return "Day (" + turnsToFlip + " more turns)";
 	}
 
 

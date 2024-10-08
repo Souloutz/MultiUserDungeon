@@ -48,6 +48,15 @@ public class Map {
 		this.goal = room3;
 	}
 
+	public Map(Room playerRoom, Room goal) {
+		this.playerRoom = playerRoom;
+		Tile playerTile = this.playerRoom.getTile(this.playerRoom.getRows() - 1, this.playerRoom.getColumns() - 1);
+		this.playerRoom.setPlayerTile(playerTile);
+		this.playerRoom.getPlayerTile().addObject(Game.getInstance().getPlayer());
+		Game.getInstance().getPlayer().setTile(playerTile);
+		this.goal = goal;
+	}
+
 	public Room getGoal() {
 		return goal;
 	}

@@ -88,7 +88,7 @@ public abstract class Character implements TileObject {
 
 	@Override
 	public String toString() {
-		return this.name + ", " + this.description + " (" + this.health + "/" + getMaxHealth() + " health, " + getAttack() + " attack, " + getDefense() + " defense).";
+		return this.name + ", " + this.description + " (" + this.health + "/" + getMaxHealth() + " health, " + getAttack() + " attack, " + getDefense() + " defense)";
 	}
 
 }
