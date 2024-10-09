@@ -4,7 +4,7 @@ public interface TrapStatus {
 
 	void handleDetected();
 
-	void handleDisarmAttempt();
+	boolean handleDisarmAttempt();
 
 	boolean isDetected();
 

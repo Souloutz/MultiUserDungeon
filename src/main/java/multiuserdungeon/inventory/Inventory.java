@@ -1,7 +1,6 @@
 package multiuserdungeon.inventory;
 
 import multiuserdungeon.inventory.elements.Bag;
-import multiuserdungeon.inventory.elements.Weapon;
 import multiuserdungeon.map.tiles.Player;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class Inventory implements InventoryElement {
 		this.description = description;
 		this.bags = new ArrayList<>();
 		addBag(new Bag("Starter Bag", "Default bag you start with", 0, 6));
-		addItem(new Weapon("Dagger", "A very sharp tool.", 10, 12)); // TODO: Remove, testing
 	}
 
 	@Override

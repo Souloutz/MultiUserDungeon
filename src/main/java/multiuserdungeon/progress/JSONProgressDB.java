@@ -3,10 +3,11 @@ package multiuserdungeon.progress;
 import com.google.gson.GsonBuilder;
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.Clock;
-import multiuserdungeon.map.Map;
+import multiuserdungeon.map.Room;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.progress.serialization.ClockTypeAdaptor;
-import multiuserdungeon.progress.serialization.MapTypeAdaptor;
+import multiuserdungeon.progress.serialization.RoomTypeAdaptor;
+import multiuserdungeon.progress.serialization.TileTypeAdaptor;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -17,8 +18,9 @@ public class JSONProgressDB implements ProgressDB {
 	private static final String FILE_NAME = "progress.json";
 	private static final GsonBuilder GSON = new GsonBuilder()
 			.setPrettyPrinting()
-			.registerTypeAdapter(Map.class, new MapTypeAdaptor())
-			.registerTypeAdapter(Clock.class, new ClockTypeAdaptor());
+			.registerTypeAdapter(Clock.class, new ClockTypeAdaptor())
+			.registerTypeAdapter(Room.class, new RoomTypeAdaptor())
+			.registerTypeAdapter(Tile.class, new TileTypeAdaptor());
 
 	@Override
 	public Game load(String uri) {

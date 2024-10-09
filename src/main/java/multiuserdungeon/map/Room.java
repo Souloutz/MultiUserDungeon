@@ -80,10 +80,6 @@ public class Room {
 		this.connections.put(tile, targetRoom);
 	}
 
-	public Map<Tile, Room> getConnections() {
-		return this.connections;
-	}
-
 	public Tile getTile(int row, int col) {
 		try {
 			return this.layout[row][col];
@@ -109,14 +105,14 @@ public class Room {
 			return false;
 		}
 
+		Player player = Game.getInstance().getPlayer();
 		Game.getInstance().getMap().setPlayerRoom(newRoom);
 		newRoom.setPlayerTile(newTile);
+		player.setTile(newTile);
 		this.playerTile = null;
 
-		Player player = Game.getInstance().getPlayer();
-		player.getTile().removeObjects();
+		player.getTile().removeObject(player);
 		newTile.addObject(player);
-		player.setTile(newTile);
 		return true;
 	}
 

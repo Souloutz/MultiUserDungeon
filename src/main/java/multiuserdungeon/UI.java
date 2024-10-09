@@ -9,6 +9,7 @@ import multiuserdungeon.commands.inventory.SwapBagAction;
 import multiuserdungeon.commands.inventory.UnequipItemAction;
 import multiuserdungeon.commands.inventory.UseItemAction;
 import multiuserdungeon.commands.map.CloseChestAction;
+import multiuserdungeon.commands.map.DisarmTrapAction;
 import multiuserdungeon.commands.map.LoadMapAction;
 import multiuserdungeon.commands.map.OpenChestAction;
 import multiuserdungeon.commands.movement.ExitRoomAction;
@@ -29,6 +30,7 @@ public class UI {
 	private static final int DELAY_MS = 3000;
 	private static final Scanner scanner = new Scanner(System.in);
 	private static Game game;
+	private static boolean inChest = false;
 
 	public static void main(String[] args) throws InterruptedException {
 		printWelcomeMsg();
@@ -46,12 +48,11 @@ public class UI {
 			try {
 				processCommand();
 			} catch(IndexOutOfBoundsException | IllegalArgumentException ignored) {
-				//printBlock("Unable to parse command arguments, please try again.");
-				ignored.printStackTrace();
+				printBlock("Unable to parse command arguments, please try again.");
 			}
 		}
 
-		printBlock("Thank you for playing, " + game.getPlayer().getName() + "!");
+		printBlock("GAME OVER\n\n\tThank you for playing, " + game.getPlayer().getName() + "!");
 		scanner.close();
 	}
 
@@ -81,13 +82,13 @@ public class UI {
 
 	private static void printRoomLayout() {
 		printBlock("You, " + game.getPlayer() + ", find a vantage point of the room. The skylight reveals that it is currently " + game.getCurrentTime() + ".\n" +
-				"From above, the rooms appears to have the following:\n" + game.getMap().getPlayerRoom());
+				"From above, the room appears like:\n\n" + game.getMap().getPlayerRoom());
 	}
 
 	public static void printAllCommands() {
 		// TODO: Cut down to only contextual relevant commands
 		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
-		printBlock("ALL COMMANDS\n\nDirections: " + directions + "\n\n" +
+		printBlock("ALL COMMANDS\n\n\tDirections: " + directions + "\n\n" +
 				"\tinventory -=- Views all of your bags and inventory stats.\n" +
 				"\tbag <bag pos> -=- Views the specified bag and its stats.\n" +
 				"\tequip <bag pos> <item pos> -=- Equips the specified item (weapon/armor).\n" +
@@ -99,6 +100,7 @@ public class UI {
 				"\topen -=- Opens the chest you are currently standing on.\n" +
 				"\tpickup <chest pos> -=- Pickups an item from the currently open chest.\n" +
 				"\tclose -=- Closes the chest you are currently standing on.\n" +
+				"\tdisarm <direction> -=- Attempts to disarm a detected trap in the specified direction.\n" +
 				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
 				"\texit <direction> -=- Exits the room with the given direction.\n" +
 				"\tattack <direction> -=- Attacks a nearby creature.\n" +
@@ -108,6 +110,12 @@ public class UI {
 	private static void processCommand() throws IndexOutOfBoundsException, IllegalArgumentException, InterruptedException {
 		System.out.print(">>> ");
 		String[] args = scanner.nextLine().toLowerCase().split(" ");
+
+		if(!(args[0].equals("open") || args[0].equals("pickup") || args[0].equals("close")) && inChest) {
+			printBlock("Please either pickup items from the chest or close the chest.");
+			Thread.sleep(DELAY_MS);
+			return;
+		}
 
 		switch(args[0]) {
 			case "inventory" -> printBlock(game.getPlayer().getInventory() + "\n\n\tWeapon: " + game.getPlayer().getWeapon() + "\n\tArmor: " + game.getPlayer().getArmor());
@@ -178,6 +186,7 @@ public class UI {
 						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
 					}
 					printBlock(builder.toString());
+					inChest = true;
 				} else {
 					printBlock("You are not currently on a chest tile, please try again.");
 				}
@@ -192,9 +201,22 @@ public class UI {
 				}
 			}
 			case "close" -> {
-				// TODO: Enforce having chest open & prevent other key commands from going through while chest is open
+				if(!inChest) {
+					printBlock("You do not currently have a chest open, please try again.");
+					break;
+				}
 				new CloseChestAction(game).execute();
 				printBlock("Successfully closed the chest.");
+				inChest = false;
+			}
+			case "disarm" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				boolean result = new DisarmTrapAction(game, direction).execute();
+				if(result) {
+					printBlock("Successfully disarmed the trap! Great job.");
+				} else {
+					printBlock("You failed to disarm the trap, or there is no trap on that tile.");
+				}
 			}
 			case "move" -> {
 				Compass direction = Compass.valueOf(args[1].toUpperCase());
@@ -230,6 +252,7 @@ public class UI {
 			}
 			default -> printBlock("Unrecognized command, please try again.");
 		}
+		Thread.sleep(DELAY_MS);
 	}
 
 }

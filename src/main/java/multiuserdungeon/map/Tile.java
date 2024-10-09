@@ -9,15 +9,18 @@ import multiuserdungeon.map.tiles.trap.Trap;
 
 public class Tile {
 
-	public final int row;
-	public final int col;
-	private LinkedList<TileObject> objects;
+	private final int row;
+	private final int col;
+	private final LinkedList<TileObject> objects;
 	private Map<Compass, Tile> adjacent;
 
 	public Tile(int row, int col) {
 		this.row = row;
 		this.col = col;
-		removeObjects();
+		this.objects = new LinkedList<>();
+		EmptyTile emptyTile = new EmptyTile();
+		emptyTile.setTile(this);
+		this.objects.add(emptyTile);
 		this.adjacent = null;
 	}
 
@@ -41,11 +44,8 @@ public class Tile {
 		this.objects.add(object);
 	}
 
-	public void removeObjects() {
-		this.objects = new LinkedList<>();
-		EmptyTile empty = new EmptyTile();
-		empty.setTile(this);
-		this.objects.add(empty);
+	public void removeObject(TileObject object) {
+		this.objects.remove(object);
 	}
 
 	public boolean passable() {

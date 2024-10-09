@@ -27,8 +27,8 @@ public class Trap implements TileObject {
 		this.status.handleDetected();
 	}
 
-	public void disarmAttempt() {
-		this.status.handleDisarmAttempt();
+	public boolean disarmAttempt() {
+		return this.status.handleDisarmAttempt();
 	}
 
 	public boolean isDetected() {
@@ -61,7 +61,7 @@ public class Trap implements TileObject {
 
 	@Override
 	public char getASCII() {
-		return '!';
+		return isDisarmed() ? '$' : isDetected() ? '!' : '-';
 	}
 
 	@Override

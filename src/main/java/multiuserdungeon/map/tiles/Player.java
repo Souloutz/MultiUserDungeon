@@ -1,6 +1,7 @@
 package multiuserdungeon.map.tiles;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.elements.Armor;
@@ -13,21 +14,21 @@ public class Player extends Character {
 	private final Inventory inventory;
 	private Weapon weapon;
 	private Armor armor;
-	private final ArrayList<Buff> buffs;
+	private final Map<Buff, Integer> buffs;
 
 	public Player(String name, String description) {
 		super(name, description, 100, 10, 0);
 		this.inventory = new Inventory("Your Inventory", "Filled with all of your wonderful items.");
 		this.weapon = null;
 		this.armor = null;
-		this.buffs = new ArrayList<>();
+		this.buffs = new HashMap<>();
 	}
 
 	@Override
 	public int getMaxHealth() {
 		int health = super.getMaxHealth();
 
-		for(Buff buff : this.buffs) {
+		for(Buff buff : this.buffs.keySet()) {
 			if(buff.getStat() == BuffStat.HEALTH) {
 				health += buff.getStatAmount();
 			}
@@ -40,7 +41,7 @@ public class Player extends Character {
 	public int getAttack() {
 		int attack = super.getAttack();
 
-		for(Buff buff : this.buffs) {
+		for(Buff buff : this.buffs.keySet()) {
 			if(buff.getStat() == BuffStat.ATTACK) {
 				attack += buff.getStatAmount();
 			}
@@ -54,7 +55,7 @@ public class Player extends Character {
 	public int getDefense() {
 		int defense = super.getDefense();
 
-		for(Buff buff : this.buffs) {
+		for(Buff buff : this.buffs.keySet()) {
 			if(buff.getStat() == BuffStat.DEFENSE) {
 				defense += buff.getStatAmount();
 			}
@@ -85,7 +86,12 @@ public class Player extends Character {
 	}
 
 	public void useBuff(Buff buff) {
-		this.buffs.add(buff);
+		this.buffs.put(buff, 0);
+	}
+
+	public void depleteBuffs() {
+		this.buffs.replaceAll((buff, turnCounter) -> turnCounter + 1);
+		this.buffs.entrySet().removeIf(entry -> entry.getValue() == 10);
 	}
 
 	public void useFood(Food food) {
@@ -109,6 +115,11 @@ public class Player extends Character {
 	@Override
 	public char getASCII() {
 		return 'P';
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + " (" + this.buffs.size() + " active buffs)";
 	}
 
 }

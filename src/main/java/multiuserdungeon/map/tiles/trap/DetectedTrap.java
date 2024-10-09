@@ -16,12 +16,16 @@ public class DetectedTrap implements TrapStatus {
 	}
 
 	@Override
-	public void handleDisarmAttempt() {
+	public boolean handleDisarmAttempt() {
+		boolean result = false;
 		if(Math.random() <= 0.5) {
 			Game.getInstance().getPlayer().attacked(this.trap.getDamage());
+		} else {
+			result = true;
 		}
 
 		this.trap.setStatus(new DisarmedTrap());
+		return result;
 	}
 
 	@Override

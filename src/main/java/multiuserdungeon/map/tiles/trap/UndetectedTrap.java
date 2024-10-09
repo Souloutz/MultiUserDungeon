@@ -21,8 +21,9 @@ public class UndetectedTrap implements TrapStatus {
 	}
 
 	@Override
-	public void handleDisarmAttempt() {
+	public boolean handleDisarmAttempt() {
 		// Nothing happens
+		return false;
 	}
 
 	@Override

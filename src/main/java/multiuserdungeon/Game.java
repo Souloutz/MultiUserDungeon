@@ -79,10 +79,10 @@ public class Game {
 		Tile newTile = playerRoom.getTile(playerRow + direction.getRowOffset(), playerCol + direction.getColOffset());
 		if(newTile == null || !newTile.passable()) return false;
 
-		playerTile.removeObjects();
-		newTile.addObject(this.player);
-		this.player.setTile(newTile);
 		playerRoom.setPlayerTile(playerTile);
+		this.player.setTile(newTile);
+		playerTile.removeObject(this.player);
+		newTile.addObject(this.player);
 
 		for(Tile adjacent : newTile.getAdjacent().values()) {
 			Trap trap = adjacent.getTrap();
@@ -115,9 +115,8 @@ public class Game {
 		Trap trap = tile.getTrap();
 		if(trap == null || !trap.isDetected()) return false;
 
-		trap.disarmAttempt();
 		endTurn();
-		return true;
+		return trap.disarmAttempt();
 	}
 
 	public List<InventoryElement> handleOpenChest() {
@@ -186,7 +185,7 @@ public class Game {
 			if(npc == null) return;
 			npc.attack(direction.getOpposite());
 		});
-
+		this.player.depleteBuffs();
 		this.clock.completeTurn();
 	}
 

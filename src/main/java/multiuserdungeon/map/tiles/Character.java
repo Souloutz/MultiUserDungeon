@@ -69,8 +69,14 @@ public abstract class Character implements TileObject {
 
 	public int attacked(int attack) {
 		int damage = Math.max(1, attack - getDefense());
+		if(damage > this.health) damage = this.health;
 		this.health -= damage;
-		this.health = Math.max(0, this.health);
+
+		if(this.health == 0) {
+			this.tile.removeObject(this);
+			this.tile = null;
+		}
+
 		return damage;
 	}
 
