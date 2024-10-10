@@ -79,17 +79,17 @@ public class Game {
 		Tile newTile = playerRoom.getTile(playerRow + direction.getRowOffset(), playerCol + direction.getColOffset());
 		if(newTile == null || !newTile.passable()) return false;
 
-		playerRoom.setPlayerTile(playerTile);
+		playerRoom.setPlayerTile(newTile);
 		this.player.setTile(newTile);
 		playerTile.removeObject(this.player);
 		newTile.addObject(this.player);
 
 		for(Tile adjacent : newTile.getAdjacent().values()) {
 			Trap trap = adjacent.getTrap();
-			if(trap != null && !trap.isDetected()) {
-				trap.detected();
-			}
+			if(trap != null && !trap.isDetected()) trap.detected();
 		}
+		Trap trap = newTile.getTrap();
+		if(trap != null && !trap.isDetected()) trap.detected();
 
 		endTurn();
 		return true;
