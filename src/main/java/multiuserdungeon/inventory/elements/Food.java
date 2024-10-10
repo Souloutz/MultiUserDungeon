@@ -1,12 +1,13 @@
 package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.map.tiles.Player;
 
 public class Food implements InventoryElement {
 
 	private final String name;
-    private final String description;
-    private final int goldValue;
+	private final String description;
+	private final int goldValue;
 	private final int health;
 
 	public Food(String name, String description, int goldValue, int health) {
@@ -18,17 +19,17 @@ public class Food implements InventoryElement {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return goldValue;
+		return this.goldValue;
 	}
 
 	@Override
@@ -36,13 +37,24 @@ public class Food implements InventoryElement {
 		return 1;
 	}
 
+	@Override
+	public boolean handleEquip(Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		player.useFood(this);
+		return true;
+	}
+
 	public int getHealth() {
-		return health;
+		return this.health;
 	}
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\nGold Value: " + goldValue + "\nHealth Points: +" + health;
+		return this.name + ", " + this.description + " (" + this.goldValue + "g, +" + this.health + " health)";
 	}
 
 }

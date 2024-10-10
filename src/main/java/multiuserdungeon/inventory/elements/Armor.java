@@ -1,6 +1,7 @@
 package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.map.tiles.Player;
 
 public class Armor implements InventoryElement {
 
@@ -18,17 +19,17 @@ public class Armor implements InventoryElement {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return goldValue;
+		return this.goldValue;
 	}
 
 	@Override
@@ -36,13 +37,24 @@ public class Armor implements InventoryElement {
 		return 1;
 	}
 
+	@Override
+	public boolean handleEquip(Player player) {
+		player.equipArmor(this);
+		return true;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		return false;
+	}
+
 	public int getDefense() {
-		return defense;
+		return this.defense;
 	}
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\nGold Value: " + goldValue + "\nDefense Points: +" + defense;
+		return this.name + ", " + this.description + " (" + this.goldValue + "g, +" + this.defense + " defense)";
 	}
 
 }

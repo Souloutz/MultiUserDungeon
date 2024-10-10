@@ -1,6 +1,7 @@
 package multiuserdungeon.inventory;
 
 import multiuserdungeon.inventory.elements.Bag;
+import multiuserdungeon.map.tiles.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,23 +16,23 @@ public class Inventory implements InventoryElement {
 		this.name = name;
 		this.description = description;
 		this.bags = new ArrayList<>();
-		addBag(new Bag("Starter bag","Default bag you start with", 0, 6));
+		addBag(new Bag("Starter Bag", "Default bag you start with", 0, 6));
 	}
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
 		int totalGV = 0;
-		for(Bag bag : bags) {
+		for(Bag bag : this.bags) {
 			totalGV += bag.getGoldValue();
 		}
 		return totalGV;
@@ -40,111 +41,107 @@ public class Inventory implements InventoryElement {
 	@Override
 	public int getOccupancy() {
 		int totalOccupancy = 0;
-		for(Bag bag : bags) {
+		for(Bag bag : this.bags) {
 			totalOccupancy += bag.getOccupancy();
 		}
 		return totalOccupancy;
 	}
 
+	@Override
+	public boolean handleEquip(Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		return false;
+	}
+
 	public int getCapacity() {
 		int totalCapacity = 0;
-		for(Bag bag : bags) {
+		for(Bag bag : this.bags) {
 			totalCapacity += bag.getCapacity();
 		}
 		return totalCapacity;
 	}
 
-	public Bag getBag(int bagPos) {
-		return bags.get(bagPos);
-	}
-
-	public List<Bag> bags() {
-		return bags;
-	}
-
-	public InventoryElement getItem(int bagPos, int itemPos) {
-		return bags.get(bagPos).getItem(itemPos);
-	}
-
-	/**
-	 * adds item into the next available bag
-	 * @param item
-	 * @return true if item is added, false if inventory completely full
-	 */
-	public boolean addItem(InventoryElement item){
-		for(Bag bag : bags) {
-			if(bag.getOccupancy()<bag.getCapacity()) {
+	public boolean addItem(InventoryElement item) {
+		for(Bag bag : this.bags) {
+			if(bag.getOccupancy() < bag.getCapacity()) {
 				bag.addItem(item);
 				return true;
 			}
 		}
-		return false; 
+		return false;
 	}
 
-	public boolean bagExists(int bagPos){
-		return (bagPos < bags.size() && bagPos >= 0);
+	public boolean removeItem(int bagPos, int itemPos) {
+		if(!itemExists(bagPos, itemPos)) return false;
+		this.bags.get(bagPos).removeItem(itemPos);
+		return true;
 	}
 
-	public void addBag(Bag bag) {
-		if(bags.size() >= 6) {
-			if(addItem(bag)) {
-				return; //returns if empty bag has been stored away
-			}
-			return; //returns if both inventory and all bags are full;
+	public InventoryElement getItem(int bagPos, int itemPos) {
+		if(!itemExists(bagPos, itemPos)) return null;
+		return this.bags.get(bagPos).getItem(itemPos);
+	}
+
+	private boolean itemExists(int bagPos, int itemPos) {
+		if(bagPos >= this.bags.size()) return false;
+		return itemPos < this.bags.get(bagPos).getOccupancy();
+	}
+
+	public boolean addBag(Bag bag) {
+		if(this.bags.size() >= 6) {
+			return addItem(bag);
 		}
-		bags.add(bag);
+
+		this.bags.add(bag);
 		bag.setIsEquipped(true);
+		return true;
 	}
 
-	/**
-	 * swaps an equipped bag in the inventory with a larger empty bag that's stored away
-	 * @param sourceBagPos
-	 * @param destBagPos
-	 * @param destItemPos
-	 */
-	public void swapBag(int sourceBagPos, int destBagPos, int destItemPos) {
-		if(bagExists(sourceBagPos) && bagExists(destBagPos) && getBag(destBagPos).itemExists(destItemPos)) {
+	public boolean swapBag(int sourceBagPos, int destBagPos, int destItemPos) {
+		if(sourceBagPos >= this.bags.size() || !itemExists(destBagPos, destItemPos)) return false;
 
-			Bag sourceBag = getBag(sourceBagPos);
-			Bag destBag = (Bag) getItem(destBagPos, destItemPos);
-			if(destBag.getCapacity() < sourceBag.getCapacity()) {
-				return; //return if new bag is smaller than source bag
-			} else {
-				for(InventoryElement item : sourceBag.items()) {
-					destBag.addItem(item);
-				}
-				bags.remove(sourceBagPos);
-				bags.add(sourceBagPos,destBag);
-				getBag(destBagPos).removeItem(destItemPos);
-				sourceBag.items().clear();
-				addItem(sourceBag); 
-				sourceBag.setIsEquipped(false);
-				destBag.setIsEquipped(true);
-			}
-		} else {
-			return; //return if either bags or item don't exist
+		Bag sourceBag = this.bags.get(sourceBagPos);
+		Bag destBag = (Bag) getItem(destBagPos, destItemPos);
+
+		if(destBag.getCapacity() < sourceBag.getCapacity()) return false;
+
+		for(InventoryElement item : sourceBag.items()) {
+			destBag.addItem(item);
 		}
+		sourceBag.clearItems();
+
+		this.bags.add(sourceBagPos, destBag);
+		this.bags.remove(sourceBagPos);
+
+		addItem(sourceBag);
+		removeItem(destBagPos, destItemPos);
+
+		sourceBag.setIsEquipped(false);
+		destBag.setIsEquipped(true);
+		return true;
 	}
 
-	/*
-		displays bag number and its items
-		e.g)
-		Bag 0: Apple, Sword, Spear
-		Bag 1:
-		*/
-	public String listBags() {
-		String bagsString = "";
-		int bagNum = 0;
-		for(Bag bag : bags){
-			bagsString += "Bag " + bagNum + ": " + bag.listItems() + "\n";
-			bagNum++;
+	public String viewBag(int bagPos) {
+		if(bagPos >= this.bags.size()) return null;
+		Bag bag = this.bags.get(bagPos);
+		StringBuilder builder = new StringBuilder(bag.toString());
+		for(int i = 0; i < bag.items().size(); i++) {
+			builder.append("\n\t").append(i).append(": ").append(bag.items().get(i).toString());
 		}
-		return bagsString;
+		return builder.toString();
 	}
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\n" + listBags() + "Gold Value: " + getGoldValue() + "\nOccupancy: " + getOccupancy() + "/" + getCapacity();
+		StringBuilder builder = new StringBuilder(this.name + ", " + this.description + " (" + getGoldValue() + "g, " + getOccupancy() + "/" + getCapacity() + ")");
+		for(int i = 0; i < this.bags.size(); i++) {
+			builder.append("\n\t").append(i).append(": ").append(this.bags.get(i));
+		}
+		return builder.toString();
 	}
 
 }

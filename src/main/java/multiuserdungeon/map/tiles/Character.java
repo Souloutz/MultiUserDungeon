@@ -1,71 +1,100 @@
 package multiuserdungeon.map.tiles;
 
-import java.util.List;
-
 import multiuserdungeon.map.*;
 
 public abstract class Character implements TileObject {
 
-	Tile tile;
+	private final String name;
+	private final String description;
+	private int health;
+	private final int baseMaxHealth;
+	private final int baseAttack;
+	private final int baseDefense;
+	private Tile tile;
 
-	String name;
-	String description;
-
-	int maxHealth;
-	int health;
-	int attack;
-	int defense;
-
-	public Character(String name, String description, int baseHealth, int baseAttack, int baseDefense) {
+	public Character(String name, String description, int baseMaxHealth, int baseAttack, int baseDefense) {
 		this.name = name;
 		this.description = description;
-		this.maxHealth = baseHealth;
-		this.health = baseHealth;
-		this.attack = baseAttack;
-		this.defense = baseDefense;
+		this.health = baseMaxHealth;
+		this.baseMaxHealth = baseMaxHealth;
+		this.baseAttack = baseAttack;
+		this.baseDefense = baseDefense;
+		this.tile = null;
 	}
 
-	public void attack(Compass compass) {
-		List<TileObject> objects = getTile().getTile(compass).getObjects();
-		for (TileObject object : objects) {
-			if (object instanceof Character character) {
-				character.attacked(getAttack());
-			}
-		}
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
-	public void attacked(int attack) {
-		this.health -= Math.max(1, attack - getDefense());
-		this.health = Math.max(0, this.health);
+	@Override
+	public Tile getTile() {
+		return this.tile;
+	}
+
+	@Override
+	public void setTile(Tile tile) {
+		this.tile = tile;
+	}
+
+	@Override
+	public boolean passable() {
+		return false;
 	}
 
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
-	public int getBaseHealth() {
-		return maxHealth;
-	}
+	public int attack(Compass compass) {
+		Tile tile = getTile().getTile(compass);
+		if(tile == null) return -1;
 
-	public int getBaseAttack() {
-		return attack;
-	}
-
-	public int getBaseDefense() {
-		return defense;
-	}
-
-	public void gainHealth(int health) {
-		this.health += health;
-		if (this.health > maxHealth){
-			this.health = maxHealth;
+		for(TileObject object : tile.getObjects()) {
+			if(object instanceof Character character) {
+				return character.attacked(getAttack());
+			}
 		}
+
+		return -1;
 	}
 
-	abstract int getHealth();
+	public int getHealth() {
+		return this.health;
+	}
 
-	abstract int getDefense();
+	public void replenishHealth(int amount) {
+		this.health += Math.min(amount, getMaxHealth() - this.health);
+	}
 
-	abstract int getAttack();
+	public int attacked(int attack) {
+		int damage = Math.max(1, attack - getDefense());
+		if(damage > this.health) damage = this.health;
+		this.health -= damage;
+
+		if(this.health == 0) {
+			this.tile.removeObject(this);
+			this.tile = null;
+		}
+
+		return damage;
+	}
+
+	public int getMaxHealth() {
+		return this.baseMaxHealth;
+	}
+
+	public int getAttack() {
+		return this.baseAttack;
+	}
+
+	public int getDefense() {
+		return this.baseDefense;
+	}
+
+	@Override
+	public String toString() {
+		return this.name + ", " + this.description + " (" + this.health + "/" + getMaxHealth() + " health, " + getAttack() + " attack, " + getDefense() + " defense)";
+	}
 
 }

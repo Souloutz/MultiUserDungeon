@@ -29,3 +29,6 @@ target/**
 
 # Ignore IntelliJ
 .idea/
+
+# Saved games
+*.json

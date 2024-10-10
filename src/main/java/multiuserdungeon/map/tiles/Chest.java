@@ -1,6 +1,5 @@
 package multiuserdungeon.map.tiles;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import multiuserdungeon.inventory.InventoryElement;
@@ -13,7 +12,7 @@ public class Chest implements TileObject {
 	private final List<InventoryElement> contents;
 	private Tile tile;
 
-	public Chest(String name, ArrayList<InventoryElement> contents) {
+	public Chest(String name, List<InventoryElement> contents) {
 		this.name = name;
 		this.contents = contents;
 		this.tile = null;
@@ -39,6 +38,11 @@ public class Chest implements TileObject {
 		return true;
 	}
 
+	@Override
+	public char getASCII() {
+		return 'C';
+	}
+
 	public List<InventoryElement> getContents() {
 		return this.contents;
 	}
@@ -46,6 +50,11 @@ public class Chest implements TileObject {
 	public InventoryElement handleLoot(int index) {
 		if(index >= this.contents.size()) return null;
 		return this.contents.remove(index);
+	}
+
+	@Override
+	public String toString() {
+		return "A " + this.name + " containing " + this.contents.size() + " item(s)";
 	}
 
 }

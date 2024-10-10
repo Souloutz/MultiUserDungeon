@@ -12,12 +12,18 @@ public class DisarmedTrap implements TrapStatus {
 	}
 
 	@Override
-	public void handleDisarmAttempt() {
+	public boolean handleDisarmAttempt() {
 		// Final state - nothing happens
+		return false;
 	}
 
 	@Override
 	public boolean isDetected() {
+		return true;
+	}
+
+	@Override
+	public boolean isDisarmed() {
 		return true;
 	}
 

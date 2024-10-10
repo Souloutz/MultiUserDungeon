@@ -1,12 +1,9 @@
 package multiuserdungeon.commands.inventory;
 
-import java.util.List;
-
 import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
-import multiuserdungeon.inventory.InventoryElement;
 
-public class PickupItemAction implements Action<List<InventoryElement>> {
+public class PickupItemAction implements Action<Boolean> {
 
 	private final Game receiver;
 	private final int index;
@@ -17,7 +14,8 @@ public class PickupItemAction implements Action<List<InventoryElement>> {
 	}
 
 	@Override
-	public List<InventoryElement> execute() {
+	public Boolean execute() {
 		return this.receiver.handlePickupItem(this.index);
 	}
+
 }

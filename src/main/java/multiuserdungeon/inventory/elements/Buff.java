@@ -2,6 +2,7 @@ package multiuserdungeon.inventory.elements;
 
 import multiuserdungeon.inventory.BuffStat;
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.map.tiles.Player;
 
 public class Buff implements InventoryElement {
 
@@ -21,17 +22,17 @@ public class Buff implements InventoryElement {
 
 	@Override
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	@Override
 	public int getGoldValue() {
-		return goldValue;
+		return this.goldValue;
 	}
 
 	@Override
@@ -39,17 +40,28 @@ public class Buff implements InventoryElement {
 		return 1;
 	}
 
+	@Override
+	public boolean handleEquip(Player player) {
+		return false;
+	}
+
+	@Override
+	public boolean handleUse(Player player) {
+		player.useBuff(this);
+		return true;
+	}
+
 	public BuffStat getStat() {
-		return stat;
+		return this.stat;
 	}
 
 	public int getStatAmount() {
-		return statAmount;
+		return this.statAmount;
 	}
 
 	@Override
 	public String toString() {
-		return name + "\n" + description + "\nGold Value: " + goldValue + "\n" + stat.toString() + " Points: +" + statAmount;
+		return this.name + ", " + this.description + " (" + this.goldValue + "g, +" + this.statAmount + " " + this.stat + ")";
 	}
 
 }

@@ -13,6 +13,16 @@ public class Night implements Time {
 	}
 
 	@Override
+	public void handle() {
+		if(this.clock.getTurn() >= 9) {
+			this.clock.setCurrentTime(new Day(this.clock));
+			this.clock.resetTurn();
+		} else {
+			this.clock.incrementTurn();
+		}
+	}
+
+	@Override
 	public boolean isDay() {
 		return false;
 	}
@@ -27,8 +37,8 @@ public class Night implements Time {
 
 	@Override
 	public String toString() {
-		int turnsToFlip = 9 - this.clock.getTurn();
-		return "Night : " + turnsToFlip;
+		int turnsToFlip = 10 - this.clock.getTurn();
+		return "Night (" + turnsToFlip + " more turns)";
 	}
 
 }

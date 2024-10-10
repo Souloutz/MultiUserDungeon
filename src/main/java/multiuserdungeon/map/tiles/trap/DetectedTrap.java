@@ -1,7 +1,6 @@
 package multiuserdungeon.map.tiles.trap;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.map.Compass;
 
 public class DetectedTrap implements TrapStatus {
 
@@ -17,12 +16,16 @@ public class DetectedTrap implements TrapStatus {
 	}
 
 	@Override
-	public void handleDisarmAttempt() {
+	public boolean handleDisarmAttempt() {
+		boolean result = false;
 		if(Math.random() <= 0.5) {
-			Game.getInstance().getPlayer().attacked(Compass.NORTH, this.trap.getDamage());
+			Game.getInstance().getPlayer().attacked(this.trap.getDamage());
+		} else {
+			result = true;
 		}
 
 		this.trap.setStatus(new DisarmedTrap());
+		return result;
 	}
 
 	@Override
@@ -30,5 +33,9 @@ public class DetectedTrap implements TrapStatus {
 		return true;
 	}
 
+	@Override
+	public boolean isDisarmed() {
+		return false;
+	}
 
 }

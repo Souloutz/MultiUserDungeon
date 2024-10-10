@@ -2,34 +2,34 @@ package multiuserdungeon.map;
 
 public enum Compass {
 
-	NORTH(0, 1),
-	NORTH_EAST(1, 1),
-	EAST(1, 0),
-	SOUTH_EAST(1, -1),
-	SOUTH(0, -1),
-	SOUTH_WEST(-1, -1),
-	WEST(-1, 0),
-	NORTH_WEST(-1, 1);
+	NORTH(-1, 0),
+	NORTH_EAST(-1, 1),
+	EAST(0, 1),
+	SOUTH_EAST(1, 1),
+	SOUTH(1, 0),
+	SOUTH_WEST(1, -1),
+	WEST(0, -1),
+	NORTH_WEST(-1, -1);
 
-	private final int x;
-	private final int y;
+	private final int rowOffset;
+	private final int colOffset;
 
-	Compass(int x, int y) {
-		this.x = x;
-		this.y = y;
+	Compass(int rowOffset, int colOffset) {
+		this.rowOffset = rowOffset;
+		this.colOffset = colOffset;
 	}
 
-	public int getX() {
-		return this.x;
+	public int getRowOffset() {
+		return this.rowOffset;
 	}
 
-	public int getY() {
-		return this.y;
+	public int getColOffset() {
+		return this.colOffset;
 	}
 
 	public Compass getOpposite() {
 		for (Compass c : Compass.values()) {
-			if (c.getX() == this.x * -1 && c.getY() == this.y * -1) {
+			if (c.getRowOffset() == this.rowOffset * -1 && c.getColOffset() == this.colOffset * -1) {
 				return c;
 			}
 		}

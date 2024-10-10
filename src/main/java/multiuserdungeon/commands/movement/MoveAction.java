@@ -4,19 +4,19 @@ import multiuserdungeon.Game;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.map.Compass;
 
-public class MoveAction implements Action<Void> {
+public class MoveAction implements Action<Boolean> {
 
-	private Game receiver;
-	private Compass direction;
+	private final Game receiver;
+	private final Compass direction;
 
 	public MoveAction(Game game, Compass direction) {
-		receiver = game;
+		this.receiver = game;
 		this.direction = direction;
 	}
 
 	@Override
-	public Void execute() {
-		receiver.handleMove(direction);
-		return null;
+	public Boolean execute() {
+		return this.receiver.handleMove(this.direction);
 	}
+
 }

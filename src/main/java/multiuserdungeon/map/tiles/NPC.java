@@ -1,56 +1,36 @@
 package multiuserdungeon.map.tiles;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.clock.Night;
-import multiuserdungeon.map.Tile;
+import multiuserdungeon.clock.CreatureBuff;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class NPC extends Character {
 
-	private boolean nocturnal;
-	private int nightBonus;
+	private final CreatureBuff creatureBuff;
 
-	public NPC(String name, String description, boolean nocturnal, int nightBonus) {
-		super(name, description, 0, 0, 0);
-		this.nocturnal = nocturnal;
-		this.nightBonus = nightBonus;
+	public NPC(String name, String description, CreatureBuff creatureBuff) {
+		super(name, description, ThreadLocalRandom.current().nextInt(50, 151), ThreadLocalRandom.current().nextInt(5, 16), ThreadLocalRandom.current().nextInt(0, 11));
+		this.creatureBuff = creatureBuff;
 	}
 
 	@Override
-	int getHealth() {
-		return health;
-	}
-
-	@Override
-	int getDefense() {
-		return defense;
-	}
-
-	@Override
-	int getAttack() {
-		if (Game.getInstance().getTime() instanceof Night && nocturnal) {
-			return attack + nightBonus;
-		}
+	public int getAttack() {
+		int attack = super.getAttack();
+		attack = (int) (attack * Game.getInstance().getCurrentTime().getStatChange(this.creatureBuff));
 		return attack;
 	}
 
 	@Override
-	public String getName() {
-		return name;
+	public int getDefense() {
+		int defense = super.getDefense();
+		defense = (int) (defense * Game.getInstance().getCurrentTime().getStatChange(this.creatureBuff));
+		return defense;
 	}
 
 	@Override
-	public Tile getTile() {
-		return tile;
-	}
-
-	@Override
-	public void setTile(Tile tile) {
-		this.tile = tile;
-	}
-
-	@Override
-	public boolean passable() {
-		return false;
+	public char getASCII() {
+		return 'N';
 	}
 
 }

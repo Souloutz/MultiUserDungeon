@@ -12,7 +12,7 @@ public enum CreatureBuff {
 	}
 
 	public double getStatChange() {
-		return buff;
+		return this.buff;
 	}
 
 }

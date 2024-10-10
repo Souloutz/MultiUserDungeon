@@ -9,5 +9,7 @@ public interface TileObject {
 	void setTile(Tile tile);
 
 	boolean passable();
+
+	char getASCII();
     
 }

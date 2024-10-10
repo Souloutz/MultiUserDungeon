@@ -1,147 +1,125 @@
 package multiuserdungeon.map.tiles;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import multiuserdungeon.inventory.Inventory;
-import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.inventory.elements.Armor;
 import multiuserdungeon.inventory.elements.Weapon;
-import multiuserdungeon.map.Tile;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.inventory.*;
 
 public class Player extends Character {
 
-	private Inventory inventory;
-	private ArrayList<Buff> buffs;
+	private final Inventory inventory;
 	private Weapon weapon;
 	private Armor armor;
+	private final Map<Buff, Integer> buffs;
 
 	public Player(String name, String description) {
 		super(name, description, 100, 10, 0);
+		this.inventory = new Inventory("Your Inventory", "Filled with all of your wonderful items.");
 		this.weapon = null;
 		this.armor = null;
-		this.inventory = new Inventory("Player's Inventory","Filled with all of your wonderful items.");
-		this.buffs = new ArrayList<Buff>();
+		this.buffs = new HashMap<>();
+	}
+
+	@Override
+	public int getMaxHealth() {
+		int health = super.getMaxHealth();
+
+		for(Buff buff : this.buffs.keySet()) {
+			if(buff.getStat() == BuffStat.HEALTH) {
+				health += buff.getStatAmount();
+			}
+		}
+
+		return health;
+	}
+
+	@Override
+	public int getAttack() {
+		int attack = super.getAttack();
+
+		for(Buff buff : this.buffs.keySet()) {
+			if(buff.getStat() == BuffStat.ATTACK) {
+				attack += buff.getStatAmount();
+			}
+		}
+
+		int weaponBuff = this.weapon != null ? this.weapon.getAttack() : 0;
+		return attack + weaponBuff;
+	}
+
+	@Override
+	public int getDefense() {
+		int defense = super.getDefense();
+
+		for(Buff buff : this.buffs.keySet()) {
+			if(buff.getStat() == BuffStat.DEFENSE) {
+				defense += buff.getStatAmount();
+			}
+		}
+
+		int armorBuff = this.armor != null ? this.armor.getDefense() : 0;
+		return defense + armorBuff;
 	}
 
 	public Inventory getInventory() {
-		return inventory;
+		return this.inventory;
 	}
 
-	public void pickupItem(InventoryElement element) {
-		for (int i = 0; i < 6;i++) {
-			if (inventory.getBag(i).getOccupancy() >= 6) {
-				continue;
-			} else {
-				inventory.getBag(i).addItem(element);
-			}
-		}
+	public Weapon getWeapon() {
+		return this.weapon;
 	}
 
-	public void destroyItem(int bagPos, int itemPos) {
-		inventory.getBag(bagPos).removeItem(itemPos);
+	public void equipWeapon(Weapon weapon) {
+		this.weapon = weapon;
 	}
 
-	public void useBuff(int bagPos, int itemPos) {
-		InventoryElement mayBuff = inventory.getItem(bagPos,itemPos);
-		Buff buff;
-		if (mayBuff instanceof Buff) {
-			buff = (Buff)mayBuff;
-		} else {
-			return;
-		}
-		destroyItem(bagPos,itemPos);
-		buffs.add(buff);
+	public Armor getArmor() {
+		return this.armor;
 	}
 
-	public void useFood(int bagPos, int itemPos) {
-		InventoryElement mayFood = inventory.getItem(bagPos,itemPos);
-		Food food;
-		if (mayFood instanceof Food) {
-			food = (Food)mayFood;
-		} else {
-			return;
-		}
-		destroyItem(bagPos,itemPos);
-		this.gainHealth(food.getHealth());
+	public void equipArmor(Armor armor) {
+		this.armor = armor;
 	}
 
-	public void swapBag(int sourceBagPos, int destBagPos) {
-		inventory.swapBag(sourceBagPos,destBagPos);
+	public void useBuff(Buff buff) {
+		this.buffs.put(buff, 0);
 	}
 
-	public Weapon getEquippedWeapon() {
-		return weapon;
+	public void depleteBuffs() {
+		this.buffs.replaceAll((buff, turnCounter) -> turnCounter + 1);
+		this.buffs.entrySet().removeIf(entry -> entry.getValue() == 10);
 	}
 
-	public Armor getEquippedArmor() {
-		return armor;
+	public void useFood(Food food) {
+		this.replenishHealth(food.getHealth());
 	}
 
-	public void equipWeapon(InventoryElement item) {
-		// TODO
+	public boolean unequipWeapon() {
+		if(this.weapon == null) return false;
+		this.inventory.addItem(this.weapon);
+		this.weapon = null;
+		return true;
 	}
 
-	public void equipArmor(InventoryElement item) {
-		// TODO
-	}
-
-	public void unequipWeapon() {
-		pickupItem(weapon);
-		weapon = null;
-	}
-
-	public void unequipArmor() {
-		pickupItem(armor);
-		armor = null;
+	public boolean unequipArmor() {
+		if(this.armor == null) return false;
+		this.inventory.addItem(this.armor);
+		this.armor = null;
+		return true;
 	}
 
 	@Override
-	public int getHealth() {
-		return 0;
+	public char getASCII() {
+		return 'P';
 	}
 
 	@Override
-	int getDefense() {
-		int buffDefense = 0;
-		for (Buff buff : buffs){
-			if (buff.getStat() == BuffStat.DEFENSE) {
-				buffDefense += buff.getStatAmount();
-			}
-		}
-		return defense + buffDefense + armor.getDefense();
-	}
-
-	@Override
-	int getAttack() {
-		int buffAttack = 0;
-		for (Buff buff : buffs){
-			if (buff.getStat() == BuffStat.ATTACK) {
-				buffAttack += buff.getStatAmount();
-			}
-		}
-		return attack + buffAttack + weapon.getAttack();
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public Tile getTile() {
-		return tile;
-	}
-
-	@Override
-	public void setTile(Tile tile) {
-		this.tile = tile;
-	}
-
-	@Override
-	public boolean passable() {
-		return false;
+	public String toString() {
+		return super.toString() + " (" + this.buffs.size() + " active buffs)";
 	}
 
 }
