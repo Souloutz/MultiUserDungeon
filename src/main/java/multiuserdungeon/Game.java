@@ -133,13 +133,25 @@ public class Game {
 		Chest chest = this.player.getTile().getChest();
 		if(chest == null) return false;
 
-		InventoryElement pickedUp = chest.handleLoot(index);
-		if(pickedUp == null) return false;
-
-		if(pickedUp instanceof Bag bag) {
-			return this.player.getInventory().addBag(bag);
+		if(index == -1) {
+			InventoryElement pickedUp;
+			while((pickedUp = chest.handleLoot(0)) != null) {
+				if(pickedUp instanceof Bag bag) {
+					if(!this.player.getInventory().addBag(bag)) return false;
+				} else {
+					if(!this.player.getInventory().addItem(pickedUp)) return false;
+				}
+			}
+			return chest.getContents().isEmpty();
 		} else {
-			return this.player.getInventory().addItem(pickedUp);
+			InventoryElement pickedUp = chest.handleLoot(index);
+			if(pickedUp == null) return false;
+
+			if(pickedUp instanceof Bag bag) {
+				return this.player.getInventory().addBag(bag);
+			} else {
+				return this.player.getInventory().addItem(pickedUp);
+			}
 		}
 	}
 

@@ -98,7 +98,7 @@ public class UI {
 				"\tswap <src bag pos> <dest bag pos> <dest bag pos> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
 				"\tload <uri> -=-= Loads a different saved map.\n" +
 				"\topen -=- Opens the chest you are currently standing on.\n" +
-				"\tpickup <chest pos> -=- Pickups an item from the currently open chest.\n" +
+				"\tpickup [chest pos] -=- Pickups all items in a chest, or just specific items.\n" +
 				"\tclose -=- Closes the chest you are currently standing on.\n" +
 				"\tdisarm <direction> -=- Attempts to disarm a detected trap in the specified direction.\n" +
 				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
@@ -192,12 +192,12 @@ public class UI {
 				}
 			}
 			case "pickup" -> {
-				int chestPos = Integer.parseInt(args[1]);
+				int chestPos = args.length == 1 ? -1 : Integer.parseInt(args[1]);
 				boolean result = new PickupItemAction(game, chestPos).execute();
 				if(result) {
-					printBlock("Successfully picked up the item.");
+					printBlock("Successfully picked up the item(s).");
 				} else {
-					printBlock("You are not currently on a chest tile, specified an unknown chest item, or your inventory is full, please try again.");
+					printBlock("You are not currently on a chest tile, your inventory is full, or the chest position is incorrect, please try again.");
 				}
 			}
 			case "close" -> {
