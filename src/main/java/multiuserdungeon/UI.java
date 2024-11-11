@@ -17,7 +17,7 @@ import multiuserdungeon.commands.movement.MoveAction;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.tiles.Player;
-import multiuserdungeon.progress.JSONProgressDB;
+import multiuserdungeon.persistence.JSONProgressDB;
 
 import java.util.Arrays;
 import java.util.List;

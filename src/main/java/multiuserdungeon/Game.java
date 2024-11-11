@@ -14,7 +14,7 @@ import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.trap.Trap;
-import multiuserdungeon.progress.ProgressDB;
+import multiuserdungeon.persistence.ProgressDB;
 
 public class Game {
 
