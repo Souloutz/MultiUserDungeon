@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class UI {
+public class PTUI {
 
 	private static final String DIVIDER  = "=".repeat(150);
 	private static final int DELAY_MS = 3000;
