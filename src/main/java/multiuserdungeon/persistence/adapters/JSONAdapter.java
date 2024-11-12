@@ -26,7 +26,7 @@ public class JSONAdapter implements FileAdapter {
 	@Override
 	public String saveProfile(Profile profile) {
 		try {
-			String path = PersistenceManager.DATA_FOLDER + profile.getPlayer().getName() + ".json";
+			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".json";
 			new Gson().toJson(profile, new FileWriter(path));
 			return path;
 		} catch (IOException e) {
