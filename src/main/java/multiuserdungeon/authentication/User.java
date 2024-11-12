@@ -1,23 +1,29 @@
 package multiuserdungeon.authentication;
 
-import multiuserdungeon.Game;
-import multiuserdungeon.map.tiles.Player;
+import com.opencsv.bean.CsvBindByPosition;
 
 public class User {
 
-    private String username;
-    private String desc;
+    @CsvBindByPosition(position = 0)
+    private final String username;
+    @CsvBindByPosition(position = 1)
+    private final String description;
 
-    public User(String name, String desc) {
+    public User(String name, String description) {
         this.username = name;
-        this.desc = desc;
+        this.description = description;
     }
 
-    public String getUsername() {return this.username;}
+    public String getUsername() {
+        return this.username;
+    }
 
-    public String getDesc() {return this.desc;}
+    public String getDescription() {
+        return this.description;
+    }
 
     public void handleBrowseMap() {
         // TODO: choose room and put player at start
     }
+
 }
