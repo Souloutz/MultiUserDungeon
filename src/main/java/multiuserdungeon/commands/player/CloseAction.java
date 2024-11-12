@@ -2,22 +2,23 @@ package multiuserdungeon.commands.player;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
 public class CloseAction implements Action<Void> {
     
     private final Game receiver;
-    private final Profile profile;
+    private final User user;
 
-    public CloseAction(Game game, Profile profile) {
+    public CloseAction(Game game, User user) {
         this.receiver = game;
-        this.profile = profile;
+        this.user = user;
     }
 
     @Override
     public Void execute() {
         if (canExecute()) {
-            this.receiver.handleCloseChest();
+            this.receiver.handleClose();
         }
 
         return null;
@@ -25,7 +26,9 @@ public class CloseAction implements Action<Void> {
 
     @Override
     public boolean canExecute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+        if (user instanceof Profile)
+			return true;
+
+		return false;
     }
 }

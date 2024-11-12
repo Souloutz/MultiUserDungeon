@@ -2,18 +2,19 @@ package multiuserdungeon.commands.player;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.map.Compass;
 
 public class MoveAction implements Action<Boolean> {
 
 	private final Game receiver;
-	private final Profile profile;
+	private final User user;
 	private final Compass direction;
 
-	public MoveAction(Game game, Profile profile, Compass direction) {
+	public MoveAction(Game game, User user, Compass direction) {
 		this.receiver = game;
-		this.profile = profile;
+		this.user = user;
 		this.direction = direction;
 	}
 
@@ -27,7 +28,9 @@ public class MoveAction implements Action<Boolean> {
 
 	@Override
 	public boolean canExecute() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+		if (user instanceof Profile)
+			return true;
+
+		return false;
 	}
 }
