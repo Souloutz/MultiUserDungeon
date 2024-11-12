@@ -33,7 +33,7 @@ public class Profile extends User {
     }
 
     public void handleNewGame() {
-        //TODO: browse a map via whatever format
+        //TODO: start a new game of either endless or premade maps
     }
 
     public void handleResumeGame(String filename) {

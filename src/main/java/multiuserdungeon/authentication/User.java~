@@ -20,7 +20,7 @@ public class User {
     }
 
     public void handleBrowseMap() {
-        // TODO: choose room and put player at start
+        // TODO: choose room and put player at start (putting player at goal room for now)
         
     }
 }
