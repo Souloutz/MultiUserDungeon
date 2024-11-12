@@ -49,6 +49,16 @@ public class Authenticator {
         return false;
     }
 
+    public boolean handleChangePassword(String curPassword, String newPassword) {
+        // check if user is logged in
+        if (this.currentUser instanceof Profile) {
+            return ((Profile) this.currentUser).changePassword(curPassword, newPassword);
+            // handle changing of DB
+        }
+
+        return false;
+    }
+
     public boolean logout() {
         //check if user is logged in
         if (this.currentUser instanceof Profile) {

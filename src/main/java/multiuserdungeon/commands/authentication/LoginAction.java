@@ -17,13 +17,15 @@ public class LoginAction implements Action<Boolean> {
 
     @Override
     public Boolean execute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        if (canExecute())
+            return this.receiver.login(username, password);
+
+        return false;
     }
 
     @Override
     public boolean canExecute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+        // checking handled in authenticator class
+        return true;
     }
 }

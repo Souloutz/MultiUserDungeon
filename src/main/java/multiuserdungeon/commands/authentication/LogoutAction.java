@@ -1,28 +1,27 @@
 package multiuserdungeon.commands.authentication;
 
 import multiuserdungeon.authentication.Authenticator;
-import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.commands.Action;
 
 public class LogoutAction implements Action<Boolean> {
     
     private final Authenticator receiver;
-    private final Profile profile;
 
-    public LogoutAction(Authenticator authenticator, Profile profile) {
+    public LogoutAction(Authenticator authenticator) {
         this.receiver = authenticator;
-        this.profile = profile;
     }
 
     @Override
     public Boolean execute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        if (canExecute())
+            return this.receiver.logout();
+
+        return false;
     }
 
     @Override
     public boolean canExecute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+        // checking handled in authenticator class
+        return true;
     }    
 }
