@@ -4,6 +4,7 @@ import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.commands.Action;
 
+// TODO is this command still necessary -> or is this just the startnewgameaction
 public class LoadMapAction implements Action<Boolean> {
 
 	private final Game receiver;
