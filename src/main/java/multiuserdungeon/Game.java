@@ -7,7 +7,7 @@ import multiuserdungeon.clock.Time;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.inventory.elements.Bag;
 import multiuserdungeon.map.Compass;
-import multiuserdungeon.map.Map;
+import multiuserdungeon.map.StaticMap;
 import multiuserdungeon.map.Room;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.tiles.Chest;
@@ -20,7 +20,7 @@ public class Game {
 
 	private static Game instance;
 	private final Player player;
-	private final Map map;
+	private final StaticMap map;
 	private final Clock clock;
 	private ProgressDB progressDB;
 	private boolean quit;
@@ -28,7 +28,7 @@ public class Game {
 	public Game(Player player) {
 		instance = this;
 		this.player = player;
-		this.map = new Map();
+		this.map = new StaticMap();
 		this.clock = new Clock();
 		this.progressDB = null;
 		this.quit = false;
@@ -42,7 +42,7 @@ public class Game {
 		return this.player;
 	}
 
-	public Map getMap() {
+	public StaticMap getMap() {
 		return this.map;
 	}
 

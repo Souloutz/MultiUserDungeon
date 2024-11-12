@@ -16,12 +16,12 @@ import multiuserdungeon.map.tiles.trap.Trap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Map {
+public class StaticMap {
 
 	private Room playerRoom;
 	private final Room goal;
 
-	public Map() {
+	public StaticMap() {
 		// Room 1
 		Room room1 = new Room(5, 5, "Bunker");
 
@@ -82,7 +82,7 @@ public class Map {
 		this.goal = room3;
 	}
 
-	public Map(Room playerRoom, Room goal) {
+	public StaticMap(Room playerRoom, Room goal) {
 		this.playerRoom = playerRoom;
 		Tile playerTile = this.playerRoom.getTile(this.playerRoom.getRows() - 1, this.playerRoom.getColumns() - 1);
 		this.playerRoom.setPlayerTile(playerTile);
