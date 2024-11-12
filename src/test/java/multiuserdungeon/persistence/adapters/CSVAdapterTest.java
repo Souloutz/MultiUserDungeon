@@ -59,7 +59,6 @@ public class CSVAdapterTest {
 
 		// Analyze
 		assertEquals(username, profile.getUsername());
-		System.out.println(profile.getStats());
 		assertEquals(100, profile.getStats().get(0).getTotalGold());
 	}
 

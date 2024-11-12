@@ -1,5 +1,6 @@
 package multiuserdungeon.persistence.adapters;
 
+import multiuserdungeon.authentication.GameStats;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.persistence.PersistenceManager;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,7 +12,11 @@ public class JSONAdapterTest {
 
 	@BeforeAll
 	public static void setup() {
-		new JSONAdapter().saveProfile(new Profile("Bob", "abc123", "I like trains"));
+		Profile profile = new Profile("Bob", "abc123", "I like trains");
+		GameStats stats = new GameStats();
+		stats.addToGold(100);
+		profile.addToStats(stats);
+		new JSONAdapter().saveProfile(profile);
 	}
 
 	@Test
@@ -38,6 +43,7 @@ public class JSONAdapterTest {
 
 		// Analyze
 		assertEquals(username, profile.getUsername());
+		assertEquals(100, profile.getStats().get(0).getTotalGold());
 	}
 
 }

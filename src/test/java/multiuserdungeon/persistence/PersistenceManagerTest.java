@@ -1,14 +1,14 @@
-package multiuserdungeon.persistence.adapters;
+package multiuserdungeon.persistence;
 
 import multiuserdungeon.authentication.GameStats;
 import multiuserdungeon.authentication.Profile;
-import multiuserdungeon.persistence.PersistenceManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class XMLAdapterTest {
+public class PersistenceManagerTest {
 
 	@BeforeAll
 	public static void setup() {
@@ -16,30 +16,33 @@ public class XMLAdapterTest {
 		GameStats stats = new GameStats();
 		stats.addToGold(100);
 		profile.addToStats(stats);
-		new XMLAdapter().saveProfile(profile);
+		PersistenceManager.getInstance().saveProfile(profile);
+	}
+
+	@Test
+	public void testSingleton() {
+		assertNotNull(PersistenceManager.getInstance());
 	}
 
 	@Test
 	public void testSaveProfile() {
 		// Setup
-		XMLAdapter adapter = new XMLAdapter();
 		Profile profile = new Profile("Jack", "Password123", "A really cool person!");
 
 		// Invoke
-		String path = adapter.saveProfile(profile);
+		String files = PersistenceManager.getInstance().saveProfile(profile);
 
 		// Analyze
-		assertEquals(PersistenceManager.DATA_FOLDER + profile.getUsername() + ".xml", path);
+		assertEquals("data/Jack.json, data/Jack.xml, data/profiles.csv", files);
 	}
 
 	@Test
 	public void testLoadProfile() {
 		// Setup
-		XMLAdapter adapter = new XMLAdapter();
 		String username = "Bob";
 
 		// Invoke
-		Profile profile = adapter.loadProfile(username);
+		Profile profile = PersistenceManager.getInstance().loadProfile(username);
 
 		// Analyze
 		assertEquals(username, profile.getUsername());
