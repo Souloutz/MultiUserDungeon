@@ -1,6 +1,5 @@
 package multiuserdungeon.persistence.adapters;
 
-import com.opencsv.CSVWriterBuilder;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -10,7 +9,6 @@ import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.persistence.FileAdapter;
 import multiuserdungeon.persistence.PersistenceManager;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -31,7 +29,10 @@ public class CSVAdapter implements FileAdapter {
 	public String saveProfile(Profile profile) {
 		try {
 			String path = PersistenceManager.DATA_FOLDER + "profiles.csv";
-			new StatefulBeanToCsvBuilder<Profile>(new FileWriter(path)).build().write(profile);
+			FileWriter writer = new FileWriter(path);
+			new StatefulBeanToCsvBuilder<Profile>(writer).build().write(profile);
+			writer.flush();
+			writer.close();
 			return path;
 		} catch(CsvDataTypeMismatchException | CsvRequiredFieldEmptyException | IOException e) {
 			System.out.println("Error saving profile to CSV!");
@@ -43,10 +44,13 @@ public class CSVAdapter implements FileAdapter {
 	public Profile loadProfile(String username) {
 		try {
 			String path = PersistenceManager.DATA_FOLDER + "profiles.csv";
-			return new CsvToBeanBuilder<Profile>(new FileReader(path)).withType(Profile.class)
+			FileReader reader = new FileReader(path);
+			Profile profile = new CsvToBeanBuilder<Profile>(reader).withType(Profile.class)
 					.withFilter(row -> row[0].equals(username)).build().parse()
 					.stream().findFirst().orElse(null);
-		} catch(FileNotFoundException e) {
+			reader.close();
+			return profile;
+		} catch(IOException e) {
 			System.out.println("Error loading profile from CSV!");
 			return null;
 		}

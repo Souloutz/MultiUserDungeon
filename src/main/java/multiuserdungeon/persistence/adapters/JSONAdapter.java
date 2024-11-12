@@ -6,7 +6,6 @@ import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.persistence.FileAdapter;
 import multiuserdungeon.persistence.PersistenceManager;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,7 +26,10 @@ public class JSONAdapter implements FileAdapter {
 	public String saveProfile(Profile profile) {
 		try {
 			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".json";
-			new Gson().toJson(profile, new FileWriter(path));
+			FileWriter writer = new FileWriter(path);
+			new Gson().toJson(profile, writer);
+			writer.flush();
+			writer.close();
 			return path;
 		} catch(IOException e) {
 			System.out.println("Error saving user to JSON!");
@@ -39,8 +41,11 @@ public class JSONAdapter implements FileAdapter {
 	public Profile loadProfile(String username) {
 		try {
 			String path = PersistenceManager.DATA_FOLDER + username + ".json";
-			return new Gson().fromJson(new FileReader(path), Profile.class);
-		} catch(FileNotFoundException e) {
+			FileReader reader = new FileReader(path);
+			Profile profile = new Gson().fromJson(reader, Profile.class);
+			reader.close();
+			return profile;
+		} catch(IOException e) {
 			System.out.println("Error loading user from JSON!");
 			return null;
 		}

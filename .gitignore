@@ -30,7 +30,7 @@ target/**
 # Ignore IntelliJ
 .idea/
 
-# Saved games
-*.json
+# Saved data
+data/
 
 *~
