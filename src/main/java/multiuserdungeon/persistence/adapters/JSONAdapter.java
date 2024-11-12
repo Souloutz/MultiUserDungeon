@@ -1,6 +1,7 @@
 package multiuserdungeon.persistence.adapters;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.persistence.FileAdapter;
@@ -27,7 +28,7 @@ public class JSONAdapter implements FileAdapter {
 		try {
 			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".json";
 			FileWriter writer = new FileWriter(path);
-			new Gson().toJson(profile, writer);
+			new GsonBuilder().setPrettyPrinting().create().toJson(profile, writer);
 			writer.flush();
 			writer.close();
 			return path;

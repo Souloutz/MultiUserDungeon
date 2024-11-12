@@ -1,5 +1,6 @@
 package multiuserdungeon.persistence.adapters;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
@@ -25,7 +26,7 @@ public class XMLAdapter implements FileAdapter {
 	@Override
 	public String saveProfile(Profile profile) {
 		try {
-			XmlMapper mapper = new XmlMapper();
+			ObjectWriter mapper = new XmlMapper().writerWithDefaultPrettyPrinter();
 			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".xml";
 			FileWriter writer = new FileWriter(path);
 			mapper.writeValue(writer, profile);
