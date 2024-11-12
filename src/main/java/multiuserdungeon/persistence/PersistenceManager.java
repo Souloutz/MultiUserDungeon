@@ -51,9 +51,9 @@ public class PersistenceManager {
 		return String.join(", ", files);
 	}
 
-	public Profile loadProfile(String filename) {
+	public Profile loadProfile(String username) {
 		for(FileAdapter adapter : this.adapters) {
-			Profile profile = adapter.loadProfile(filename);
+			Profile profile = adapter.loadProfile(username);
 			if(profile != null) return profile;
 		}
 		return null;
