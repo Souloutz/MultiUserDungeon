@@ -1,13 +1,14 @@
 package multiuserdungeon.persistence.adapters;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.persistence.FileAdapter;
 
 public class JSONAdapter implements FileAdapter {
 
 	@Override
-	public boolean saveGame(Game game) {
-		return false;
+	public String saveGame(Game game) {
+		return null;
 	}
 
 	@Override
@@ -16,12 +17,12 @@ public class JSONAdapter implements FileAdapter {
 	}
 
 	@Override
-	public boolean saveUser(User user) {
-		return false;
+	public String saveUser(User user) {
+		return null;
 	}
 
 	@Override
-	public Game loadUser(String filename) {
+	public User loadUser(String filename) {
 		return null;
 	}
 

@@ -17,7 +17,6 @@ import multiuserdungeon.commands.movement.MoveAction;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.tiles.Player;
-import multiuserdungeon.persistence.JSONProgressDB;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +34,6 @@ public class UI {
 	public static void main(String[] args) throws InterruptedException {
 		printWelcomeMsg();
 		game = new Game(createPlayer());
-		game.setProgressDB(new JSONProgressDB());
 
 		printBlock("You enter the first narrow doorway to begin your journey...");
 		Thread.sleep(DELAY_MS);

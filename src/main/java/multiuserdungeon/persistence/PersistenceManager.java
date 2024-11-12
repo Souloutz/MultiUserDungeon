@@ -1,6 +1,7 @@
 package multiuserdungeon.persistence;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.persistence.adapters.CSVAdapter;
 import multiuserdungeon.persistence.adapters.JSONAdapter;
 import multiuserdungeon.persistence.adapters.XMLAdapter;
@@ -22,7 +23,7 @@ public class PersistenceManager {
 		return INSTANCE;
 	}
 
-	public boolean saveGame(Game game) {
+	public String saveGame(Game game) {
 		for(FileAdapter adapter : this.adapters) {
 			if(!adapter.saveGame(game)) return false;
 		}
@@ -44,7 +45,7 @@ public class PersistenceManager {
 		return true;
 	}
 
-	public Game loadUser(String filename) {
+	public User loadUser(String filename) {
 		for(FileAdapter adapter : this.adapters) {
 			User user = adapter.loadUser(filename);
 			if(user != null) return user;

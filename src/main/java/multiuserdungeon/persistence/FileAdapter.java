@@ -1,15 +1,16 @@
 package multiuserdungeon.persistence;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.authentication.User;
 
 public interface FileAdapter {
 
-	boolean saveGame(Game game);
+	String saveGame(Game game);
 
 	Game loadGame(String filename);
 
-	boolean saveUser(User user);
+	String saveUser(User user);
 
-	Game loadUser(String filename);
+	User loadUser(String filename);
 
 }
