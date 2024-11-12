@@ -20,6 +20,14 @@ public class Profile extends User {
         return this.password;
     }
 
+    public boolean changePassword(String prevPassword, String newPassword) {
+        if (prevPassword.equals(this.password)) {
+            this.password = newPassword;
+            return true;
+        }
+        return false;
+    }
+
     public Player getPlayer() {
         return super.getPlayer();
     }

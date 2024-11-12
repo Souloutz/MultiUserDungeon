@@ -42,6 +42,17 @@ public class Authenticator {
         return false;
     }
 
+    public boolean register(String username, String password, String description) {
+        //check if user is not logged in
+        if (this.currentUser instanceof User) {
+            //create new profile accordingly
+            this.currentUser = new Profile(username, password, description);
+            //add to json here
+            return true;
+        }
+        return false;
+    }
+
     public boolean logout() {
         //check if user is logged in
         if (this.currentUser instanceof Profile) {
