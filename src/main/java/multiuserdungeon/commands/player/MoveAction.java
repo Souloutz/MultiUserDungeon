@@ -1,27 +1,26 @@
-package multiuserdungeon.commands.inventory;
+package multiuserdungeon.commands.player;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.commands.Action;
+import multiuserdungeon.map.Compass;
 
-public class DestroyItemAction implements Action<Boolean> {
+public class MoveAction implements Action<Boolean> {
 
 	private final Game receiver;
 	private final Profile profile;
-	private final int bagPos;
-	private final int itemPos;
+	private final Compass direction;
 
-	public DestroyItemAction(Game game, Profile profile, int bagPos, int itemPos) {
+	public MoveAction(Game game, Profile profile, Compass direction) {
 		this.receiver = game;
 		this.profile = profile;
-		this.bagPos = bagPos;
-		this.itemPos = itemPos;
+		this.direction = direction;
 	}
 
 	@Override
 	public Boolean execute() {
 		if (canExecute())
-			return this.receiver.handleDestroyItem(this.bagPos, this.itemPos);
+			return this.receiver.handleMove(this.direction);
 
 		return false;
 	}

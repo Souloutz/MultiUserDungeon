@@ -1,29 +1,28 @@
-package multiuserdungeon.commands.inventory;
+package multiuserdungeon.commands.player;
+
+import java.util.List;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.commands.Action;
+import multiuserdungeon.inventory.InventoryElement;
 
-public class DestroyItemAction implements Action<Boolean> {
+public class OpenAction implements Action<List<InventoryElement>> {
 
 	private final Game receiver;
 	private final Profile profile;
-	private final int bagPos;
-	private final int itemPos;
 
-	public DestroyItemAction(Game game, Profile profile, int bagPos, int itemPos) {
+	public OpenAction(Game game, Profile profile) {
 		this.receiver = game;
 		this.profile = profile;
-		this.bagPos = bagPos;
-		this.itemPos = itemPos;
 	}
 
 	@Override
-	public Boolean execute() {
+	public List<InventoryElement> execute() {
 		if (canExecute())
-			return this.receiver.handleDestroyItem(this.bagPos, this.itemPos);
+			return this.receiver.handleOpenChest();
 
-		return false;
+		return null;
 	}
 
 	@Override

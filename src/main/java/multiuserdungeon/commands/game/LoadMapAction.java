@@ -1,27 +1,25 @@
-package multiuserdungeon.commands.inventory;
+package multiuserdungeon.commands.game;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.commands.Action;
 
-public class DestroyItemAction implements Action<Boolean> {
+public class LoadMapAction implements Action<Boolean> {
 
 	private final Game receiver;
 	private final Profile profile;
-	private final int bagPos;
-	private final int itemPos;
-
-	public DestroyItemAction(Game game, Profile profile, int bagPos, int itemPos) {
+	private final String uri;
+	
+	public LoadMapAction(Game game, Profile profile, String uri) {
 		this.receiver = game;
 		this.profile = profile;
-		this.bagPos = bagPos;
-		this.itemPos = itemPos;
+		this.uri = uri;
 	}
 
 	@Override
 	public Boolean execute() {
 		if (canExecute())
-			return this.receiver.handleDestroyItem(this.bagPos, this.itemPos);
+			return this.receiver.handleLoadMap(this.uri);
 
 		return false;
 	}

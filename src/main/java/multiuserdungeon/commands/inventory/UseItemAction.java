@@ -1,23 +1,34 @@
 package multiuserdungeon.commands.inventory;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.commands.Action;
 
 public class UseItemAction implements Action<Boolean> {
 
 	private final Game receiver;
+	private final Profile profile;
 	private final int bagPos;
 	private final int itemPos;
 
-	public UseItemAction(Game game, int bagPos, int itemPos) {
-		receiver = game;
+	public UseItemAction(Game game, Profile profile, int bagPos, int itemPos) {
+		this.receiver = game;
+		this.profile = profile;
 		this.bagPos = bagPos;
 		this.itemPos = itemPos;
 	}
 
 	@Override
 	public Boolean execute() {
-		return this.receiver.handleUseItem(this.bagPos, this.itemPos);
+		if (canExecute())
+			return this.receiver.handleUseItem(this.bagPos, this.itemPos);
+
+		return false;
 	}
 
+	@Override
+	public boolean canExecute() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+	}
 }
