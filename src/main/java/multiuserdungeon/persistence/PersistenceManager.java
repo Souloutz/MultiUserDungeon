@@ -6,6 +6,7 @@ import multiuserdungeon.persistence.adapters.CSVAdapter;
 import multiuserdungeon.persistence.adapters.JSONAdapter;
 import multiuserdungeon.persistence.adapters.XMLAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,12 @@ public class PersistenceManager {
 
 	public PersistenceManager() {
 		this.adapters = new ArrayList<>(List.of(new JSONAdapter(), new XMLAdapter(), new CSVAdapter()));
+		File dataFolder = new File(DATA_FOLDER);
+		if(!dataFolder.exists()) {
+			if(!dataFolder.mkdirs()) {
+				System.out.println("Failed to create data folder!");
+			}
+		}
 	}
 
 	public static PersistenceManager getInstance() {
