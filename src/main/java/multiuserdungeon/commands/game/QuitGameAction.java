@@ -1,30 +1,32 @@
 package multiuserdungeon.commands.game;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.authentication.Profile;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
-public class QuitGameAction implements Action<String> {
+public class QuitGameAction implements Action<Void> {
 
 	private final Game receiver;
-	private final Profile profile;
+	private final User user;
 
-	public QuitGameAction(Game game, Profile profile) {
+	public QuitGameAction(Game game, User user) {
 		this.receiver = game;
-		this.profile = profile;
+		this.user = user;
 	}
 
 	@Override
-	public String execute() {
+	public Void execute() {
 		if (canExecute())
-			return this.receiver.handleQuitGame();
+			this.receiver.handleQuitGame();
 
 		return null;
 	}	
 
 	@Override
 	public boolean canExecute() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+		if (user instanceof User)
+			return true;
+
+		return false;
 	}
 }
