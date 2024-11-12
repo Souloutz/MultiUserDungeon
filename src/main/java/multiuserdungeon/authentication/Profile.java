@@ -1,7 +1,5 @@
 package multiuserdungeon.authentication;
 
-import multiuserdungeon.map.tiles.Player;
-
 import java.util.ArrayList;
 
 public class Profile extends User {
@@ -26,10 +24,6 @@ public class Profile extends User {
             return true;
         }
         return false;
-    }
-
-    public Player getPlayer() {
-        return super.getPlayer();
     }
 
     public ArrayList<GameStats> getStats() {
