@@ -13,6 +13,8 @@ import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Player;
+import multiuserdungeon.map.tiles.shrine.Shrine;
+import multiuserdungeon.map.tiles.shrine.Snapshot;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.progress.ProgressDB;
 
@@ -22,6 +24,7 @@ public class Game {
 	private final Player player;
 	private final Map map;
 	private final Clock clock;
+	private Shrine shrine;
 	private ProgressDB progressDB;
 	private boolean quit;
 
@@ -184,6 +187,20 @@ public class Game {
 
 	public boolean handleSwapBag(int sourceBagPos, int destBagPos, int destItemPos) {
 		return this.player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
+	}
+
+	public Snapshot createSnapshot(){
+		//TODO: copy logic
+		return null;
+	}
+
+	public void restoreGame(Snapshot snapshot){
+
+	}
+
+	public boolean handlePray(){
+		return false;
+
 	}
 
 	public String handleQuitGame() {
