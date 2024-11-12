@@ -7,7 +7,7 @@ import multiuserdungeon.persistence.adapters.JSONAdapter;
 import multiuserdungeon.persistence.adapters.XMLAdapter;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class PersistenceManager {
@@ -18,7 +18,7 @@ public class PersistenceManager {
 	private final List<FileAdapter> adapters;
 
 	public PersistenceManager() {
-		this.adapters = new ArrayList<>(List.of(new JSONAdapter(), new XMLAdapter(), new CSVAdapter()));
+		this.adapters = new LinkedList<>(List.of(new JSONAdapter(), new XMLAdapter(), new CSVAdapter()));
 		File dataFolder = new File(DATA_FOLDER);
 		if(!dataFolder.exists()) {
 			if(!dataFolder.mkdirs()) {
@@ -33,7 +33,7 @@ public class PersistenceManager {
 	}
 
 	public String saveGame(Game game) {
-		List<String> files = new ArrayList<>();
+		List<String> files = new LinkedList<>();
 		for(FileAdapter adapter : this.adapters) {
 			String uri = adapter.saveGame(game);
 			if(adapter.saveGame(game) != null) files.add(uri);
@@ -50,7 +50,7 @@ public class PersistenceManager {
 	}
 
 	public String saveProfile(Profile profile) {
-		List<String> files = new ArrayList<>();
+		List<String> files = new LinkedList<>();
 		for(FileAdapter adapter : this.adapters) {
 			String uri = adapter.saveProfile(profile);
 			if(adapter.saveProfile(profile) != null) files.add(uri);

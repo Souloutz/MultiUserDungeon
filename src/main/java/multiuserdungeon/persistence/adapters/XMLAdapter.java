@@ -29,8 +29,6 @@ public class XMLAdapter implements FileAdapter {
 			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".xml";
 			FileWriter writer = new FileWriter(path);
 			mapper.writeValue(writer, profile);
-			writer.flush();
-			writer.close();
 			return path;
 		} catch(IOException e) {
 			System.out.println("Error saving profile to XML!");
@@ -44,9 +42,7 @@ public class XMLAdapter implements FileAdapter {
 			XmlMapper mapper = new XmlMapper();
 			String path = PersistenceManager.DATA_FOLDER + username + ".xml";
 			FileReader reader = new FileReader(path);
-			Profile profile = mapper.readValue(reader, Profile.class);
-			reader.close();
-			return profile;
+			return mapper.readValue(reader, Profile.class);
 		} catch(IOException e) {
 			System.out.println("Error loading profile from XML!");
 			return null;

@@ -29,7 +29,7 @@ public class CSVAdapter implements FileAdapter {
 	public String saveProfile(Profile profile) {
 		try {
 			String path = PersistenceManager.DATA_FOLDER + "profiles.csv";
-			FileWriter writer = new FileWriter(path);
+			FileWriter writer = new FileWriter(path, true);
 			new StatefulBeanToCsvBuilder<Profile>(writer).build().write(profile);
 			writer.flush();
 			writer.close();

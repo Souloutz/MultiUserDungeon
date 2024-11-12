@@ -1,18 +1,27 @@
 package multiuserdungeon.authentication;
 
+import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
+import multiuserdungeon.persistence.GameStatsCSVConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Profile extends User {
 
     @CsvBindByPosition(position = 2)
     private String password;
-    @CsvBindByPosition(position = 3)
-    private final ArrayList<GameStats> stats;
+    @CsvBindAndSplitByPosition(position = 3, elementType = GameStats.class, writeDelimiter = "|", converter = GameStatsCSVConverter.class)
+    private final List<GameStats> stats;
 
-    public Profile(String username, String password, String desc) {
-        super(username, desc);
+    public Profile() {
+        super(null, null);
+        this.password = null;
+        this.stats = null;
+    }
+
+    public Profile(String username, String password, String description) {
+        super(username, description);
         this.password = password;
         this.stats = new ArrayList<>();
     }
@@ -29,7 +38,7 @@ public class Profile extends User {
         return false;
     }
 
-    public ArrayList<GameStats> getStats() {
+    public List<GameStats> getStats() {
         return this.stats;
     }
 
