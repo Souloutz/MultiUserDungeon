@@ -11,17 +11,22 @@ import multiuserdungeon.inventory.elements.Weapon;
 import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
+import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.trap.Trap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class StaticMap {
+public class PremadeMap implements GameMap {
 
-	private Room playerRoom;
+	private Map<Player,Room> playerRoom;
+	private Player player;
 	private final Room goal;
 
-	public StaticMap() {
+	//Class messed up transitioning from playerRoom to Map<Player,Room>
+
+	public PremadeMap() {
 		// Room 1
 		Room room1 = new Room(5, 5, "Bunker");
 
@@ -82,7 +87,7 @@ public class StaticMap {
 		this.goal = room3;
 	}
 
-	public StaticMap(Room playerRoom, Room goal) {
+	public PremadeMap(Room playerRoom, Room goal) {
 		this.playerRoom = playerRoom;
 		Tile playerTile = this.playerRoom.getTile(this.playerRoom.getRows() - 1, this.playerRoom.getColumns() - 1);
 		this.playerRoom.setPlayerTile(playerTile);
@@ -95,10 +100,12 @@ public class StaticMap {
 		return goal;
 	}
 
+	@Override
 	public Room getPlayerRoom() {
 		return this.playerRoom;
 	}
 
+	@Override
 	public void setPlayerRoom(Room room) {
 		this.playerRoom = room;
 	}

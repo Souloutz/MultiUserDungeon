@@ -169,4 +169,8 @@ public class Room {
 		return builder.toString();
 	}
 
+	public Map<Tile,Room> getConnections () {
+		return this.connections;
+	}
+
 }
