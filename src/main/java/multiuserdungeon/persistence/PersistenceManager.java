@@ -1,6 +1,7 @@
 package multiuserdungeon.persistence;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.persistence.adapters.CSVAdapter;
 import multiuserdungeon.persistence.adapters.JSONAdapter;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PersistenceManager {
+
+	public static final String DATA_FOLDER = "data/";
 
 	private static PersistenceManager INSTANCE = null;
 	private final List<FileAdapter> adapters;
@@ -24,10 +27,12 @@ public class PersistenceManager {
 	}
 
 	public String saveGame(Game game) {
+		List<String> files = new ArrayList<>();
 		for(FileAdapter adapter : this.adapters) {
-			if(!adapter.saveGame(game)) return false;
+			String uri = adapter.saveGame(game);
+			if(adapter.saveGame(game) != null) files.add(uri);
 		}
-		return true;
+		return String.join(", ", files);
 	}
 
 	public Game loadGame(String filename) {
@@ -38,17 +43,19 @@ public class PersistenceManager {
 		return null;
 	}
 
-	public boolean saveUser(User user) {
+	public String saveProfile(Profile profile) {
+		List<String> files = new ArrayList<>();
 		for(FileAdapter adapter : this.adapters) {
-			if(!adapter.saveUser(user)) return false;
+			String uri = adapter.saveProfile(profile);
+			if(adapter.saveProfile(profile) != null) files.add(uri);
 		}
-		return true;
+		return String.join(", ", files);
 	}
 
-	public User loadUser(String filename) {
+	public Profile loadProfile(String filename) {
 		for(FileAdapter adapter : this.adapters) {
-			User user = adapter.loadUser(filename);
-			if(user != null) return user;
+			Profile profile = adapter.loadProfile(filename);
+			if(profile != null) return profile;
 		}
 		return null;
 	}

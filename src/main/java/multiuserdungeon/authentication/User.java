@@ -1,11 +1,10 @@
 package multiuserdungeon.authentication;
 
-import multiuserdungeon.Game;
 import multiuserdungeon.map.tiles.Player;
 
 public class User {
 
-    private Player player;
+    private final Player player;
 
     public User(String name, String desc) {
         this.player = new Player(name, desc);
@@ -21,6 +20,6 @@ public class User {
 
     public void handleBrowseMap() {
         // TODO: choose room and put player at start
-        
     }
+
 }

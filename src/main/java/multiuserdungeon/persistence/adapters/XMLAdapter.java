@@ -1,7 +1,7 @@
 package multiuserdungeon.persistence.adapters;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.authentication.User;
+import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.persistence.FileAdapter;
 
 public class XMLAdapter implements FileAdapter {
@@ -17,12 +17,12 @@ public class XMLAdapter implements FileAdapter {
 	}
 
 	@Override
-	public String saveUser(User user) {
+	public String saveProfile(Profile profile) {
 		return null;
 	}
 
 	@Override
-	public User loadUser(String filename) {
+	public Profile loadProfile(String filename) {
 		return null;
 	}
 

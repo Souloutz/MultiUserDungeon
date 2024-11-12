@@ -1,7 +1,7 @@
 package multiuserdungeon.persistence;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.authentication.User;
+import multiuserdungeon.authentication.Profile;
 
 public interface FileAdapter {
 
@@ -9,8 +9,8 @@ public interface FileAdapter {
 
 	Game loadGame(String filename);
 
-	String saveUser(User user);
+	String saveProfile(Profile profile);
 
-	User loadUser(String filename);
+	Profile loadProfile(String filename);
 
 }

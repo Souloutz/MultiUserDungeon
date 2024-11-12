@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Profile extends User {
 
     private String password;
-    private ArrayList<GameStats> stats;
+    private final ArrayList<GameStats> stats;
 
     public Profile(String username, String password, String desc) {
         super(username, desc);
