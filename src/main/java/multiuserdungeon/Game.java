@@ -119,13 +119,33 @@ public class Game {
 		return trap.disarmAttempt();
 	}
 
-	public List<InventoryElement> handleOpenChest() {
+	public boolean handlePray() {
+		// TODO
+		return false;
+	}
+
+	public String handleTalkToMerchant(Compass direction) {
+		// TODO
+		return null;
+	} 
+
+	public boolean handleBuyItem(int index) {
+		// TODO;
+		return false;
+	}
+
+	public boolean handleSellItem(int bagPos, int itemPos) {
+		// TODO;
+		return false;
+	}
+
+	public List<InventoryElement> handleOpen() {
 		Chest chest = this.player.getTile().getChest();
 		if(chest == null) return null;
 		return chest.getContents();
 	}
 
-	public void handleCloseChest() {
+	public void handleClose() {
 		endTurn();
 	}
 
@@ -153,6 +173,11 @@ public class Game {
 				return this.player.getInventory().addItem(pickedUp);
 			}
 		}
+	}
+
+	public List<InventoryElement> handleViewInventory() {
+		// TODO
+		return null;
 	}
 
 	public boolean handleEquipItem(int bagPos, int itemPos) {
@@ -186,8 +211,11 @@ public class Game {
 		return this.player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
 	}
 
-	public String handleQuitGame() {
+	public void handleQuitGame() {
 		this.quit = true;
+	}
+
+	public String handleSaveGame() {
 		return this.progressDB.save(this);
 	}
 	

@@ -42,4 +42,8 @@ public class Profile extends User {
         //TODO: load a saved game via whatever format
     }
 
+    public boolean handleJoinGame(String filename) {
+        // TODO
+        return false;
+    }
 }
