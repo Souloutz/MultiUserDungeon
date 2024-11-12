@@ -1,10 +1,14 @@
 package multiuserdungeon.authentication;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 import java.util.ArrayList;
 
 public class Profile extends User {
 
+    @CsvBindByPosition(position = 2)
     private String password;
+    @CsvBindByPosition(position = 3)
     private final ArrayList<GameStats> stats;
 
     public Profile(String username, String password, String desc) {
