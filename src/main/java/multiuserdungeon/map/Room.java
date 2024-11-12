@@ -46,6 +46,21 @@ public class Room {
 		}
 	}
 
+	//copy constructor
+	public Room(Room room){
+		this.rows = room.getRows();
+		this.columns = room.getColumns();
+		this.description = room.getDescription();
+		for(Tile tile : room.getDoorways().values()){
+			Tile newTile = new Tile(newTile);
+
+		}
+		this.doorways = null;
+		this.connections = null;
+		this.layout = null;
+		this.playerTile = null;
+	}
+
 	public int getRows() {
 		return this.rows;
 	}
@@ -60,6 +75,10 @@ public class Room {
 
 	public Tile getDoorway(Compass compass) {
 		return this.doorways.get(compass);
+	}
+
+	public Map<Compass, Tile> getDoorways() {
+		return this.doorways;
 	}
 
 	public void addConnection(int row, int col, Room targetRoom) {

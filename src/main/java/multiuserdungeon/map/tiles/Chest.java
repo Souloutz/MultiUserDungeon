@@ -18,6 +18,15 @@ public class Chest implements TileObject {
 		this.tile = null;
 	}
 
+	//copy constructor
+	public Chest(Chest chest){
+		this.name = chest.getName();
+		for (InventoryElement item : chest.getContents()){
+			this.contents.
+		}
+		this.tile = getTile();
+	}
+
 	@Override
 	public String getName() {
 		return this.name;

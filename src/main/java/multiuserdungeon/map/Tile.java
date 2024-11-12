@@ -25,6 +25,39 @@ public class Tile {
 		this.adjacent = null;
 	}
 
+	//copy constructor
+	public Tile(Tile tile){
+		this.row = tile.getRow();
+		this.col = tile.getCol();
+		for(TileObject tileObject : tile.getObjects()){
+			TileObject newTileObject;
+			if(tileObject instanceof Chest){
+				// newTileObject = new Chest
+			}
+			else if(tileObject instanceof EmptyTile){
+
+			}
+			else if(tileObject instanceof NPC){
+				newTileObject = new NPC((NPC)tileObject);
+			}
+			else if(tileObject instanceof Obstacle){
+
+			}
+			else if(tileObject instanceof Player){
+				
+			}
+			else if(tileObject instanceof Shrine){
+
+			}
+			else{ //shrine
+
+			}
+			this.addObject(tileObject);
+		}
+		this.objects = null;
+		this.adjacent = null;
+	}
+
 	public int getRow() {
 		return this.row;
 	}

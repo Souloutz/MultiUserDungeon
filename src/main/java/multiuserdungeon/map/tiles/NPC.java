@@ -14,6 +14,12 @@ public class NPC extends Character {
 		this.creatureBuff = creatureBuff;
 	}
 
+	//copy constructor
+	public NPC(NPC npc){
+		super(npc.getName(), npc.getDescription(), npc.getMaxHealth(), npc.getAttack(), npc.getDefense());
+		this.creatureBuff = npc.getCreatureBuff();
+	}
+
 	@Override
 	public int getAttack() {
 		int attack = super.getAttack();
@@ -31,6 +37,10 @@ public class NPC extends Character {
 	@Override
 	public char getASCII() {
 		return 'N';
+	}
+
+	public CreatureBuff getCreatureBuff() {
+		return creatureBuff;
 	}
 
 }
