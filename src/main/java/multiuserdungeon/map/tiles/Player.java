@@ -3,10 +3,8 @@ package multiuserdungeon.map.tiles;
 import java.util.HashMap;
 import java.util.Map;
 
-import multiuserdungeon.inventory.Inventory;
-import multiuserdungeon.inventory.elements.Armor;
-import multiuserdungeon.inventory.elements.Weapon;
 import multiuserdungeon.inventory.elements.*;
+import multiuserdungeon.map.Tile;
 import multiuserdungeon.inventory.*;
 
 public class Player extends Character {
@@ -22,6 +20,20 @@ public class Player extends Character {
 		this.weapon = null;
 		this.armor = null;
 		this.buffs = new HashMap<>();
+	}
+
+	//copy constructor
+	public Player(Player player){
+		super(player.getName(), player.getDescription(), player.getMaxHealth(), player.getAttack(), player.getDefense());
+		this.weapon=(player.getWeapon());
+		this.armor=(player.getArmor());
+		this.inventory = new Inventory(player.getInventory());
+		this.buffs = new HashMap<>();
+		for(Buff buff : player.buffs.keySet()){
+			this.useBuff(buff);
+		}
+		this.setHealth(player.getHealth());
+
 	}
 
 	@Override

@@ -11,6 +11,11 @@ public class EmptyTile implements TileObject {
 		this.tile = null;
 	}
 
+	//copy constructor
+	public EmptyTile(EmptyTile emptyTile){
+		this.tile = null;
+	}
+
 	@Override
 	public String getName() {
 		return "Empty Tile";

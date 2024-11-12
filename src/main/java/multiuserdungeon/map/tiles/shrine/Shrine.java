@@ -14,7 +14,16 @@ public class Shrine implements TileObject{
     public Shrine(String name){
         this.game = Game.getInstance();
         this.name = name;
+		this.tile = null;
     }
+
+	//copy constructor
+	public Shrine(Shrine shrine){
+		this.name = shrine.getName();
+		this.snapshot = shrine.getSnapshot();
+		this.game = Game.getInstance();
+		this.tile = null;
+	}
 
     public void storeSnapshot(){
         snapshot = game.createSnapshot();

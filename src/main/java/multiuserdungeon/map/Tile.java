@@ -29,33 +29,35 @@ public class Tile {
 	public Tile(Tile tile){
 		this.row = tile.getRow();
 		this.col = tile.getCol();
+		this.objects = new LinkedList<>();
 		for(TileObject tileObject : tile.getObjects()){
-			TileObject newTileObject;
+			TileObject newTileObject = new EmptyTile((EmptyTile)tileObject);
 			if(tileObject instanceof Chest){
-				// newTileObject = new Chest
+				newTileObject = new Chest((Chest)tileObject);
 			}
 			else if(tileObject instanceof EmptyTile){
-
+				newTileObject = new EmptyTile((EmptyTile)tileObject);
 			}
 			else if(tileObject instanceof NPC){
 				newTileObject = new NPC((NPC)tileObject);
 			}
 			else if(tileObject instanceof Obstacle){
-
+				newTileObject = new Obstacle((Obstacle)tileObject);
 			}
 			else if(tileObject instanceof Player){
-				
+				newTileObject = new Player((Player)tileObject);
 			}
 			else if(tileObject instanceof Shrine){
-
+				newTileObject = new Obstacle((Obstacle)tileObject);
 			}
-			else{ //shrine
-
-			}
-			this.addObject(tileObject);
+			// else if (tileObject instanceof Merchant){
+			// 	newTileObject = null;
+			// }
+			// new EmptyTile((EmptyTile)tileObject);
+			newTileObject.setTile(this);
+			this.objects.add(newTileObject);
 		}
-		this.objects = null;
-		this.adjacent = null;
+		this.adjacent = null; //will be set in room constructor
 	}
 
 	public int getRow() {

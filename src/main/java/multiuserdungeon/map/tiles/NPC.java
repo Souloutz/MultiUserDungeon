@@ -2,6 +2,7 @@ package multiuserdungeon.map.tiles;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.CreatureBuff;
+import multiuserdungeon.map.Tile;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -18,6 +19,7 @@ public class NPC extends Character {
 	public NPC(NPC npc){
 		super(npc.getName(), npc.getDescription(), npc.getMaxHealth(), npc.getAttack(), npc.getDefense());
 		this.creatureBuff = npc.getCreatureBuff();
+		this.setHealth(npc.getHealth());
 	}
 
 	@Override
