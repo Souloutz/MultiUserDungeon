@@ -29,7 +29,7 @@ public class JSONAdapter implements FileAdapter {
 			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".json";
 			new Gson().toJson(profile, new FileWriter(path));
 			return path;
-		} catch (IOException e) {
+		} catch(IOException e) {
 			System.out.println("Error saving user to JSON!");
 			return null;
 		}
@@ -37,10 +37,10 @@ public class JSONAdapter implements FileAdapter {
 
 	@Override
 	public Profile loadProfile(String username) {
-		String path = PersistenceManager.DATA_FOLDER + username + ".json";
 		try {
+			String path = PersistenceManager.DATA_FOLDER + username + ".json";
 			return new Gson().fromJson(new FileReader(path), Profile.class);
-		} catch (FileNotFoundException e) {
+		} catch(FileNotFoundException e) {
 			System.out.println("Error loading user from JSON!");
 			return null;
 		}

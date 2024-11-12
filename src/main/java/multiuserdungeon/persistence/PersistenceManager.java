@@ -2,7 +2,6 @@ package multiuserdungeon.persistence;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
-import multiuserdungeon.authentication.User;
 import multiuserdungeon.persistence.adapters.CSVAdapter;
 import multiuserdungeon.persistence.adapters.JSONAdapter;
 import multiuserdungeon.persistence.adapters.XMLAdapter;

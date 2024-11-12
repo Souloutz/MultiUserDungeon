@@ -1,8 +1,14 @@
 package multiuserdungeon.persistence.adapters;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.persistence.FileAdapter;
+import multiuserdungeon.persistence.PersistenceManager;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class XMLAdapter implements FileAdapter {
 
@@ -18,12 +24,27 @@ public class XMLAdapter implements FileAdapter {
 
 	@Override
 	public String saveProfile(Profile profile) {
-		return null;
+		try {
+			XmlMapper mapper = new XmlMapper();
+			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".xml";
+			mapper.writeValue(new FileWriter(path), profile);
+			return path;
+		} catch(IOException e) {
+			System.out.println("Error saving profile to XML!");
+			return null;
+		}
 	}
 
 	@Override
 	public Profile loadProfile(String username) {
-		return null;
+		try {
+			XmlMapper mapper = new XmlMapper();
+			String path = PersistenceManager.DATA_FOLDER + username + ".xml";
+			return mapper.readValue(new FileReader(path), Profile.class);
+		} catch(IOException e) {
+			System.out.println("Error loading profile from XML!");
+			return null;
+		}
 	}
 
 }

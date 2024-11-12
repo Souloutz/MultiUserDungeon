@@ -2,7 +2,6 @@ package multiuserdungeon.persistence.adapters;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
-import multiuserdungeon.authentication.User;
 import multiuserdungeon.persistence.FileAdapter;
 
 public class CSVAdapter implements FileAdapter {
