@@ -4,28 +4,33 @@ import java.util.List;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.inventory.InventoryElement;
 
 public class ViewInventoryAction implements Action<List<InventoryElement>> {
     
     private final Game receiver;
-    private final Profile profile;
+    private final User user;
 
-    public ViewInventoryAction(Game game, Profile profile) {
+    public ViewInventoryAction(Game game, User user) {
         this.receiver = game;
-        this.profile = profile; 
+        this.user = user; 
     }
 
     @Override
     public List<InventoryElement> execute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        if (canExecute())
+            return this.receiver.handleViewInventory();
+        
+        return null;
     }
 
     @Override
     public boolean canExecute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+        if (user instanceof Profile)
+			return true;
+
+		return false;
     }
 }
