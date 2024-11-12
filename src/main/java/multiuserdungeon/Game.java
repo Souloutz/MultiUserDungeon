@@ -204,6 +204,7 @@ public class Game {
 			}
 			newPlayer.getInventory().addBag(newBag);
 		}
+		newPlayer.setHealth(player.getHealth());
 
 		//TODO:copy map
 		Map newMap = null;
@@ -244,6 +245,7 @@ public class Game {
 
 	public String handleQuitGame() {
 		this.quit = true;
+		this.shrine = null;
 		return this.progressDB.save(this);
 	}
 	
