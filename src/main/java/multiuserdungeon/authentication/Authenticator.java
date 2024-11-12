@@ -1,5 +1,7 @@
 package multiuserdungeon.authentication;
 
+import multiuserdungeon.persistence.PersistenceManager;
+
 public class Authenticator {
 
     private User currentUser;
@@ -10,9 +12,7 @@ public class Authenticator {
     }
 
     public static Authenticator instance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Authenticator();
-        }
+        if(INSTANCE == null) INSTANCE = new Authenticator();
         return INSTANCE;
     }
 
@@ -25,42 +25,32 @@ public class Authenticator {
     }
 
     public boolean loggedIn() {
-        return (this.currentUser != null);
+        return this.currentUser != null && this.currentUser instanceof Profile;
     }
 
     public boolean login(String username, String password) {
-        //check if user is not logged in
-        if (this.currentUser instanceof User) {
-            //if so, check username and password
-            //TODO: check if user exists
-            if (username != null && password != null) {
-                //TODO: get existing user from persistence
-                this.setUser(new Profile(username, password, "placeholder desc"));
-                return true;
-            }
-        }
-        return false;
+        if(loggedIn()) return false;
+        if(username == null || password == null) return false;
+
+        Profile profile = PersistenceManager.getInstance().loadProfile(username);
+        if(profile == null) return false;
+        if(!profile.getPassword().equals(password)) return false;
+
+        setUser(profile);
+        return true;
     }
 
     public boolean register(String username, String password, String description) {
-        //check if user is not logged in
-        if (this.currentUser instanceof User) {
-            //create new profile accordingly
-            this.currentUser = new Profile(username, password, description);
-            //add to json here
-            return true;
-        }
-        return false;
+        if(loggedIn()) return false;
+
+        this.setUser(new Profile(username, password, description));
+        return true;
     }
 
     public boolean logout() {
-        //check if user is logged in
-        if (this.currentUser instanceof Profile) {
-            //if so replace with new User (represents logged-out user) and return true
-            this.setUser(null); //logged out user
-            return true;
-        }
-        //do nothing and return false
-        return false;
+        if(!loggedIn()) return false;
+        setUser(null);
+        return true;
     }
+
 }
