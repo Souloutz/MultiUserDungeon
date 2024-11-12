@@ -1,25 +1,29 @@
 package multiuserdungeon.commands.profile;
 
-import multiuserdungeon.authentication.Profile;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
-public class BrowseMapAction implements Action<Boolean> {
+public class BrowseMapAction implements Action<Void> {
     
-    private final Profile receiver;
+    private final User receiver;
 
-    public BrowseMapAction(Profile profile) {
-        this.receiver = profile;
+    public BrowseMapAction(User user) {
+        this.receiver = user;
     }
 
     @Override
-    public Boolean execute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+    public Void execute() {
+        if (canExecute())
+            this.receiver.handleBrowseMap();
+
+        return null;
     }
 
     @Override
     public boolean canExecute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+        if (receiver instanceof User)
+			return true;
+
+		return false;
     }
 }

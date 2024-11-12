@@ -1,25 +1,31 @@
 package multiuserdungeon.commands.profile;
 
 import multiuserdungeon.authentication.Profile;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
 public class ViewHistoryAction implements Action<String> {
     
-    private final Profile receiver;
+    private final User receiver;
 
-    public ViewHistoryAction(Profile profile) {
-        this.receiver = profile;
+    public ViewHistoryAction(User user) {
+        this.receiver = user;
     }
 
     @Override
+    // TODO string or some other return type
     public String execute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        if (canExecute())
+            return ((Profile) this.receiver).getStats().toString();
+
+        return null;
     }
 
     @Override
     public boolean canExecute() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'canExecute'");
+        if (receiver instanceof Profile)
+			return true;
+
+		return false;
     }
 }
