@@ -3,7 +3,10 @@ package multiuserdungeon;
 import java.util.List;
 
 import multiuserdungeon.clock.Clock;
+import multiuserdungeon.clock.Day;
+import multiuserdungeon.clock.Night;
 import multiuserdungeon.clock.Time;
+import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.inventory.elements.Bag;
 import multiuserdungeon.map.Compass;
@@ -190,8 +193,36 @@ public class Game {
 	}
 
 	public Snapshot createSnapshot(){
-		//TODO: copy logic
-		return null;
+		//copy player
+		Player newPlayer = new Player(player.getName(), player.getDescription());
+		newPlayer.equipWeapon(player.getWeapon());
+		newPlayer.equipArmor(player.getArmor());
+		for(Bag bag: player.getInventory().getBags()){
+			Bag newBag = new Bag(bag.getName(), bag.getDescription(), bag.getGoldValue(), bag.getCapacity());
+			for(InventoryElement item : bag.items()){
+				newBag.addItem(item);
+			}
+			newPlayer.getInventory().addBag(newBag);
+		}
+
+		//TODO:copy map
+		Map newMap = null;
+
+
+		//copy clock
+		Clock newClock = new Clock();
+		Time newTime;
+		if(clock.getCurrentTime().isDay()){
+			newTime = new Day(newClock);
+		}
+		else{
+			newTime = new Night(newClock);
+		}
+		newClock.setCurrentTime(newTime);
+		newClock.setTurnCounter(clock.getTurnCounter());
+
+
+		return new Snapshot(newPlayer, newMap, newClock);
 	}
 
 	public void restoreGame(Snapshot snapshot){
@@ -199,7 +230,15 @@ public class Game {
 	}
 
 	public boolean handlePray(){
-		return false;
+		if(map.getPlayerRoom().isSafe()){
+			Shrine newShrine = this.player.getTile().getShrine();
+			this.shrine = newShrine;
+			shrine.storeSnapshot();
+			return true;
+		}
+		else{
+			return false;
+		}
 
 	}
 
@@ -219,6 +258,9 @@ public class Game {
 	}
 
 	public boolean isOver() {
+		// if(this.map instanceof EndlessMap){
+		// 	return this.quit || (this.player.getHealth() == 0 && this.shrine==null);
+		// }
 		return this.quit || this.player.getHealth() == 0 || this.map.playerReachedGoal();
 	}
 

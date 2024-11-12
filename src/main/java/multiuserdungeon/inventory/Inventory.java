@@ -47,6 +47,10 @@ public class Inventory implements InventoryElement {
 		return totalOccupancy;
 	}
 
+	public List<Bag> getBags() {
+		return bags;
+	}
+
 	@Override
 	public boolean handleEquip(Player player) {
 		return false;

@@ -1,9 +1,6 @@
 package multiuserdungeon.map.tiles.shrine;
 
-import java.util.List;
-
 import multiuserdungeon.Game;
-import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.TileObject;
 
