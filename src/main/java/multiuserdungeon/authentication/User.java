@@ -1,25 +1,23 @@
 package multiuserdungeon.authentication;
 
+import multiuserdungeon.Game;
 import multiuserdungeon.map.tiles.Player;
 
 public class User {
 
-    private final Player player;
+    private String username;
+    private String desc;
 
     public User(String name, String desc) {
-        this.player = new Player(name, desc);
-    }
-    
-    public User() {
-        this.player = new Player("Guest", "A guest user...");
+        this.username = name;
+        this.desc = desc;
     }
 
-    public Player getPlayer() {
-        return this.player;
-    }
+    public String getUsername() {return this.username;}
+
+    public String getDesc() {return this.desc;}
 
     public void handleBrowseMap() {
         // TODO: choose room and put player at start
     }
-
 }

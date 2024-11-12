@@ -11,6 +11,6 @@ public interface FileAdapter {
 
 	String saveProfile(Profile profile);
 
-	Profile loadProfile(String filename);
+	Profile loadProfile(String username);
 
 }

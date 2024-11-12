@@ -23,7 +23,7 @@ public class CSVAdapter implements FileAdapter {
 	}
 
 	@Override
-	public Profile loadProfile(String filename) {
+	public Profile loadProfile(String username) {
 		return null;
 	}
 

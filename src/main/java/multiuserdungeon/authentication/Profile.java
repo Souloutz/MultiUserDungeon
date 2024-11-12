@@ -10,7 +10,6 @@ public class Profile extends User {
     public Profile(String username, String password, String desc) {
         super(username, desc);
         this.password = password;
-        // TODO: get historic stats from json
         this.stats = new ArrayList<>();
     }
 

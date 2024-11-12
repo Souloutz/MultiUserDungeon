@@ -6,6 +6,8 @@ import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.persistence.FileAdapter;
 import multiuserdungeon.persistence.PersistenceManager;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -34,8 +36,14 @@ public class JSONAdapter implements FileAdapter {
 	}
 
 	@Override
-	public Profile loadProfile(String filename) {
-
+	public Profile loadProfile(String username) {
+		String path = PersistenceManager.DATA_FOLDER + username + ".json";
+		try {
+			return new Gson().fromJson(new FileReader(path), Profile.class);
+		} catch (FileNotFoundException e) {
+			System.out.println("Error loading user from JSON!");
+			return null;
+		}
 	}
 
 }

@@ -6,7 +6,7 @@ public class Authenticator {
     private static Authenticator INSTANCE;
 
     private Authenticator() {
-        this.currentUser = new User();
+        this.currentUser = null;
     }
 
     public static Authenticator instance() {
@@ -22,6 +22,10 @@ public class Authenticator {
 
     private void setUser(User u) {
         this.currentUser = u;
+    }
+
+    public boolean loggedIn() {
+        return (this.currentUser != null);
     }
 
     public boolean login(String username, String password) {
@@ -53,7 +57,7 @@ public class Authenticator {
         //check if user is logged in
         if (this.currentUser instanceof Profile) {
             //if so replace with new User (represents logged-out user) and return true
-            this.setUser(new User()); //logged out user
+            this.setUser(null); //logged out user
             return true;
         }
         //do nothing and return false
