@@ -17,7 +17,7 @@ public class User {
 
     public String getDesc() {return this.desc;}
 
-    public void handleBrowseMap() {
+    public void handleBrowseMap(String filePath) {
         // TODO: choose room and put player at start
     }
 }
