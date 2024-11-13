@@ -4,6 +4,7 @@ import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
+// TODO remove?? loadmap is resumegame?
 public class ResumeGameAction implements Action<Void> {
     
     private final User receiver;

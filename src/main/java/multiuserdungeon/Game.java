@@ -139,7 +139,8 @@ public class Game {
 
 	public List<InventoryElement> handleOpen() {
 		Chest chest = this.player.getTile().getChest();
-		if(chest == null) return null;
+		if (chest == null) return null;
+		
 		return chest.getContents();
 	}
 
@@ -149,32 +150,30 @@ public class Game {
 
 	public boolean handlePickupItem(int index) {
 		Chest chest = this.player.getTile().getChest();
-		if(chest == null) return false;
+		if (chest == null) return false;
 
-		if(index == -1) {
+		if (index == -1) {
 			InventoryElement pickedUp;
-			while((pickedUp = chest.handleLoot(0)) != null) {
-				if(pickedUp instanceof Bag bag) {
-					if(!this.player.getInventory().addBag(bag)) return false;
+			while ((pickedUp = chest.handleLoot(0)) != null) {
+				if (pickedUp instanceof Bag bag) {
+					if (!this.player.getInventory().addBag(bag)) return false;
 				} else {
-					if(!this.player.getInventory().addItem(pickedUp)) return false;
+					if (!this.player.getInventory().addItem(pickedUp)) return false;
 				}
 			}
 			return chest.getContents().isEmpty();
 		} else {
 			InventoryElement pickedUp = chest.handleLoot(index);
-			if(pickedUp == null) return false;
+			if (pickedUp == null) return false;
 
-			if(pickedUp instanceof Bag bag) {
+			if (pickedUp instanceof Bag bag)
 				return this.player.getInventory().addBag(bag);
-			} else {
+			else
 				return this.player.getInventory().addItem(pickedUp);
-			}
 		}
 	}
 
 	public String handleViewInventory() {
-		// TODO
 		StringBuilder inventoryString = new StringBuilder();
 		Inventory inventory = this.player.getInventory();
 
@@ -186,7 +185,8 @@ public class Game {
 
 	public boolean handleEquipItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
-		if(item == null) return false;
+		if (item == null) return false;
+
 		this.player.getInventory().removeItem(bagPos, itemPos);
 		return item.handleEquip(this.player);
 	}
@@ -197,14 +197,14 @@ public class Game {
 
 	public boolean handleUseItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
-		if(item == null) return false;
+		if (item == null) return false;
 
-		if(item.handleUse(this.player)) {
+		if (item.handleUse(this.player)) {
 			handleDestroyItem(bagPos, itemPos);
 			return true;
-		} else {
-			return false;
-		}
+		} 
+
+		return false;
 	}
 
 	public boolean handleDestroyItem(int bagPos, int itemPos) {
@@ -217,6 +217,9 @@ public class Game {
 
 	public void handleQuitGame() {
 		this.quit = true;
+	}
+
+	public String handleSaveGame() {
 		return PersistenceManager.getInstance().saveGame(this);
 	}
 	
@@ -226,6 +229,7 @@ public class Game {
 			if(npc == null) return;
 			npc.attack(direction.getOpposite());
 		});
+
 		this.player.depleteBuffs();
 		this.clock.completeTurn();
 	}
