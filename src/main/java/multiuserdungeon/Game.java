@@ -14,7 +14,7 @@ import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.trap.Trap;
-import multiuserdungeon.progress.ProgressDB;
+import multiuserdungeon.persistence.PersistenceManager;
 
 public class Game {
 
@@ -22,7 +22,6 @@ public class Game {
 	private final Player player;
 	private final Map map;
 	private final Clock clock;
-	private ProgressDB progressDB;
 	private boolean quit;
 
 	public Game(Player player) {
@@ -30,7 +29,6 @@ public class Game {
 		this.player = player;
 		this.map = new Map();
 		this.clock = new Clock();
-		this.progressDB = null;
 		this.quit = false;
 	}
 
@@ -50,12 +48,8 @@ public class Game {
 		return this.clock.getCurrentTime();
 	}
 
-	public void setProgressDB(ProgressDB progressDB) {
-		this.progressDB = progressDB;
-	}
-
 	public boolean handleLoadMap(String uri) {
-		Game loaded = this.progressDB.load(uri);
+		Game loaded = PersistenceManager.getInstance().loadGame(uri);
 		if(loaded != null) {
 			instance = loaded;
 			return true;
@@ -188,7 +182,7 @@ public class Game {
 
 	public String handleQuitGame() {
 		this.quit = true;
-		return this.progressDB.save(this);
+		return PersistenceManager.getInstance().saveGame(this);
 	}
 	
 	public void endTurn() {
