@@ -34,8 +34,9 @@ public class Profile extends User {
         this.stats.add(stats);
     }
 
-    public void handleNewGame() {
+    public void handleNewGame(String mapType, String filePath) {
         //TODO: start a new game of either endless or premade maps
+
     }
 
     public void handleResumeGame(String filename) {
@@ -43,7 +44,7 @@ public class Profile extends User {
     }
 
     public boolean handleJoinGame(String filename) {
-        // TODO
+        // TODO persistence loadMap
         return false;
     }
 }

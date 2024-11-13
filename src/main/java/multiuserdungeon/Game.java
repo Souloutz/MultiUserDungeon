@@ -2,8 +2,10 @@ package multiuserdungeon;
 
 import java.util.List;
 
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.clock.Clock;
 import multiuserdungeon.clock.Time;
+import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.inventory.elements.Bag;
 import multiuserdungeon.map.Compass;
@@ -24,8 +26,9 @@ public class Game {
 	private final Clock clock;
 	private ProgressDB progressDB;
 	private boolean quit;
+	private boolean browsing; // true or false
 
-	public Game(Player player) {
+	public Game(Player player, Map map, User user) {
 		instance = this;
 		this.player = player;
 		this.map = new Map();
@@ -54,15 +57,16 @@ public class Game {
 		this.progressDB = progressDB;
 	}
 
-	public boolean handleLoadMap(String uri) {
-		Game loaded = this.progressDB.load(uri);
-		if(loaded != null) {
-			instance = loaded;
-			return true;
-		} else {
-			return false;
-		}
-	}
+	// TODO
+	// public boolean handleLoadMap(String uri) {
+	// 	Game loaded = this.progressDB.load(uri);
+	// 	if(loaded != null) {
+	// 		instance = loaded;
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// }
 
 	public int handleAttack(Compass direction) {
 		int damage = this.player.attack(direction);
@@ -96,6 +100,7 @@ public class Game {
 	}
 
 	public boolean handleExitRoom(Compass direction) {
+		// TODO handle exiting room based on type of map
 		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
 			endTurn();
 			return true;
@@ -175,9 +180,15 @@ public class Game {
 		}
 	}
 
-	public List<InventoryElement> handleViewInventory() {
+	public String handleViewInventory() {
 		// TODO
-		return null;
+		StringBuilder inventoryString = new StringBuilder();
+		Inventory inventory = this.player.getInventory();
+
+		for (int index = 0; index < 6; index++)
+			inventoryString.append("\n").append(inventory.viewBag(index));
+		
+		return inventoryString.toString();
 	}
 
 	public boolean handleEquipItem(int bagPos, int itemPos) {
@@ -232,5 +243,4 @@ public class Game {
 	public boolean isOver() {
 		return this.quit || this.player.getHealth() == 0 || this.map.playerReachedGoal();
 	}
-
 }
