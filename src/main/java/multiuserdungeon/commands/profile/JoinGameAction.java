@@ -7,17 +7,17 @@ import multiuserdungeon.commands.Action;
 public class JoinGameAction implements Action<Boolean> {
     
     private final User receiver;
-    private final String filename;
+    private final String filePath;
 
-    public JoinGameAction(User user, String filename) {
+    public JoinGameAction(User user, String filePath) {
         this.receiver = user;
-        this.filename = filename;
+        this.filePath = filePath;
     }
 
     @Override
     public Boolean execute() {
         if (canExecute())
-            return ((Profile) this.receiver).handleJoinGame(filename);
+            return ((Profile) this.receiver).handleJoinGame(filePath);
 
         return false;
     }

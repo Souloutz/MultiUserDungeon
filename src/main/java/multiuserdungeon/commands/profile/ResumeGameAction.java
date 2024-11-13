@@ -7,17 +7,17 @@ import multiuserdungeon.commands.Action;
 public class ResumeGameAction implements Action<Void> {
     
     private final User receiver;
-    private final String filename;
+    private final String filePath;
 
-    public ResumeGameAction(User user, String filename) {
+    public ResumeGameAction(User user, String filePath) {
         this.receiver = user;
-        this.filename = filename;
+        this.filePath = filePath;
     }
 
     @Override
     public Void execute() {
         if (canExecute())
-            ((Profile) this.receiver).handleResumeGame(filename);
+            ((Profile) this.receiver).handleResumeGame(filePath);
 
         return null;
     }

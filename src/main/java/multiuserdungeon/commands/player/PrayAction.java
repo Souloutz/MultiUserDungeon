@@ -4,6 +4,7 @@ import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
+import multiuserdungeon.map.EndlessMap;
 import multiuserdungeon.map.Map;
 
 public class PrayAction implements Action<Boolean> {
@@ -29,7 +30,7 @@ public class PrayAction implements Action<Boolean> {
 
     @Override
     public boolean canExecute() {
-        if (user instanceof Profile)
+        if (user instanceof Profile && map instanceof EndlessMap)
 			return true;
 
 		return false;
