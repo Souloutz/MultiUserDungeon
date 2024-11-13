@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import multiuserdungeon.inventory.elements.*;
-import multiuserdungeon.map.Tile;
 import multiuserdungeon.inventory.*;
 
 public class Player extends Character {
@@ -25,9 +24,9 @@ public class Player extends Character {
 	//copy constructor
 	public Player(Player player){
 		super(player.getName(), player.getDescription(), player.getMaxHealth(), player.getAttack(), player.getDefense());
+		this.inventory = new Inventory(player.getInventory());
 		this.weapon=(player.getWeapon());
 		this.armor=(player.getArmor());
-		this.inventory = new Inventory(player.getInventory());
 		this.buffs = new HashMap<>();
 		for(Buff buff : player.buffs.keySet()){
 			this.useBuff(buff);

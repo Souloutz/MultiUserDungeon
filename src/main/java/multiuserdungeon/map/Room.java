@@ -44,9 +44,8 @@ public class Room {
 				getTile(row, col).setAdjacent(adjacent);
 			}
 		}
-
-		//TODO: figure out connections
 	}
+		//TODO: figure out connections (added in Map class)
 
 	//copy constructor
 	public Room(Room room){

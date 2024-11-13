@@ -2,8 +2,6 @@ package multiuserdungeon.map.tiles;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.CreatureBuff;
-import multiuserdungeon.map.Tile;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NPC extends Character {
