@@ -20,8 +20,8 @@ public class Authenticator {
         return this.currentUser;
     }
 
-    private void setUser(User u) {
-        this.currentUser = u;
+    private void setUser(User user) {
+        this.currentUser = user;
     }
 
     public boolean loggedIn() {
@@ -43,18 +43,18 @@ public class Authenticator {
     public boolean register(String username, String password, String description) {
         if(loggedIn()) return false;
 
-        this.setUser(new Profile(username, password, description));
+        Profile newProfile = new Profile(username, password, description);
+        PersistenceManager.getInstance().saveProfile(newProfile);
+        setUser(newProfile);
         return true;
     }
 
     public boolean handleChangePassword(String curPassword, String newPassword) {
-        // check if user is logged in
-        if (this.currentUser instanceof Profile) {
-            return ((Profile) this.currentUser).changePassword(curPassword, newPassword);
-            // handle changing of DB
-        }
-
-        return false;
+        if (!loggedIn()) return false;
+        
+        ((Profile) this.currentUser).changePassword(curPassword, newPassword);
+        PersistenceManager.getInstance().saveProfile((Profile) this.currentUser);
+        return true;
     }
 
     public boolean logout() {

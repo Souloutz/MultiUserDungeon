@@ -122,7 +122,7 @@ public class Game {
 		return false;
 	}
 
-	public String handleTalkToMerchant(Compass direction) {
+	public List<InventoryElement> handleTalkToMerchant(Compass direction) {
 		// TODO
 		return null;
 	} 
