@@ -24,6 +24,16 @@ public class Bag implements InventoryElement {
 		this.items = new ArrayList<>();
 	}
 
+	//copy constructor
+	public Bag(Bag bag) {
+		this.name = bag.name;
+		this.description = bag.description;
+		this.goldValue = bag.goldValue;
+		this.capacity = bag.capacity;
+		this.isEquipped = false;
+		this.items = new ArrayList<>();
+	}
+
 	@Override
 	public String getName() {
 		return this.name;

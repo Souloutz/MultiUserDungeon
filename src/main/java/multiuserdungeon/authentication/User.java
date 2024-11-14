@@ -22,7 +22,7 @@ public class User {
         return this.description;
     }
 
-    public void handleBrowseMap() {
+    public void handleBrowseMap(String filePath) {
         // TODO: choose room and put player at start
     }
 

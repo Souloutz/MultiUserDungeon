@@ -17,6 +17,14 @@ public class Food implements InventoryElement {
 		this.health = health;
 	}
 
+	//copy constructor
+	public Food(Food food){
+		this.name = food.name;
+		this.description = food.description;
+		this.goldValue = food.goldValue;
+		this.health = food.health;
+	}
+
 	@Override
 	public String getName() {
 		return this.name;

@@ -1,28 +1,26 @@
-package multiuserdungeon.commands.inventory;
+package multiuserdungeon.commands.player;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
-public class EquipItemAction implements Action<Boolean> {
+public class PickupItemAction implements Action<Boolean> {
 
 	private final Game receiver;
 	private final User user;
-	private final int bagPos;
-	private final int itemPos;
+	private final int index;
 
-	public EquipItemAction(Game game, User user, int bagPos, int itemPos) {
+	public PickupItemAction(Game game, User user, int index) {
 		this.receiver = game;
 		this.user = user;
-		this.bagPos = bagPos;
-		this.itemPos = itemPos;
+		this.index = index;
 	}
 
 	@Override
 	public Boolean execute() {
 		if (canExecute())
-			return this.receiver.handleEquipItem(this.bagPos, this.itemPos);
+			return this.receiver.handlePickupItem(this.index);
 
 		return false;
 	}

@@ -20,6 +20,15 @@ public class Buff implements InventoryElement {
         this.statAmount = statAmount;
 	}
 
+	//copy constructor
+	public Buff(Buff buff) {
+		this.name = buff.name;
+        this.description = buff.description;
+        this.goldValue = buff.goldValue;
+        this.stat = buff.stat;
+        this.statAmount = buff.statAmount;
+	}
+
 	@Override
 	public String getName() {
 		return this.name;

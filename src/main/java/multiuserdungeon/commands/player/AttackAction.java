@@ -1,30 +1,29 @@
-package multiuserdungeon.commands.inventory;
+package multiuserdungeon.commands.player;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
+import multiuserdungeon.map.Compass;
 
-public class EquipItemAction implements Action<Boolean> {
+public class AttackAction implements Action<Integer> {
 
 	private final Game receiver;
 	private final User user;
-	private final int bagPos;
-	private final int itemPos;
+	private final Compass direction;
 
-	public EquipItemAction(Game game, User user, int bagPos, int itemPos) {
+	public AttackAction(Game game, User user, Compass direction) {
 		this.receiver = game;
 		this.user = user;
-		this.bagPos = bagPos;
-		this.itemPos = itemPos;
+		this.direction = direction;
 	}
 
 	@Override
-	public Boolean execute() {
+	public Integer execute() {
 		if (canExecute())
-			return this.receiver.handleEquipItem(this.bagPos, this.itemPos);
+			return this.receiver.handleAttack(this.direction);
 
-		return false;
+		return -1;
 	}
 
 	@Override
