@@ -20,11 +20,12 @@ import multiuserdungeon.inventory.elements.Buff;
 
 public class Items {
 
-    private String filename = "data\\itemsDB.json";
+    private static String filename = "data\\itemsDB.json";
     private static Items instance = null;
-    private Map<Integer, InventoryElement> items = new HashMap<Integer,InventoryElement>();
+    private Map<Integer, InventoryElement> items;
     
     private Items() throws IOException{
+        this.items = new HashMap<Integer,InventoryElement>();
         load();
     }
 
@@ -35,6 +36,10 @@ public class Items {
         return instance;
     }
 
+    /**
+     * loads items json to map of id and items
+     * @throws IOException
+     */
     public void load() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> arlData = mapper.readValue(new File(filename), ArrayList.class);
