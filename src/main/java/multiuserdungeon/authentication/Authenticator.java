@@ -49,8 +49,10 @@ public class Authenticator {
         return true;
     }
 
-    public boolean handleChangePassword(String curPassword, String newPassword) {
+    public boolean handleChangePassword(String curPassword, String newPassword, String confirmPassword) {
         if (!loggedIn()) return false;
+        if (curPassword.equals(newPassword)) return false;
+        if (!newPassword.equals(confirmPassword)) return false;
         
         ((Profile) this.currentUser).changePassword(curPassword, newPassword);
         PersistenceManager.getInstance().saveProfile((Profile) this.currentUser);

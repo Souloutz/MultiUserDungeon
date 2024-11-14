@@ -7,6 +7,7 @@ import multiuserdungeon.commands.inventory.EquipItemAction;
 import multiuserdungeon.commands.inventory.SwapBagAction;
 import multiuserdungeon.commands.inventory.UnequipItemAction;
 import multiuserdungeon.commands.inventory.UseItemAction;
+import multiuserdungeon.commands.inventory.ViewInventoryAction;
 import multiuserdungeon.commands.player.CloseAction;
 import multiuserdungeon.commands.player.DisarmTrapAction;
 import multiuserdungeon.authentication.Authenticator;
@@ -35,7 +36,7 @@ public class PTUI {
 	private static final Scanner scanner = new Scanner(System.in);
 	private static final Authenticator authenticator = Authenticator.getInstance();
 	private static Game game;
-	private static boolean inChest = false;
+	private static boolean inMenu = false;
 
 	public static void main(String[] args) throws InterruptedException {
 		printWelcomeMsg();
@@ -87,6 +88,28 @@ public class PTUI {
 	private static void printRoomLayout() {
 		printBlock("You, " + game.getPlayer() + ", find a vantage point of the room. The skylight reveals that it is currently " + game.getCurrentTime() + ".\n" +
 				"From above, the room appears like:\n\n" + game.getMap().getPlayerRoom());
+	}
+
+	public static void printAllCommands() {
+		// TODO: Cut down to only contextual relevant commands
+		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
+		printBlock("ALL COMMANDS\n\n\tDirections: " + directions + "\n\n" +
+				"\tinventory -=- Views all of your bags and inventory stats.\n" +
+				"\tbag <bag pos> -=- Views the specified bag and its stats.\n" +
+				"\tequip <bag pos> <item pos> -=- Equips the specified item (weapon/armor).\n" +
+				"\tunequip <weapon/armor> -=- Unequips the current weapon or armor.\n" +
+				"\tuse <bag pos> <item pos> -=- Uses the specified item (food/buffs).\n" +
+				"\tdestroy <bag pos> <item pos> -=- Destroys the specified item to clear space.\n" +
+				"\tswap <src bag pos> <dest bag pos> <dest bag pos> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
+				"\tload <uri> -=-= Loads a different saved map.\n" +
+				"\topen -=- Opens the chest you are currently standing on.\n" +
+				"\tpickup [chest pos] -=- Pickups all items in a chest, or just specific items.\n" +
+				"\tclose -=- Closes the chest you are currently standing on.\n" +
+				"\tdisarm <direction> -=- Attempts to disarm a detected trap in the specified direction.\n" +
+				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
+				"\texit <direction> -=- Exits the room with the given direction.\n" +
+				"\tattack <direction> -=- Attacks a nearby creature.\n" +
+				"\tquit -=- Quits the current game, saving all progress.\n");
 	}
 
 	public static void printAllCommands() {
@@ -166,6 +189,21 @@ public class PTUI {
 				else
 					printBlock("Could not change password, please try again.");
 			}
+			case "browse" -> {
+
+			}
+			case "start" -> {
+
+			}
+			case "resume" -> {
+
+			}
+			case "join" -> {
+
+			}
+			case "view history" -> {
+
+			}
 		}
 	}
 
@@ -202,7 +240,10 @@ public class PTUI {
 		}
 
 		switch(args[0]) {
-			case "inventory" -> printBlock(game.getPlayer().getInventory() + "\n\n\tWeapon: " + game.getPlayer().getWeapon() + "\n\tArmor: " + game.getPlayer().getArmor());
+			case "inventory" -> {
+				String inventoryString = new ViewInventoryAction(game, authenticator.getUser()).execute();
+				printBlock(inventoryString);
+			}
 			case "bag" -> {
 				int bagPos = Integer.parseInt(args[1]);
 				String result = game.getPlayer().getInventory().viewBag(bagPos);
