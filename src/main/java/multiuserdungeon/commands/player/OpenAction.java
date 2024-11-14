@@ -28,6 +28,7 @@ public class OpenAction implements Action<List<InventoryElement>> {
 
 	@Override
 	public boolean canExecute() {
+		//TODO{Make very specific to determine if this action should be an option}
 		if (user instanceof Profile)
 			return true;
 
