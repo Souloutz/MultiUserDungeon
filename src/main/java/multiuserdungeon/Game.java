@@ -19,16 +19,15 @@ import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.shrine.Snapshot;
 import multiuserdungeon.map.tiles.trap.Trap;
-import multiuserdungeon.progress.ProgressDB;
+import multiuserdungeon.persistence.PersistenceManager;
 
 public class Game {
 
 	private static Game instance;
-	private final Player player;
-	private final Map map;
-	private final Clock clock;
+	private Player player;
+	private Map map;
+	private Clock clock;
 	private Shrine shrine;
-	private ProgressDB progressDB;
 	private boolean quit;
 
 	public Game(Player player) {
@@ -36,7 +35,6 @@ public class Game {
 		this.player = player;
 		this.map = new Map();
 		this.clock = new Clock();
-		this.progressDB = null;
 		this.quit = false;
 	}
 
@@ -56,12 +54,8 @@ public class Game {
 		return this.clock.getCurrentTime();
 	}
 
-	public void setProgressDB(ProgressDB progressDB) {
-		this.progressDB = progressDB;
-	}
-
 	public boolean handleLoadMap(String uri) {
-		Game loaded = this.progressDB.load(uri);
+		Game loaded = PersistenceManager.getInstance().loadGame(uri);
 		if(loaded != null) {
 			instance = loaded;
 			return true;
@@ -193,22 +187,12 @@ public class Game {
 	}
 
 	public Snapshot createSnapshot(){
-		//copy player
-		Player newPlayer = new Player(player.getName(), player.getDescription());
-		newPlayer.equipWeapon(player.getWeapon());
-		newPlayer.equipArmor(player.getArmor());
-		for(Bag bag: player.getInventory().getBags()){
-			Bag newBag = new Bag(bag.getName(), bag.getDescription(), bag.getGoldValue(), bag.getCapacity());
-			for(InventoryElement item : bag.items()){
-				newBag.addItem(item);
-			}
-			newPlayer.getInventory().addBag(newBag);
-		}
-		newPlayer.setHealth(player.getHealth());
 
 		//TODO:copy map
 		Map newMap = null;
 
+		//player is part of map, so no need to copy again
+		Player newPlayer = newMap.getPlayerRoom().getPlayerTile().getPlayer();
 
 		//copy clock
 		Clock newClock = new Clock();
@@ -227,7 +211,9 @@ public class Game {
 	}
 
 	public void restoreGame(Snapshot snapshot){
-
+		this.player = snapshot.getPlayer();
+		this.map = snapshot.getMap();
+		this.clock = snapshot.getClock();
 	}
 
 	public boolean handlePray(){
@@ -246,7 +232,7 @@ public class Game {
 	public String handleQuitGame() {
 		this.quit = true;
 		this.shrine = null;
-		return this.progressDB.save(this);
+		return PersistenceManager.getInstance().saveGame(this);
 	}
 	
 	public void endTurn() {
@@ -260,9 +246,7 @@ public class Game {
 	}
 
 	public boolean isOver() {
-		// if(this.map instanceof EndlessMap){
-		// 	return this.quit || (this.player.getHealth() == 0 && this.shrine==null);
-		// }
+		//TODO: add if shrine is null (for endless map)
 		return this.quit || this.player.getHealth() == 0 || this.map.playerReachedGoal();
 	}
 
