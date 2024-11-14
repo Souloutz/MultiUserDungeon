@@ -1,12 +1,14 @@
 package multiuserdungeon;
 
 import multiuserdungeon.commands.player.AttackAction;
+import multiuserdungeon.commands.player.BuyItemAction;
 import multiuserdungeon.commands.game.QuitGameAction;
 import multiuserdungeon.commands.inventory.DestroyItemAction;
 import multiuserdungeon.commands.inventory.EquipItemAction;
 import multiuserdungeon.commands.inventory.SwapBagAction;
 import multiuserdungeon.commands.inventory.UnequipItemAction;
 import multiuserdungeon.commands.inventory.UseItemAction;
+import multiuserdungeon.commands.inventory.ViewBagAction;
 import multiuserdungeon.commands.inventory.ViewInventoryAction;
 import multiuserdungeon.commands.player.CloseAction;
 import multiuserdungeon.commands.player.DisarmTrapAction;
@@ -20,8 +22,12 @@ import multiuserdungeon.commands.player.OpenAction;
 import multiuserdungeon.commands.player.ExitRoomAction;
 import multiuserdungeon.commands.player.MoveAction;
 import multiuserdungeon.commands.player.PickupItemAction;
+import multiuserdungeon.commands.player.PrayAction;
+import multiuserdungeon.commands.player.SellItemAction;
+import multiuserdungeon.commands.player.TalkToMerchantAction;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
+import multiuserdungeon.map.Map;
 import multiuserdungeon.map.tiles.Player;
 
 import java.util.Arrays;
@@ -240,14 +246,135 @@ public class PTUI {
 		}
 
 		switch(args[0]) {
+			case "attack" -> {
+				// TODO: Find a way to add more information on who they attacked in response
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				int damage = new AttackAction(game, authenticator.getUser(), direction).execute();
+				
+				if (damage != -1)
+					printBlock("Successfully attacked " + direction + " and dealt " + damage + " damage.");
+				else
+					printBlock("Unable to attack that tile, please try again.");
+			}
+			case "disarm" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				boolean result = new DisarmTrapAction(game, authenticator.getUser(), direction).execute();
+				
+				if (result)
+					printBlock("Successfully disarmed the trap! Great job.");
+				else
+					printBlock("You failed to disarm the trap, or there is no trap on that tile.");
+			}
+			case "move" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				boolean result = new MoveAction(game, authenticator.getUser(), direction).execute();
+				
+				if (result)
+					printBlock("Successfully moved " + direction + ".");
+				else
+					printBlock("Unable to move in that direction, please try again.");
+			}
+			case "exit" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				boolean result = new ExitRoomAction(game, authenticator.getUser(), direction).execute();
+				
+				if (result)
+					printRoomDescription();
+				else
+					printBlock("A doorway in that direction does not exist, or you are not at a doorway, please try again.");
+			}
+			case "pray" -> {
+				// TODO
+				if (game.getMap() instanceof Map) {
+					printBlock("Shrines do not exist on premade maps.");
+					break;
+				}
+				boolean result = new PrayAction(game, authenticator.getUser(), game.getMap()).execute();
+
+				if (result)
+					printBlock("The God of Subsystems, Bobby, has heard your prayers. You have been granted with a second chance at life.");
+				else
+					printBlock("A shrine in that direction does not exist or now is not a safe time to pray, please try again.");
+			}
+			case "open" -> {
+				List<InventoryElement> contents = new OpenAction(game, authenticator.getUser()).execute();
+				
+				if (contents != null) {
+					StringBuilder builder = new StringBuilder("Contents (" + contents.size() + " items)");
+					for(int i = 0; i < contents.size(); i++) {
+						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
+					}
+					printBlock(builder.toString());
+					inMenu = true;
+				}
+				else
+					printBlock("You are not currently on a tile containing either a chest or corpse, please try again.");
+			}
+			case "pickup" -> {
+				int chestPos = args.length == 1 ? -1 : Integer.parseInt(args[1]);
+				boolean result = new PickupItemAction(game, authenticator.getUser(), chestPos).execute();
+				
+				if (result)
+					printBlock("Successfully picked up the item(s).");
+				else
+					printBlock("You are not currently on a chest tile, your inventory is full, or the chest position is incorrect, please try again.");
+			}
+			case "close" -> {
+				if (!inMenu) {
+					printBlock("You do not currently have a menu open, please try again.");
+					break;
+				}
+
+				new CloseAction(game, authenticator.getUser()).execute();
+				printBlock("Successfully closed the menu.");
+				inMenu = false;
+			}	
+			case "talk" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				List<InventoryElement> contents = new TalkToMerchantAction(game, authenticator.getUser(), direction).execute();
+				
+				if (contents != null) {
+					StringBuilder builder = new StringBuilder("Merchant: \"Welcome to my shop, adventurer! We buy and sell only the finest of goods. Here, take a look.\"\n\n");
+
+					builder.append("Shop Contents (" + contents.size() + " items)");
+					for (int i = 0; i < contents.size(); i++) {
+						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
+					}
+					printBlock(builder.toString());
+					inMenu = true;
+				}
+				else
+					printBlock("A merchant in that direction does not exist or now is not a safe time to talk, please try again.");
+			}
+			case "buy" -> {
+				int itemPos = args.length == 1 ? -1 : Integer.parseInt(args[1]);
+				boolean result = new BuyItemAction(game, authenticator.getUser(), itemPos).execute();
+				
+				if (result)
+					printBlock("Successfully bought up the item(s).\nMerchant: \"Excellent choice! Thank you for shopping. Anything else I can do for you?\"");
+				else
+					printBlock("You are not currently talking to a merchant, your inventory is full, the item position is incorrect, or you do not have sufficient gold, please try again.");
+			}
+			case "sell" -> {
+				int bagPos = args.length == 2 ? -1 : Integer.parseInt(args[1]);
+				int itemPos = Integer.parseInt(args[2]);
+				boolean result = new SellItemAction(game, authenticator.getUser(), bagPos, itemPos).execute();
+
+				if (result)
+					printBlock("Successfully sold the item(s).\nMerchant: \"Pleasure doing business with ya!\"");
+				else
+					printBlock("Unknown item, item does not exist, or the bag/item position is incorrect, please try again.");
+			}
+
+			//TODO
 			case "inventory" -> {
 				String inventoryString = new ViewInventoryAction(game, authenticator.getUser()).execute();
 				printBlock(inventoryString);
 			}
 			case "bag" -> {
 				int bagPos = Integer.parseInt(args[1]);
-				String result = game.getPlayer().getInventory().viewBag(bagPos);
-				printBlock(Objects.requireNonNullElse(result, "Invalid bag specified, please try again."));
+				String bagString = new ViewBagAction(game, authenticator.getUser(), bagPos).execute();
+				printBlock(bagString);
 			}
 			case "equip" -> {
 				int bagPos = Integer.parseInt(args[1]);
@@ -302,74 +429,6 @@ public class PTUI {
 			case "load" -> {
 				new LoadMapAction(game, args[1]).execute();
 				printBlock("Successfully loaded the map.");
-			}
-			case "open" -> {
-				List<InventoryElement> contents = new OpenAction(game).execute();
-				if(contents != null) {
-					StringBuilder builder = new StringBuilder("Contents (" + contents.size() + " items)");
-					for(int i = 0; i < contents.size(); i++) {
-						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
-					}
-					printBlock(builder.toString());
-					inChest = true;
-				} else {
-					printBlock("You are not currently on a chest tile, please try again.");
-				}
-			}
-			case "pickup" -> {
-				int chestPos = args.length == 1 ? -1 : Integer.parseInt(args[1]);
-				boolean result = new PickupItemAction(game, chestPos).execute();
-				if(result) {
-					printBlock("Successfully picked up the item(s).");
-				} else {
-					printBlock("You are not currently on a chest tile, your inventory is full, or the chest position is incorrect, please try again.");
-				}
-			}
-			case "close" -> {
-				if(!inChest) {
-					printBlock("You do not currently have a chest open, please try again.");
-					break;
-				}
-				new CloseAction(game).execute();
-				printBlock("Successfully closed the chest.");
-				inChest = false;
-			}
-			case "disarm" -> {
-				Compass direction = Compass.valueOf(args[1].toUpperCase());
-				boolean result = new DisarmTrapAction(game, direction).execute();
-				if(result) {
-					printBlock("Successfully disarmed the trap! Great job.");
-				} else {
-					printBlock("You failed to disarm the trap, or there is no trap on that tile.");
-				}
-			}
-			case "move" -> {
-				Compass direction = Compass.valueOf(args[1].toUpperCase());
-				boolean result = new MoveAction(game, direction).execute();
-				if(result) {
-					printBlock("Successfully moved " + direction + ".");
-				} else {
-					printBlock("Unable to move in that direction, please try again.");
-				}
-			}
-			case "exit" -> {
-				Compass direction = Compass.valueOf(args[1].toUpperCase());
-				boolean result = new ExitRoomAction(game, direction).execute();
-				if(result) {
-					printRoomDescription();
-				} else {
-					printBlock("A doorway in that direction does not exist, or you are not at a doorway, please try again.");
-				}
-			}
-			case "attack" -> {
-				// TODO: Find a way to add more information on who they attacked in response
-				Compass direction = Compass.valueOf(args[1].toUpperCase());
-				int damage = new AttackAction(game, direction).execute();
-				if(damage != -1) {
-					printBlock("Successfully attacked " + direction + " and dealt " + damage + " damage.");
-				} else {
-					printBlock("Unable to attack that tile, please try again.");
-				}
 			}
 			case "quit" -> {
 				String result = new QuitGameAction(game).execute();
