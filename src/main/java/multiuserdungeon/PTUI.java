@@ -9,6 +9,11 @@ import multiuserdungeon.commands.inventory.UnequipItemAction;
 import multiuserdungeon.commands.inventory.UseItemAction;
 import multiuserdungeon.commands.player.CloseAction;
 import multiuserdungeon.commands.player.DisarmTrapAction;
+import multiuserdungeon.authentication.Authenticator;
+import multiuserdungeon.commands.authentication.ChangePasswordAction;
+import multiuserdungeon.commands.authentication.LoginAction;
+import multiuserdungeon.commands.authentication.LogoutAction;
+import multiuserdungeon.commands.authentication.RegisterAction;
 import multiuserdungeon.commands.game.LoadMapAction;
 import multiuserdungeon.commands.player.OpenAction;
 import multiuserdungeon.commands.player.ExitRoomAction;
@@ -28,12 +33,13 @@ public class PTUI {
 	private static final String DIVIDER  = "=".repeat(150);
 	private static final int DELAY_MS = 3000;
 	private static final Scanner scanner = new Scanner(System.in);
+	private static final Authenticator authenticator = Authenticator.getInstance();
 	private static Game game;
 	private static boolean inChest = false;
 
 	public static void main(String[] args) throws InterruptedException {
 		printWelcomeMsg();
-		game = new Game(createPlayer());
+		
 
 		printBlock("You enter the first narrow doorway to begin your journey...");
 		Thread.sleep(DELAY_MS);
@@ -105,7 +111,87 @@ public class PTUI {
 				"\tquit -=- Quits the current game, saving all progress.\n");
 	}
 
-	private static void processCommand() throws IndexOutOfBoundsException, IllegalArgumentException, InterruptedException {
+	/**
+	 * Handles processing application commands
+	 * 	- Login
+	 * 	- Logout
+	 * 	- Change password
+	 * 	- Register
+	 * 	- Browse map
+	 * 	- Join game
+	 * 	- Resume game
+	 * 	- Start game
+	 * 	- View history
+	 */
+	private static void processProfileCommand() {
+		System.out.println(">>> ");
+		String[] args = scanner.nextLine().toLowerCase().split(" ");
+		
+		switch(args[0]) {
+			case "login" -> {
+				String username = args[1];
+				String password = args[2];
+				boolean result = new LoginAction(authenticator, username, password).execute();
+
+				if (result)
+					printBlock("Successfully logged in.");
+				else
+					printBlock("Username and/or password does not match.");
+			}
+			case "logout" -> {
+				boolean result = new LogoutAction(authenticator).execute();
+
+				if (result)
+					printBlock("Successfully logged out.");
+				else
+					printBlock("Not currently logged in or did not successfully log out, please try again.");
+			}
+			case "register" -> {
+				String username = args[1];
+				String password = args[2];
+				boolean result = new RegisterAction(authenticator, username, password).execute();
+			
+				if (result)
+					printBlock("Successfully created account.");
+				else
+					printBlock("Username might already exist, please try again.");
+			}
+			case "change password" -> {
+				String oldPassword = args[1];
+				String newPassword = args[2];
+				boolean result = new ChangePasswordAction(authenticator, oldPassword, newPassword).execute();
+
+				if (result)
+					printBlock("Successfully changed password.");
+				else
+					printBlock("Could not change password, please try again.");
+			}
+		}
+	}
+
+	/**
+	 * Handles processing in-game commands
+	 * 	- Attack
+	 * 	- Move
+	 * 	- Disarm trap
+	 * 	- Pray
+	 * 	- Exit room
+	 * 	- Open
+	 * 	- Close
+	 * 	- Pickup item
+	 * 	- Talk to merchant
+	 * 	- Buy item
+	 * 	- Sell item
+	 * 	- View inventory
+	 * 	- Use item
+	 * 	- Equip item
+	 * 	- Unequip item
+	 * 	- Destroy item
+	 * 	- Swap bag
+	 * 	- Save game
+	 * 	- Quit game
+	 */
+	private static void processInGameCommand() throws IndexOutOfBoundsException, IllegalArgumentException, InterruptedException {
 		System.out.print(">>> ");
 		String[] args = scanner.nextLine().toLowerCase().split(" ");
 

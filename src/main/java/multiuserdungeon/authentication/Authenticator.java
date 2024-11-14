@@ -11,7 +11,7 @@ public class Authenticator {
         this.currentUser = null;
     }
 
-    public static Authenticator instance() {
+    public static Authenticator getInstance() {
         if(INSTANCE == null) INSTANCE = new Authenticator();
         return INSTANCE;
     }
