@@ -57,15 +57,6 @@ public class Items {
                 );
                 items.put((int)itemMap.get("id"), item);
             }
-            else if(itemMap.containsKey("defense")){
-                InventoryElement item = new Armor( 
-                    (String) itemMap.get("name"),
-                    (String) itemMap.get("description"),
-                    (int) itemMap.get("goldValue"),
-                    (int) itemMap.get("defense")
-                );
-                items.put((int)itemMap.get("id"), item);
-            }
             else if(itemMap.containsKey("stat")){
                 InventoryElement item = new Buff( 
                     (String) itemMap.get("name"),

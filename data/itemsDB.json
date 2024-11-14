@@ -1,0 +1,38 @@
+[
+    {
+        "id": 0,
+        "name": "Starter Bag",
+        "description": "Default bag you start with.",
+        "goldValue": 0,
+        "capacity": 6
+    },
+    {
+        "id": 1,
+        "name": "Rusty Chestplate",
+        "description": "Better than nothing.",
+        "goldValue": 10,
+        "defense": 10
+    },
+    {
+        "id": 2,
+        "name": "Shield Elixir",
+        "description": "Tasty potion.",
+        "goldValue": 10,
+        "stat":"DEFENSE",
+        "statAmount": 15
+    },
+    {
+        "id": 3,
+        "name": "Medium-Rare Steak",
+        "description": "An explorer's meal.",
+        "goldValue": 6,
+        "health" : 30 
+    },
+    {
+        "id": 4,
+        "name": "Broadsword",
+        "description": "Heavy hitting weapon",
+        "goldValue": 25,
+        "attack": 40
+    }
+]

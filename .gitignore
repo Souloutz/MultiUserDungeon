@@ -31,6 +31,6 @@ target/**
 .idea/
 
 # Saved data
-data/
+# data/
 
 *~
