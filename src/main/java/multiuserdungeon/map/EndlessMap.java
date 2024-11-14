@@ -36,4 +36,8 @@ public class EndlessMap implements GameMap {
     public boolean isStartRoom() {
         return getPlayerRoom().equals(playerStartRooms.get(currentPlayer));
     }
+
+    private static class RoomGenerator {
+
+    }
 }

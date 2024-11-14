@@ -85,6 +85,7 @@ public class UI {
 
 	public static void printAllCommands() {
 		// TODO: Cut down to only contextual relevant commands
+		// This will  be done by checking canExecute of each command
 		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
 		printBlock("ALL COMMANDS\n\n\tDirections: " + directions + "\n\n" +
 				"\tinventory -=- Views all of your bags and inventory stats.\n" +

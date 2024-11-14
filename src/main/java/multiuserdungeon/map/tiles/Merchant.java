@@ -49,11 +49,14 @@ public class Merchant {
     public int buyItem (InventoryElement item) {
         return item.getGoldValue() / 2;
     }
-    public InventoryElement handleSale(InventoryElement item) {
-        store.remove(item);
-        return item;
+    public Map<InventoryElement,Integer> handleSale(InventoryElement item) {
+        Integer value = store.remove(item);
+        Map<InventoryElement,Integer> sold = new HashMap<>();
+        sold.put(item,value);
+        return sold;
     }
     public boolean isOpen() {
         return Game.getInstance().getMap().getPlayerRoom().isSafe() && Game.getInstance().getCurrentTime() instanceof Day;
+        // isSafe() will arrive with the Shrine subsystem.
     }
 }

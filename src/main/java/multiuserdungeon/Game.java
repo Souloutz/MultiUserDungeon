@@ -1,6 +1,6 @@
 package multiuserdungeon;
 
-import java.util.List;
+import java.util.*;
 
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.clock.*;
@@ -21,10 +21,10 @@ public class Game {
 	private boolean quit;
 	private boolean browsing; // true or false
 
-	public Game(Player player, Map map, User user) {
+	public Game(Player player, GameMap map, User user) {
 		instance = this;
 		this.player = player;
-		this.map = null;
+		this.map = map;
 		this.clock = new Clock();
 		this.quit = false;
 	}
@@ -123,19 +123,38 @@ public class Game {
 		return false;
 	}
 
-	public List<InventoryElement> handleTalkToMerchant(Compass direction) {
-		// TODO
+	public Map<InventoryElement, Integer> handleTalkToMerchant(Compass direction) {
+		Tile merchantTile = this.player.getTile().getTile(direction);
+		if (merchantTile.getObjects().get(0) instanceof Merchant) {
+			Merchant m = (Merchant)merchantTile.getObjects().get(0);
+			return m.getStore();
+		}
 		return null;
 	} 
 
-	public boolean handleBuyItem(int index) {
-		// TODO;
-		return false;
+	public boolean handleBuyItem(Merchant merchant, InventoryElement item) {
+		try {
+			if (player.getGold() < merchant.getStore().get(item)) {
+				return false;
+			}
+		} catch (NullPointerException e) {
+			return false;
+		}
+		Map<InventoryElement,Integer> bought = merchant.handleSale(item);
+
+		player.loseGold((Integer)bought.values().toArray()[0]);
+		player.getInventory().addItem((InventoryElement)bought.keySet().toArray()[0]);
+		return true;
 	}
 
-	public boolean handleSellItem(int bagPos, int itemPos) {
-		// TODO;
-		return false;
+	public boolean handleSellItem(int bagPos, int itemPos, Merchant merchant) {
+		InventoryElement selling = player.getInventory().getItem(bagPos,itemPos);
+		if (selling == null) {
+			return false;
+		}
+		player.getInventory().removeItem(bagPos,itemPos);
+		player.gainGold(merchant.buyItem(selling));
+		return true;
 	}
 
 	public List<InventoryElement> handleOpen() {
