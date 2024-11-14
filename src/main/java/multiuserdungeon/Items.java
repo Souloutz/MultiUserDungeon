@@ -39,21 +39,21 @@ public class Items {
         ObjectMapper mapper = new ObjectMapper();
         ArrayList<HashMap<String, Object>> arlData = mapper.readValue(new File(filename), ArrayList.class);
         for(HashMap<String, Object> itemMap : arlData){
-            if (itemMap.containsKey("capacity")){
-                InventoryElement item = new Bag( 
-                    (String) itemMap.get("name"),
-                    (String) itemMap.get("description"),
-                    (int) itemMap.get("goldValue"),
-                    (int) itemMap.get("capacity")
-                );
-                items.put((int)itemMap.get("id"), item);
-            }
-            else if(itemMap.containsKey("defense")){
+            if(itemMap.containsKey("defense")){
                 InventoryElement item = new Armor( 
                     (String) itemMap.get("name"),
                     (String) itemMap.get("description"),
                     (int) itemMap.get("goldValue"),
                     (int) itemMap.get("defense")
+                );
+                items.put((int)itemMap.get("id"), item);
+            }
+            else if (itemMap.containsKey("capacity")){
+                InventoryElement item = new Bag( 
+                    (String) itemMap.get("name"),
+                    (String) itemMap.get("description"),
+                    (int) itemMap.get("goldValue"),
+                    (int) itemMap.get("capacity")
                 );
                 items.put((int)itemMap.get("id"), item);
             }
@@ -92,6 +92,9 @@ public class Items {
     public InventoryElement getItem(int id){
         if (items.containsKey(id)) {
             InventoryElement item = items.get(id);
+            if(item instanceof Armor){
+                return new Armor((Armor)item);
+            }
             if(item instanceof Bag){
                 return new Bag((Bag)item);
             }
