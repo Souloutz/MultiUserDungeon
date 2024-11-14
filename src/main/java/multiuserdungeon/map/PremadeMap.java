@@ -11,20 +11,15 @@ import multiuserdungeon.inventory.elements.Weapon;
 import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
-import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.map.tiles.trap.Trap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PremadeMap implements GameMap {
 
-	private Map<Player,Room> playerRoom;
-	private Player player;
+	private Room playerRoom;
 	private final Room goal;
-
-	//Class messed up transitioning from playerRoom to Map<Player,Room>
 
 	public PremadeMap() {
 		// Room 1

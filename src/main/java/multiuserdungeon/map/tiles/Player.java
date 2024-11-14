@@ -27,6 +27,20 @@ public class Player extends Character {
 	}
 
 	@Override
+	public boolean equals (Object o) {
+		if (o instanceof Player) {
+			Player p = (Player)o;
+			if (p.gold == this.gold &&
+				p.armor.equals(this.armor) &&
+				p.weapon.equals(this.weapon));
+		//TODO{Finish this method, make weapons and armor individually comparable}
+		//TODO{Make sure that you are comparing attributes from Character as well}
+
+		}
+		return false;
+	}
+
+	@Override
 	public int getMaxHealth() {
 		int health = super.getMaxHealth();
 

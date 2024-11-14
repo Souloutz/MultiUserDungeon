@@ -1,6 +1,7 @@
 package multiuserdungeon.map;
 
 import java.util.Map;
+import java.util.HashMap;
 import multiuserdungeon.map.tiles.*;
 
 public class EndlessMap implements GameMap {
@@ -8,8 +9,10 @@ public class EndlessMap implements GameMap {
     private Map<Player,Room> playerStartRooms;
     private Player currentPlayer;
 
-    public EndlessMap() {
-
+    public EndlessMap(Player player) {
+        this.playerRooms = new HashMap<>();
+        this.playerStartRooms = new HashMap<>();
+        this.currentPlayer = player;
     }
 
     @Override
@@ -23,10 +26,11 @@ public class EndlessMap implements GameMap {
 
     public void handleExitRoom() {
         Room room = getPlayerRoom();
-        if (room.getConnections().get(currentPlayer.getTile()) == null) {
-            //TODO{method here for generating new rooms}
-        }
-        
+        try {
+            if (room.getConnections().get(currentPlayer.getTile()) == null) {
+                //TODO{method here for generating new rooms}
+            }
+        } catch (NullPointerException e) {}
     }
 
     public boolean isStartRoom() {

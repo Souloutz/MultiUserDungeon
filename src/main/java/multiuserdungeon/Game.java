@@ -2,17 +2,11 @@ package multiuserdungeon;
 
 import java.util.List;
 
-import multiuserdungeon.clock.Clock;
-import multiuserdungeon.clock.Time;
-import multiuserdungeon.inventory.InventoryElement;
-import multiuserdungeon.inventory.elements.Bag;
-import multiuserdungeon.map.Compass;
-import multiuserdungeon.map.PremadeMap;
-import multiuserdungeon.map.Room;
-import multiuserdungeon.map.Tile;
-import multiuserdungeon.map.tiles.Chest;
-import multiuserdungeon.map.tiles.NPC;
-import multiuserdungeon.map.tiles.Player;
+import multiuserdungeon.clock.*;
+import multiuserdungeon.inventory.*;
+import multiuserdungeon.inventory.elements.*;
+import multiuserdungeon.map.*;
+import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.progress.ProgressDB;
 
@@ -20,7 +14,7 @@ public class Game {
 
 	private static Game instance;
 	private final Player player;
-	private final PremadeMap map;
+	private GameMap map;
 	private final Clock clock;
 	private ProgressDB progressDB;
 	private boolean quit;
@@ -28,10 +22,14 @@ public class Game {
 	public Game(Player player) {
 		instance = this;
 		this.player = player;
-		this.map = new PremadeMap();
+		this.map = null;
 		this.clock = new Clock();
 		this.progressDB = null;
 		this.quit = false;
+	}
+
+	public void setMap(GameMap map) {
+		this.map = map;
 	}
 
 	public static Game getInstance() {
@@ -42,7 +40,7 @@ public class Game {
 		return this.player;
 	}
 
-	public PremadeMap getMap() {
+	public GameMap getMap() {
 		return this.map;
 	}
 
@@ -96,6 +94,10 @@ public class Game {
 	}
 
 	public boolean handleExitRoom(Compass direction) {
+		if (this.map instanceof EndlessMap) {
+			EndlessMap o = (EndlessMap)this.map;
+			o.handleExitRoom();
+		}
 		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
 			endTurn();
 			return true;
@@ -202,7 +204,13 @@ public class Game {
 	}
 
 	public boolean isOver() {
-		return this.quit || this.player.getHealth() == 0 || this.map.playerReachedGoal();
+		if (this.map instanceof PremadeMap) {
+			PremadeMap m = (PremadeMap)this.map;
+			if (m.playerReachedGoal()) {
+				return true;
+			}
+		}
+		return this.quit || this.player.getHealth() == 0 ;
 	}
 
 }
