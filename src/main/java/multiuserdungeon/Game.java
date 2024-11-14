@@ -2,13 +2,15 @@ package multiuserdungeon;
 
 import java.util.List;
 
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.clock.*;
+import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.map.*;
 import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.map.tiles.trap.Trap;
-import multiuserdungeon.progress.ProgressDB;
+import multiuserdungeon.persistence.PersistenceManager;
 
 public class Game {
 
@@ -16,15 +18,14 @@ public class Game {
 	private final Player player;
 	private GameMap map;
 	private final Clock clock;
-	private ProgressDB progressDB;
 	private boolean quit;
+	private boolean browsing; // true or false
 
-	public Game(Player player) {
+	public Game(Player player, Map map, User user) {
 		instance = this;
 		this.player = player;
 		this.map = null;
 		this.clock = new Clock();
-		this.progressDB = null;
 		this.quit = false;
 	}
 
@@ -48,12 +49,8 @@ public class Game {
 		return this.clock.getCurrentTime();
 	}
 
-	public void setProgressDB(ProgressDB progressDB) {
-		this.progressDB = progressDB;
-	}
-
 	public boolean handleLoadMap(String uri) {
-		Game loaded = this.progressDB.load(uri);
+		Game loaded = PersistenceManager.getInstance().loadGame(uri);
 		if(loaded != null) {
 			instance = loaded;
 			return true;
@@ -121,45 +118,76 @@ public class Game {
 		return trap.disarmAttempt();
 	}
 
-	public List<InventoryElement> handleOpenChest() {
+	public boolean handlePray() {
+		// TODO
+		return false;
+	}
+
+	public List<InventoryElement> handleTalkToMerchant(Compass direction) {
+		// TODO
+		return null;
+	} 
+
+	public boolean handleBuyItem(int index) {
+		// TODO;
+		return false;
+	}
+
+	public boolean handleSellItem(int bagPos, int itemPos) {
+		// TODO;
+		return false;
+	}
+
+	public List<InventoryElement> handleOpen() {
 		Chest chest = this.player.getTile().getChest();
-		if(chest == null) return null;
+		if (chest == null) return null;
+		
 		return chest.getContents();
 	}
 
-	public void handleCloseChest() {
+	public void handleClose() {
 		endTurn();
 	}
 
 	public boolean handlePickupItem(int index) {
 		Chest chest = this.player.getTile().getChest();
-		if(chest == null) return false;
+		if (chest == null) return false;
 
-		if(index == -1) {
+		if (index == -1) {
 			InventoryElement pickedUp;
-			while((pickedUp = chest.handleLoot(0)) != null) {
-				if(pickedUp instanceof Bag bag) {
-					if(!this.player.getInventory().addBag(bag)) return false;
+			while ((pickedUp = chest.handleLoot(0)) != null) {
+				if (pickedUp instanceof Bag bag) {
+					if (!this.player.getInventory().addBag(bag)) return false;
 				} else {
-					if(!this.player.getInventory().addItem(pickedUp)) return false;
+					if (!this.player.getInventory().addItem(pickedUp)) return false;
 				}
 			}
 			return chest.getContents().isEmpty();
 		} else {
 			InventoryElement pickedUp = chest.handleLoot(index);
-			if(pickedUp == null) return false;
+			if (pickedUp == null) return false;
 
-			if(pickedUp instanceof Bag bag) {
+			if (pickedUp instanceof Bag bag)
 				return this.player.getInventory().addBag(bag);
-			} else {
+			else
 				return this.player.getInventory().addItem(pickedUp);
-			}
 		}
+	}
+
+	public String handleViewInventory() {
+		StringBuilder inventoryString = new StringBuilder();
+		Inventory inventory = this.player.getInventory();
+
+		for (int index = 0; index < 6; index++)
+			inventoryString.append("\n").append(inventory.viewBag(index));
+		
+		return inventoryString.toString();
 	}
 
 	public boolean handleEquipItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
-		if(item == null) return false;
+		if (item == null) return false;
+
 		this.player.getInventory().removeItem(bagPos, itemPos);
 		return item.handleEquip(this.player);
 	}
@@ -170,14 +198,14 @@ public class Game {
 
 	public boolean handleUseItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
-		if(item == null) return false;
+		if (item == null) return false;
 
-		if(item.handleUse(this.player)) {
+		if (item.handleUse(this.player)) {
 			handleDestroyItem(bagPos, itemPos);
 			return true;
-		} else {
-			return false;
-		}
+		} 
+
+		return false;
 	}
 
 	public boolean handleDestroyItem(int bagPos, int itemPos) {
@@ -188,9 +216,12 @@ public class Game {
 		return this.player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
 	}
 
-	public String handleQuitGame() {
+	public void handleQuitGame() {
 		this.quit = true;
-		return this.progressDB.save(this);
+	}
+
+	public String handleSaveGame() {
+		return PersistenceManager.getInstance().saveGame(this);
 	}
 	
 	public void endTurn() {
@@ -199,6 +230,7 @@ public class Game {
 			if(npc == null) return;
 			npc.attack(direction.getOpposite());
 		});
+
 		this.player.depleteBuffs();
 		this.clock.completeTurn();
 	}
@@ -212,5 +244,4 @@ public class Game {
 		}
 		return this.quit || this.player.getHealth() == 0 ;
 	}
-
 }

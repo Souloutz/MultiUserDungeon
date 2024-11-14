@@ -1,23 +1,22 @@
 package multiuserdungeon;
 
-import multiuserdungeon.commands.AttackAction;
-import multiuserdungeon.commands.QuitGameAction;
+import multiuserdungeon.commands.player.AttackAction;
+import multiuserdungeon.commands.game.QuitGameAction;
 import multiuserdungeon.commands.inventory.DestroyItemAction;
 import multiuserdungeon.commands.inventory.EquipItemAction;
-import multiuserdungeon.commands.inventory.PickupItemAction;
 import multiuserdungeon.commands.inventory.SwapBagAction;
 import multiuserdungeon.commands.inventory.UnequipItemAction;
 import multiuserdungeon.commands.inventory.UseItemAction;
-import multiuserdungeon.commands.map.CloseChestAction;
-import multiuserdungeon.commands.map.DisarmTrapAction;
-import multiuserdungeon.commands.map.LoadMapAction;
-import multiuserdungeon.commands.map.OpenChestAction;
-import multiuserdungeon.commands.movement.ExitRoomAction;
-import multiuserdungeon.commands.movement.MoveAction;
+import multiuserdungeon.commands.player.CloseAction;
+import multiuserdungeon.commands.player.DisarmTrapAction;
+import multiuserdungeon.commands.game.LoadMapAction;
+import multiuserdungeon.commands.player.OpenAction;
+import multiuserdungeon.commands.player.ExitRoomAction;
+import multiuserdungeon.commands.player.MoveAction;
+import multiuserdungeon.commands.player.PickupItemAction;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.tiles.Player;
-import multiuserdungeon.progress.JSONProgressDB;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +34,6 @@ public class UI {
 	public static void main(String[] args) throws InterruptedException {
 		printWelcomeMsg();
 		game = new Game(createPlayer());
-		game.setProgressDB(new JSONProgressDB());
 
 		printBlock("You enter the first narrow doorway to begin your journey...");
 		Thread.sleep(DELAY_MS);
@@ -179,7 +177,7 @@ public class UI {
 				printBlock("Successfully loaded the map.");
 			}
 			case "open" -> {
-				List<InventoryElement> contents = new OpenChestAction(game).execute();
+				List<InventoryElement> contents = new OpenAction(game).execute();
 				if(contents != null) {
 					StringBuilder builder = new StringBuilder("Contents (" + contents.size() + " items)");
 					for(int i = 0; i < contents.size(); i++) {
@@ -205,7 +203,7 @@ public class UI {
 					printBlock("You do not currently have a chest open, please try again.");
 					break;
 				}
-				new CloseChestAction(game).execute();
+				new CloseAction(game).execute();
 				printBlock("Successfully closed the chest.");
 				inChest = false;
 			}
