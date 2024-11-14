@@ -38,6 +38,6 @@ public class EndlessMap implements GameMap {
     }
 
     private static class RoomGenerator {
-
+        
     }
 }

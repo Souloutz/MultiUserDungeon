@@ -9,6 +9,7 @@ import multiuserdungeon.inventory.*;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.map.*;
 import multiuserdungeon.map.tiles.*;
+import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.persistence.PersistenceManager;
 
@@ -119,8 +120,13 @@ public class Game {
 	}
 
 	public boolean handlePray() {
-		// TODO
-		return false;
+		Shrine shrine = this.player.getTile().getShrine();
+		if (shrine == null) {
+			return false;
+		}
+		shrine.storeSnapshot();
+		endTurn();
+		return true;
 	}
 
 	public Map<InventoryElement, Integer> handleTalkToMerchant(Compass direction) {
@@ -155,6 +161,10 @@ public class Game {
 		player.getInventory().removeItem(bagPos,itemPos);
 		player.gainGold(merchant.buyItem(selling));
 		return true;
+	}
+
+	public void handleLeaveMerchant() {
+		endTurn();
 	}
 
 	public List<InventoryElement> handleOpen() {
@@ -261,6 +271,13 @@ public class Game {
 				return true;
 			}
 		}
-		return this.quit || this.player.getHealth() == 0 ;
+		return this.quit || (this.player.getHealth() <= 0 && !(map instanceof EndlessMap));
+	}
+
+	public void respawn() {
+		if (this.player.getHealth() <= 0) {
+			//TODO{check if there is a snapshot, if not end game, if yes then restore}
+			//Finish this when Shrine is complete
+		}
 	}
 }
