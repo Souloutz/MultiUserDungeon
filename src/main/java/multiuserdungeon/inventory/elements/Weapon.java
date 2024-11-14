@@ -17,6 +17,15 @@ public class Weapon implements InventoryElement {
         this.attack = attack;
 	}
 
+
+	//copy constructor
+	public Weapon(Weapon weapon){
+		this.name = weapon.name;
+        this.description = weapon.description;
+        this.goldValue = weapon.goldValue;
+        this.attack = weapon.attack;
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;

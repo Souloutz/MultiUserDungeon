@@ -1,21 +1,35 @@
 package multiuserdungeon.commands.inventory;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.authentication.Profile;
+import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
 public class UnequipItemAction implements Action<Boolean> {
 
 	private final Game receiver;
+	private final User user;
 	private final boolean isWeapon;
 
-	public UnequipItemAction(Game game, boolean isWeapon) {
+	public UnequipItemAction(Game game, User user, boolean isWeapon) {
 		this.receiver = game;
+		this.user = user;
 		this.isWeapon = isWeapon;
 	}
 
 	@Override
 	public Boolean execute() {
-		return this.receiver.handleUnequipItem(this.isWeapon);
+		if (canExecute())
+			return this.receiver.handleUnequipItem(this.isWeapon);
+
+		return false;
 	}
 
+	@Override
+	public boolean canExecute() {
+		if (user instanceof Profile)
+			return true;
+
+		return false;
+	}
 }

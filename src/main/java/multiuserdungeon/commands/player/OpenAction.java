@@ -1,30 +1,29 @@
-package multiuserdungeon.commands.inventory;
+package multiuserdungeon.commands.player;
+
+import java.util.List;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
+import multiuserdungeon.inventory.InventoryElement;
 
-public class EquipItemAction implements Action<Boolean> {
+public class OpenAction implements Action<List<InventoryElement>> {
 
 	private final Game receiver;
 	private final User user;
-	private final int bagPos;
-	private final int itemPos;
 
-	public EquipItemAction(Game game, User user, int bagPos, int itemPos) {
+	public OpenAction(Game game, User user) {
 		this.receiver = game;
 		this.user = user;
-		this.bagPos = bagPos;
-		this.itemPos = itemPos;
 	}
 
 	@Override
-	public Boolean execute() {
+	public List<InventoryElement> execute() {
 		if (canExecute())
-			return this.receiver.handleEquipItem(this.bagPos, this.itemPos);
+			return this.receiver.handleOpen();
 
-		return false;
+		return null;
 	}
 
 	@Override
