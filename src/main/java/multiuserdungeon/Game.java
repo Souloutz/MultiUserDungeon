@@ -64,6 +64,7 @@ public class Game {
 		int damage = this.player.attack(direction);
 		if(damage != -1) endTurn();
 		return damage;
+		//TODO{add functionality here or in NPC to make corpse if it dies}
 	}
 
 	public boolean handleMove(Compass direction) {
@@ -277,6 +278,7 @@ public class Game {
 	public void respawn() {
 		if (this.player.getHealth() <= 0) {
 			//TODO{check if there is a snapshot, if not end game, if yes then restore}
+			//Don't forget to make corpse of yourself
 			//Finish this when Shrine is complete
 		}
 	}
