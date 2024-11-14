@@ -89,6 +89,11 @@ public class Items {
         }
     }
 
+    /**
+     * instantiate new Inventory Element given item's id
+     * @param id
+     * @return InventoryElement
+     */
     public InventoryElement getItem(int id){
         if (items.containsKey(id)) {
             InventoryElement item = items.get(id);
@@ -116,10 +121,9 @@ public class Items {
 
     public InventoryElement getRandomItem(){
         Random random = new Random();
-        Object[] values = items.values().toArray();
-        InventoryElement randomItem = (InventoryElement) values[random.nextInt(values.length)];
-
-        return randomItem;
+        Object[] itemIDs = (items.keySet()).toArray();
+        int randomtID = (int) itemIDs[random.nextInt(itemIDs.length)];
+        return getItem(randomtID);
     }
 
     public Map<Integer, InventoryElement> getItems(){
