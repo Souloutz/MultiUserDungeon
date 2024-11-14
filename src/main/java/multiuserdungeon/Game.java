@@ -94,7 +94,7 @@ public class Game {
 	public boolean handleExitRoom(Compass direction) {
 		if (this.map instanceof EndlessMap) {
 			EndlessMap o = (EndlessMap)this.map;
-			o.handleExitRoom();
+			o.handleExitRoom(direction);
 		}
 		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
 			endTurn();

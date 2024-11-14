@@ -3,6 +3,7 @@ package multiuserdungeon.map;
 import java.util.Map;
 import java.util.HashMap;
 import multiuserdungeon.map.tiles.*;
+import multiuserdungeon.QuintonsMagicFolder.*;
 
 public class EndlessMap implements GameMap {
     private Map<Player,Room> playerRooms;
@@ -24,11 +25,12 @@ public class EndlessMap implements GameMap {
         this.playerRooms.put(currentPlayer,room);
     }
 
-    public void handleExitRoom() {
+    public void handleExitRoom(Compass direction) {
         Room room = getPlayerRoom();
         try {
             if (room.getConnections().get(currentPlayer.getTile()) == null) {
-                //TODO{method here for generating new rooms}
+                Room newRoom = RoomGenerator.generateRoom(direction,room);
+                room.getConnections().put(currentPlayer.getTile(),newRoom);
             }
         } catch (NullPointerException e) {}
     }
@@ -37,7 +39,4 @@ public class EndlessMap implements GameMap {
         return getPlayerRoom().equals(playerStartRooms.get(currentPlayer));
     }
 
-    private static class RoomGenerator {
-        
-    }
 }
