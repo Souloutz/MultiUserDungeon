@@ -1,4 +1,4 @@
-package multiuserdungeon.QuintonsMagicFolder;
+package multiuserdungeon;
 
 import multiuserdungeon.map.*;
 import multiuserdungeon.map.tiles.Chest;
@@ -119,6 +119,4 @@ public class RoomGenerator {
         //TODO{Pretty sure all shhrines are the same}
     }
 
-    public static void main(String[] args) {
-    }
 }

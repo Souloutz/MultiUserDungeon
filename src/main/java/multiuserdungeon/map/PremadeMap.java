@@ -15,11 +15,13 @@ import multiuserdungeon.map.tiles.trap.Trap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PremadeMap implements GameMap {
 
 	private Room playerRoom;
 	private final Room goal;
+	private Set<Room> rooms;
 
 	public PremadeMap() {
 		// Room 1
@@ -82,13 +84,14 @@ public class PremadeMap implements GameMap {
 		this.goal = room3;
 	}
 
-	public PremadeMap(Room playerRoom, Room goal) {
+	public PremadeMap(Room playerRoom, Room goal, Set<Room> rooms) {
 		this.playerRoom = playerRoom;
 		Tile playerTile = this.playerRoom.getTile(this.playerRoom.getRows() - 1, this.playerRoom.getColumns() - 1);
 		this.playerRoom.setPlayerTile(playerTile);
 		this.playerRoom.getPlayerTile().addObject(Game.getInstance().getPlayer());
 		Game.getInstance().getPlayer().setTile(playerTile);
 		this.goal = goal;
+		this.rooms = rooms;
 	}
 
 	public Room getGoal() {
@@ -107,6 +110,11 @@ public class PremadeMap implements GameMap {
 
 	public boolean playerReachedGoal() {
 		return getPlayerRoom().equals(getGoal());
+	}
+
+	@Override
+	public Set<Room> getRooms() {
+		return rooms;
 	}
 
 }
