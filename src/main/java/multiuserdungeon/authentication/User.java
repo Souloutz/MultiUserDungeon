@@ -2,6 +2,9 @@ package multiuserdungeon.authentication;
 
 import com.opencsv.bean.CsvBindByPosition;
 
+import multiuserdungeon.Game;
+import multiuserdungeon.persistence.PersistenceManager;
+
 public class User {
 
     @CsvBindByPosition(position = 0)
@@ -24,6 +27,7 @@ public class User {
 
     public void handleBrowseMap(String filePath) {
         // TODO: choose room and put player at start
+        Game game = PersistenceManager.getInstance().loadGame(filePath);
     }
 
 }
