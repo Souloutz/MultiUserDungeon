@@ -50,6 +50,9 @@ public class Tile {
 			else if(tileObject instanceof Shrine){
 				newTileObject = new Obstacle((Obstacle)tileObject);
 			}
+			else if(tileObject instanceof Trap){
+				newTileObject = new Trap((Trap)tileObject);
+			}
 			// else if (tileObject instanceof Merchant){
 			// 	newTileObject = null;
 			// }
