@@ -103,6 +103,10 @@ public class EndlessMap implements GameMap {
         return getPlayerRoom().equals(playerStartRooms.get(currentPlayer));
     }
 
+    public Player getCurrentPlayer(){
+        return this.currentPlayer;
+    }
+
     @Override
     public List<Room> getRooms() {
         return rooms;

@@ -49,7 +49,7 @@ public class Tile {
 				continue; //skip, creating new player object and setting player tile handled in EndlessMap
 			}
 			else if(tileObject instanceof Shrine){
-				newTileObject = new Obstacle((Obstacle)tileObject);
+				newTileObject = new Shrine((Shrine)tileObject);
 			}
 			else if(tileObject instanceof Trap){
 				newTileObject = new Trap((Trap)tileObject);

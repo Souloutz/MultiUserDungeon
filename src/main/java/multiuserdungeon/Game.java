@@ -251,13 +251,10 @@ public class Game {
 
 	public Snapshot createSnapshot(){
 
-		//TODO:copy map
-		GameMap newMap = new EndlessMap((EndlessMap)map);
+		EndlessMap newMap = new EndlessMap((EndlessMap)map);
 
-		//player is part of map, so no need to copy again
-		Player newPlayer = newMap.getPlayerRoom().getPlayerTile().getPlayer();
+		Player newPlayer = newMap.getCurrentPlayer();
 
-		//copy clock
 		Clock newClock = new Clock();
 		Time newTime;
 		if(clock.getCurrentTime().isDay()){
