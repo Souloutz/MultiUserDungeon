@@ -5,16 +5,16 @@ import java.util.HashMap;
 import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.RoomGenerator;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class EndlessMap implements GameMap {
     private Map<Player,Room> playerRooms;
     private Map<Player,Room> playerStartRooms;
     private Player currentPlayer;
 
-    private Set<Room> rooms;
+    private List<Room> rooms;
 
-    public EndlessMap(Player player, Set<Room> rooms) {
+    public EndlessMap(Player player, List<Room> rooms) {
         this.playerRooms = new HashMap<>();
         this.playerStartRooms = new HashMap<>();
         this.currentPlayer = player;
@@ -46,7 +46,7 @@ public class EndlessMap implements GameMap {
     }
 
     @Override
-    public Set<Room> getRooms() {
+    public List<Room> getRooms() {
         return rooms;
     }
 

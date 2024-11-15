@@ -1,9 +1,9 @@
 package multiuserdungeon.map;
 
-import java.util.Set;
+import java.util.List;
 
 public interface GameMap {
     public Room getPlayerRoom();
     public void setPlayerRoom(Room room);
-    public Set<Room> getRooms();
+    public List<Room> getRooms();
 }

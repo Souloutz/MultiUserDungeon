@@ -74,6 +74,9 @@ public class RoomGenerator {
         for (int i = 0;i < max;i++) {
             Tile tile = room.getTile(y[i],x[i]);
             int place = objects[i] % 4;
+
+            // was going to use switch case, but considering it needs to check
+            // both real and modular value, not possible
             if (objects[i] == 31) {
                 tile.addObject((TileObject)generateMerchant());
             } else if (objects[i] == 30) {
