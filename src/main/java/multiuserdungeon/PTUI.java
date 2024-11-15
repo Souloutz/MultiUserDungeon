@@ -3,6 +3,7 @@ package multiuserdungeon;
 import multiuserdungeon.commands.player.AttackAction;
 import multiuserdungeon.commands.player.BuyItemAction;
 import multiuserdungeon.commands.game.QuitGameAction;
+import multiuserdungeon.commands.game.SaveGameAction;
 import multiuserdungeon.commands.inventory.DestroyItemAction;
 import multiuserdungeon.commands.inventory.EquipItemAction;
 import multiuserdungeon.commands.inventory.SwapBagAction;
@@ -25,6 +26,11 @@ import multiuserdungeon.commands.player.PickupItemAction;
 import multiuserdungeon.commands.player.PrayAction;
 import multiuserdungeon.commands.player.SellItemAction;
 import multiuserdungeon.commands.player.TalkToMerchantAction;
+import multiuserdungeon.commands.profile.BrowseMapAction;
+import multiuserdungeon.commands.profile.JoinGameAction;
+import multiuserdungeon.commands.profile.ResumeGameAction;
+import multiuserdungeon.commands.profile.StartGameAction;
+import multiuserdungeon.commands.profile.ViewHistoryAction;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.Map;
@@ -32,7 +38,6 @@ import multiuserdungeon.map.tiles.Player;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class PTUI {
@@ -42,25 +47,35 @@ public class PTUI {
 	private static final Scanner scanner = new Scanner(System.in);
 	private static final Authenticator authenticator = Authenticator.getInstance();
 	private static Game game;
+	private static boolean inGame = false;
 	private static boolean inMenu = false;
+	private static boolean exit = false;
 
 	public static void main(String[] args) throws InterruptedException {
 		printWelcomeMsg();
+		printProfileCommands();
 		
-
-		printBlock("You enter the first narrow doorway to begin your journey...");
-		Thread.sleep(DELAY_MS);
-		printRoomDescription();
-
-		while(!game.isOver()) {
-			printRoomLayout();
-			printAllCommands();
+		while (true) {
 
 			try {
-				processCommand();
-			} catch(IndexOutOfBoundsException | IllegalArgumentException ignored) {
+				processProfileCommand();
+			} catch (IndexOutOfBoundsException | IllegalArgumentException ignored) {
 				printBlock("Unable to parse command arguments, please try again.");
 			}
+
+			while (!game.isOver() && inGame) {
+				printGameCommands();
+				printRoomLayout();
+	
+				try {
+					processInGameCommand();
+				} catch (IndexOutOfBoundsException | IllegalArgumentException ignored) {
+					printBlock("Unable to parse command arguments, please try again.");
+				}
+			}
+
+			if (exit)
+				break;
 		}
 
 		printBlock("GAME OVER\n\n\tThank you for playing, " + game.getPlayer().getName() + "!");
@@ -96,48 +111,47 @@ public class PTUI {
 				"From above, the room appears like:\n\n" + game.getMap().getPlayerRoom());
 	}
 
-	public static void printAllCommands() {
+	public static void printProfileCommands() {
 		// TODO: Cut down to only contextual relevant commands
-		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
-		printBlock("ALL COMMANDS\n\n\tDirections: " + directions + "\n\n" +
-				"\tinventory -=- Views all of your bags and inventory stats.\n" +
-				"\tbag <bag pos> -=- Views the specified bag and its stats.\n" +
-				"\tequip <bag pos> <item pos> -=- Equips the specified item (weapon/armor).\n" +
-				"\tunequip <weapon/armor> -=- Unequips the current weapon or armor.\n" +
-				"\tuse <bag pos> <item pos> -=- Uses the specified item (food/buffs).\n" +
-				"\tdestroy <bag pos> <item pos> -=- Destroys the specified item to clear space.\n" +
-				"\tswap <src bag pos> <dest bag pos> <dest bag pos> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
-				"\tload <uri> -=-= Loads a different saved map.\n" +
-				"\topen -=- Opens the chest you are currently standing on.\n" +
-				"\tpickup [chest pos] -=- Pickups all items in a chest, or just specific items.\n" +
-				"\tclose -=- Closes the chest you are currently standing on.\n" +
-				"\tdisarm <direction> -=- Attempts to disarm a detected trap in the specified direction.\n" +
-				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
-				"\texit <direction> -=- Exits the room with the given direction.\n" +
-				"\tattack <direction> -=- Attacks a nearby creature.\n" +
-				"\tquit -=- Quits the current game, saving all progress.\n");
+		printBlock("PROFILE COMMANDS\n\n\t: \n\n" +
+				"\tlogin <username> <password> -=- Login to your profile and gain access to other commands.\n" +
+				"\tlogout -=- Logout of your profile.\n" +
+				"\tpassword <old password> <new password> <confirm password> -=- Change your profile password.\n" +
+				"\tregister <username> <password> -=- Register a new profile (username must be unique).\n" +
+				"\tbrowse <file path> -=- Browse a premade map without playing.\n" +
+				"\tjoin <file path> -=- Join an existing endless adventure map game.\n" +
+				"\tresume <file path> -=- Resume an existing game.\n" +
+				"\tstart <map type> <file path> -=-= Start a new game (endless/premade).\n" +
+				"\thistory -=- View game history and accumulated stats.\n" +
+				"\tquit -=- Quit the application\n" + 
+				"\thelp -=- Displays all profile commands.\n");
 	}
 
-	public static void printAllCommands() {
+	public static void printGameCommands() {
 		// TODO: Cut down to only contextual relevant commands
 		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
-		printBlock("ALL COMMANDS\n\n\tDirections: " + directions + "\n\n" +
-				"\tinventory -=- Views all of your bags and inventory stats.\n" +
-				"\tbag <bag pos> -=- Views the specified bag and its stats.\n" +
-				"\tequip <bag pos> <item pos> -=- Equips the specified item (weapon/armor).\n" +
-				"\tunequip <weapon/armor> -=- Unequips the current weapon or armor.\n" +
-				"\tuse <bag pos> <item pos> -=- Uses the specified item (food/buffs).\n" +
-				"\tdestroy <bag pos> <item pos> -=- Destroys the specified item to clear space.\n" +
-				"\tswap <src bag pos> <dest bag pos> <dest bag pos> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
-				"\tload <uri> -=-= Loads a different saved map.\n" +
-				"\topen -=- Opens the chest you are currently standing on.\n" +
-				"\tpickup [chest pos] -=- Pickups all items in a chest, or just specific items.\n" +
-				"\tclose -=- Closes the chest you are currently standing on.\n" +
-				"\tdisarm <direction> -=- Attempts to disarm a detected trap in the specified direction.\n" +
-				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
-				"\texit <direction> -=- Exits the room with the given direction.\n" +
-				"\tattack <direction> -=- Attacks a nearby creature.\n" +
-				"\tquit -=- Quits the current game, saving all progress.\n");
+		printBlock("ALL GAME COMMANDS\n\n\tDirections: " + directions + "\n\n" +
+				"\tattack <direction> -=- Attack a nearby creature.\n" +
+				"\tmove <direction> -=- Move in the specified direction within the room.\n" +
+				"\tdisarm <direction> -=- Attempt to disarm a detected trap in the specified direction.\n" +
+				"\tpray -=- Pray to a shrine to gain a second chance at life if you die (resets when you die or quit).\n" +
+				"\texit <direction> -=- Exit the room with the given direction.\n" +
+				"\topen -=- Open the chest or corpse you are currently standing on.\n" +
+				"\tpickup [chest pos] -=- Pickup all items in a chest, or just specific items.\n" +
+				"\tclose -=- Close the menu you are currently in.\n" +
+				"\ttalk -=- Talk to a merchant to either buy or sell items.\n" + 
+				"\tbuy -=- Buy an item from the merchant.\n" +
+				"\tsell <bag pos> <item pos> -=- Sell an item to the merchant at half price.\n" +
+				"\tinventory -=- View all of your bags and inventory stats.\n" +
+				"\tbag <bag pos> -=- View the specified bag and its stats.\n" +
+				"\tuse <bag pos> <item pos> -=- Use the specified item (food/buffs).\n" +
+				"\tequip <bag pos> <item pos> -=- Equip the specified item (weapon/armor).\n" +
+				"\tunequip <weapon/armor> -=- Unequip the current weapon or armor.\n" +
+				"\tdestroy <bag pos> <item pos> -=- Destroy the specified item to clear space.\n" +
+				"\tswap <src bag pos> <dest bag pos> <dest bag pos> -=- Swap a larger unequipped bag with an equipped one, copying all items over.\n" +
+				"\tload <file path> -=-= Load a different saved map.\n" +
+				"\tsave -=- Save the current game.\n" +
+				"\tquit -=- Quit the current game.\n");
 	}
 
 	/**
@@ -151,12 +165,17 @@ public class PTUI {
 	 * 	- Resume game
 	 * 	- Start game
 	 * 	- View history
+	 * 	- Help
+	 * 	- Quit
 	 */
-	private static void processProfileCommand() {
+	private static void processProfileCommand() throws InterruptedException {
 		System.out.println(">>> ");
 		String[] args = scanner.nextLine().toLowerCase().split(" ");
 		
 		switch(args[0]) {
+			case "help" -> {
+				printProfileCommands();
+			}
 			case "login" -> {
 				String username = args[1];
 				String password = args[2];
@@ -185,32 +204,60 @@ public class PTUI {
 				else
 					printBlock("Username might already exist, please try again.");
 			}
-			case "change password" -> {
+			case "password" -> {
 				String oldPassword = args[1];
 				String newPassword = args[2];
-				boolean result = new ChangePasswordAction(authenticator, oldPassword, newPassword).execute();
+				String confirmPassword = args[3];
+				boolean result = new ChangePasswordAction(authenticator, oldPassword, newPassword, confirmPassword).execute();
 
 				if (result)
 					printBlock("Successfully changed password.");
 				else
 					printBlock("Could not change password, please try again.");
 			}
-			case "browse" -> {
 
+
+			// TODO: Finish implementation
+			case "browse" -> {
+				String filePath = args[1];
+				new BrowseMapAction(authenticator.getUser(), filePath).execute();
 			}
 			case "start" -> {
+				String mapType = args[1].toLowerCase();
+				String filePath = args[2];
+				new StartGameAction(authenticator.getUser(), mapType, filePath).execute();
 
+				printBlock("You enter the first narrow doorway to begin your journey...");
+				Thread.sleep(DELAY_MS);
+				printRoomDescription();
 			}
 			case "resume" -> {
+				String filePath = args[1];
+				new ResumeGameAction(authenticator.getUser(), filePath).execute();
 
+				printBlock("You re-enter the labrinth to continue on your quest...");
+				Thread.sleep(DELAY_MS);
+				printRoomDescription();
 			}
 			case "join" -> {
+				String filePath = args[1];
+				new JoinGameAction(authenticator.getUser(), filePath).execute();
 
+				printBlock("You enter the pits of darkness. Only death awaits...");
+				Thread.sleep(DELAY_MS);
+				printRoomDescription();
 			}
-			case "view history" -> {
-
+			case "history" -> {
+				new ViewHistoryAction(authenticator.getUser()).execute();
 			}
+			case "quit" -> {
+				inGame = false;
+				exit = true;
+			}
+			default -> printBlock("Unrecognized command, please try again.");
 		}
+
+		Thread.sleep(DELAY_MS);
 	}
 
 	/**
@@ -227,6 +274,7 @@ public class PTUI {
 	 * 	- Buy item
 	 * 	- Sell item
 	 * 	- View inventory
+	 * 	- View bag
 	 * 	- Use item
 	 * 	- Equip item
 	 * 	- Unequip item
@@ -234,18 +282,22 @@ public class PTUI {
 	 * 	- Swap bag
 	 * 	- Save game
 	 * 	- Quit game
+	 * 	- Help
 	 */
 	private static void processInGameCommand() throws IndexOutOfBoundsException, IllegalArgumentException, InterruptedException {
 		System.out.print(">>> ");
 		String[] args = scanner.nextLine().toLowerCase().split(" ");
 
-		if(!(args[0].equals("open") || args[0].equals("pickup") || args[0].equals("close")) && inChest) {
+		if(!(args[0].equals("open") || args[0].equals("pickup") || args[0].equals("close")) && inMenu) {
 			printBlock("Please either pickup items from the chest or close the chest.");
 			Thread.sleep(DELAY_MS);
 			return;
 		}
 
 		switch(args[0]) {
+			case "help" -> {
+				printGameCommands();
+			}
 			case "attack" -> {
 				// TODO: Find a way to add more information on who they attacked in response
 				Compass direction = Compass.valueOf(args[1].toUpperCase());
@@ -347,7 +399,7 @@ public class PTUI {
 					printBlock("A merchant in that direction does not exist or now is not a safe time to talk, please try again.");
 			}
 			case "buy" -> {
-				int itemPos = args.length == 1 ? -1 : Integer.parseInt(args[1]);
+				int itemPos = Integer.parseInt(args[1]);
 				boolean result = new BuyItemAction(game, authenticator.getUser(), itemPos).execute();
 				
 				if (result)
@@ -356,7 +408,7 @@ public class PTUI {
 					printBlock("You are not currently talking to a merchant, your inventory is full, the item position is incorrect, or you do not have sufficient gold, please try again.");
 			}
 			case "sell" -> {
-				int bagPos = args.length == 2 ? -1 : Integer.parseInt(args[1]);
+				int bagPos = Integer.parseInt(args[1]);
 				int itemPos = Integer.parseInt(args[2]);
 				boolean result = new SellItemAction(game, authenticator.getUser(), bagPos, itemPos).execute();
 
@@ -365,78 +417,88 @@ public class PTUI {
 				else
 					printBlock("Unknown item, item does not exist, or the bag/item position is incorrect, please try again.");
 			}
-
-			//TODO
 			case "inventory" -> {
 				String inventoryString = new ViewInventoryAction(game, authenticator.getUser()).execute();
-				printBlock(inventoryString);
+				
+				if (inventoryString != null)
+					printBlock(inventoryString);
+				else
+					printBlock("You are not able to view your inventory, please try again.");
 			}
 			case "bag" -> {
 				int bagPos = Integer.parseInt(args[1]);
 				String bagString = new ViewBagAction(game, authenticator.getUser(), bagPos).execute();
-				printBlock(bagString);
-			}
-			case "equip" -> {
-				int bagPos = Integer.parseInt(args[1]);
-				int itemPos = Integer.parseInt(args[2]);
-				boolean result = new EquipItemAction(game, bagPos, itemPos).execute();
-				if(result) {
-					printBlock("Successfully equipped the item.");
-				} else {
-					printBlock("Unknown item or item is not able to be equipped, please try again.");
-				}
-			}
-			case "unequip" -> {
-				boolean isWeapon = args[1].equals("weapon");
-				boolean result = new UnequipItemAction(game, isWeapon).execute();
-				if(result) {
-					printBlock("Successfully unequipped the item.");
-				} else {
-					printBlock("That type of item is not currently equipped.");
-				}
+				
+				if (bagString != null)
+					printBlock(bagString);
+				else 
+					printBlock("You are not able to view your bag or that bag does not exist, please try again.");
 			}
 			case "use" -> {
 				int bagPos = Integer.parseInt(args[1]);
 				int itemPos = Integer.parseInt(args[2]);
-				boolean result = new UseItemAction(game, bagPos, itemPos).execute();
-				if(result) {
+				boolean result = new UseItemAction(game, authenticator.getUser(), bagPos, itemPos).execute();
+				
+				if (result)
 					printBlock("Successfully used the item.");
-				} else {
+				else
 					printBlock("Unknown item or item is not usable, please try again.");
-				}
+			}
+			case "equip" -> {
+				int bagPos = Integer.parseInt(args[1]);
+				int itemPos = Integer.parseInt(args[2]);
+				boolean result = new EquipItemAction(game, authenticator.getUser(), bagPos, itemPos).execute();
+				
+				if (result)
+					printBlock("Successfully equipped the item.");
+				else
+					printBlock("Unknown item or item is not able to be equipped, please try again.");
+			}
+			case "unequip" -> {
+				boolean isWeapon = args[1].equals("weapon");
+				boolean result = new UnequipItemAction(game, authenticator.getUser(), isWeapon).execute();
+				
+				if (result)
+					printBlock("Successfully unequipped the item.");
+				else
+					printBlock("That type of item is not currently equipped.");
 			}
 			case "destroy" -> {
 				int bagPos = Integer.parseInt(args[1]);
 				int itemPos = Integer.parseInt(args[2]);
-				boolean result = new DestroyItemAction(game, bagPos, itemPos).execute();
-				if(result) {
+				boolean result = new DestroyItemAction(game, authenticator.getUser(), bagPos, itemPos).execute();
+				
+				if (result)
 					printBlock("Successfully destroyed the item.");
-				} else {
+				else
 					printBlock("Unknown item, please try again.");
-				}
 			}
 			case "swap" -> {
 				int sourceBagPos = Integer.parseInt(args[1]);
 				int destBagPos = Integer.parseInt(args[2]);
 				int destItemPos = Integer.parseInt(args[3]);
-				boolean result = new SwapBagAction(game, sourceBagPos, destBagPos, destItemPos).execute();
-				if(result) {
+				boolean result = new SwapBagAction(game, authenticator.getUser(), sourceBagPos, destBagPos, destItemPos).execute();
+				
+				if (result)
 					printBlock("Successfully swapped the bags.");
-				} else {
+				else
 					printBlock("Unknown bags or the destination bag is smaller than the source, please try again.");
-				}
 			}
 			case "load" -> {
-				new LoadMapAction(game, args[1]).execute();
+				new LoadMapAction(game, authenticator.getUser(), args[1]).execute();
 				printBlock("Successfully loaded the map.");
 			}
+			case "save" -> {
+				new SaveGameAction(game, authenticator.getUser()).execute();
+				printBlock("Successfully saved the game.");
+			}
 			case "quit" -> {
-				String result = new QuitGameAction(game).execute();
-				printBlock(result);
+				new QuitGameAction(game, authenticator.getUser()).execute();
+				printBlock("Successfully quit the game.");
 			}
 			default -> printBlock("Unrecognized command, please try again.");
 		}
+
 		Thread.sleep(DELAY_MS);
 	}
-
 }
