@@ -122,27 +122,52 @@ public class Game {
 		return trap.disarmAttempt();
 	}
 
-	public boolean handlePray(){
-		Shrine newShrine = this.player.getTile().getShrine();
-		if(map.getPlayerRoom().isSafe() && shrine != null){
-			this.shrine = newShrine;
-			shrine.storeSnapshot();
-			return true;
-		}
-		else{
+	public boolean handlePray() {
+		Shrine shrine = this.player.getTile().getShrine();
+		if (shrine == null) {
 			return false;
 		}
-
+		shrine.storeSnapshot();
+		endTurn();
+		return true;
 	}
 
-	public boolean handleBuyItem(int index) {
-		// TODO;
-		return false;
+	public Map<InventoryElement, Integer> handleTalkToMerchant(Compass direction) {
+		Tile merchantTile = this.player.getTile().getTile(direction);
+		if (merchantTile.getObjects().get(0) instanceof Merchant) {
+			Merchant m = (Merchant)merchantTile.getObjects().get(0);
+			return m.getStore();
+		}
+		return null;
+	} 
+
+	public boolean handleBuyItem(Merchant merchant, InventoryElement item) {
+		try {
+			if (player.getGold() < merchant.getStore().get(item)) {
+				return false;
+			}
+		} catch (NullPointerException e) {
+			return false;
+		}
+		Map<InventoryElement,Integer> bought = merchant.handleSale(item);
+
+		player.loseGold((Integer)bought.values().toArray()[0]);
+		player.getInventory().addItem((InventoryElement)bought.keySet().toArray()[0]);
+		return true;
 	}
 
-	public boolean handleSellItem(int bagPos, int itemPos) {
-		// TODO;
-		return false;
+	public boolean handleSellItem(int bagPos, int itemPos, Merchant merchant) {
+		InventoryElement selling = player.getInventory().getItem(bagPos,itemPos);
+		if (selling == null) {
+			return false;
+		}
+		player.getInventory().removeItem(bagPos,itemPos);
+		player.gainGold(merchant.buyItem(selling));
+		return true;
+	}
+
+	public void handleLeaveMerchant() {
+		endTurn();
 	}
 
 	public List<InventoryElement> handleOpen() {
@@ -255,7 +280,6 @@ public class Game {
 
 	public void handleQuitGame() {
 		this.quit = true;
-		this.shrine = null;
 	}
 
 	public String handleSaveGame() {
@@ -274,7 +298,20 @@ public class Game {
 	}
 
 	public boolean isOver() {
-		//TODO: add if shrine is null (for endless map)
-		return this.quit || this.player.getHealth() == 0 || this.map.playerReachedGoal();
+		if (this.map instanceof PremadeMap) {
+			PremadeMap m = (PremadeMap)this.map;
+			if (m.playerReachedGoal()) {
+				return true;
+			}
+		}
+		return this.quit || (this.player.getHealth() <= 0 && !(map instanceof EndlessMap));
+	}
+
+	public void respawn() {
+		if (this.player.getHealth() <= 0) {
+			//TODO{check if there is a snapshot, if not end game, if yes then restore}
+			//Don't forget to make corpse of yourself
+			//Finish this when Shrine is complete
+		}
 	}
 }
