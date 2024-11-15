@@ -4,7 +4,6 @@ import java.util.*;
 
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.clock.*;
-import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.map.*;
@@ -128,9 +127,14 @@ public class Game {
 		if (shrine == null) {
 			return false;
 		}
-		shrine.storeSnapshot();
+		if(map.getPlayerRoom().isSafe()){
+			this.shrine = shrine;
+			shrine.storeSnapshot();
+			endTurn();
+			return true;
+		}
 		endTurn();
-		return true;
+		return false;
 	}
 
 	public Map<InventoryElement, Integer> handleTalkToMerchant(Compass direction) {
