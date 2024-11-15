@@ -26,6 +26,20 @@ public class Food implements InventoryElement {
 	}
 
 	@Override
+	public boolean equals (Object o) {
+		if (o instanceof Food) {
+			Food f = (Food)o;
+			if (f.name.equals(this.name) &&
+			f.description.equals(this.description) &&
+			f.goldValue == this.goldValue &&
+			f.health == this.health) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public String getName() {
 		return this.name;
 	}

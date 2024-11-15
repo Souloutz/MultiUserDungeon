@@ -7,6 +7,7 @@ import java.util.Map;
 import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
+import multiuserdungeon.map.tiles.shrine.Shrine;
 
 public class Tile {
 
@@ -150,12 +151,11 @@ public class Tile {
 	}
 
 	public Shrine getShrine() {
-		for (TileObject object : objects) {
+		for (TileObject object: objects) {
 			if (object instanceof Shrine shrine) {
 				return shrine;
 			}
 		}
-
 		return null;
 	}
 

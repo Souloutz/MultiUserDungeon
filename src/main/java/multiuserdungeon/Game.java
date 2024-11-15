@@ -4,6 +4,7 @@ import java.util.*;
 
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.clock.*;
+import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.map.*;

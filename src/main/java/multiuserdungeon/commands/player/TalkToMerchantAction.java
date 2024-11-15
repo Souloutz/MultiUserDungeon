@@ -31,7 +31,8 @@ public class TalkToMerchantAction implements Action<List<InventoryElement>> {
 
     @Override
     public boolean canExecute() {
-       if (user instanceof Profile)
+        //TODO{Make very specific to determine if this action should be an option}
+        if (user instanceof Profile)
 			return true;
 
 		return false;
