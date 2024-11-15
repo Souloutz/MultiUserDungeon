@@ -46,7 +46,7 @@ public class Tile {
 				newTileObject = new Obstacle((Obstacle)tileObject);
 			}
 			else if(tileObject instanceof Player){
-				continue; //skip, creating new player object and setting player tile handled in Map
+				continue; //skip, creating new player object and setting player tile handled in EndlessMap
 			}
 			else if(tileObject instanceof Shrine){
 				newTileObject = new Obstacle((Obstacle)tileObject);
@@ -54,10 +54,9 @@ public class Tile {
 			else if(tileObject instanceof Trap){
 				newTileObject = new Trap((Trap)tileObject);
 			}
-			// else if (tileObject instanceof Merchant){
-			// 	newTileObject = null;
-			// }
-			// new EmptyTile((EmptyTile)tileObject);
+			else if (tileObject instanceof Merchant){
+				newTileObject = new Merchant((Merchant)tileObject);
+			}
 			newTileObject.setTile(this);
 			this.objects.add(newTileObject);
 		}
