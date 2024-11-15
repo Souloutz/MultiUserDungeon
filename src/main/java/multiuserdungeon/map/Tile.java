@@ -45,7 +45,7 @@ public class Tile {
 				newTileObject = new Obstacle((Obstacle)tileObject);
 			}
 			else if(tileObject instanceof Player){
-				newTileObject = new Player((Player)tileObject);
+				continue; //skip, creating new player object and setting player tile handled in Map
 			}
 			else if(tileObject instanceof Shrine){
 				newTileObject = new Obstacle((Obstacle)tileObject);

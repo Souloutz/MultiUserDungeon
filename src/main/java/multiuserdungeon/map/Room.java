@@ -18,6 +18,36 @@ public class Room {
 	private final Tile[][] layout;
 	private Tile playerTile;
 
+	//copy constructor
+	public Room(Room room){
+		this.rows = room.getRows();
+		this.columns = room.getColumns();
+		this.doorways = new HashMap<>();
+		this.connections = new HashMap<>();
+		this.layout = new Tile[this.rows][this.columns];
+		this.playerTile = room.getPlayerTile();
+
+		this.description = room.getDescription();
+
+		for(int row = 0; row < this.rows; row++){
+			for(int col = 0; col < this.columns; col++){
+				this.layout[row][col] = new Tile(room.getTile(row, col));
+			}
+		}
+		
+		for(int row = 0; row < this.rows; row++) {
+			for(int col = 0; col < this.columns; col++) {
+				Map<Compass, Tile> adjacent = new HashMap<>();
+				for(Compass compass : Compass.values()) {
+					Tile adjacentTile = this.getTile(row + compass.getRowOffset(), col + compass.getColOffset());
+					if(adjacentTile == null) continue;
+					adjacent.put(compass, adjacentTile);
+				}
+				this.getTile(row, col).setAdjacent(adjacent);
+			}
+		}
+	}
+
 	public Room(int rows, int columns, String description) {
 		this.rows = rows;
 		this.columns = columns;
@@ -45,36 +75,6 @@ public class Room {
 			}
 		}
 	}
-		//TODO: figure out connections (added in Map class)
-
-	//copy constructor
-	public Room(Room room){
-		this.rows = room.getRows();
-		this.columns = room.getColumns();
-		this.doorways = new HashMap<>();
-		this.connections = new HashMap<>();
-		this.layout = new Tile[this.rows][this.columns];
-		this.playerTile = room.getPlayerTile();
-
-		this.description = room.getDescription();
-		for(int row = 0; row < this.rows; row++){
-			for(int col = 0; col < this.columns; col++){
-				this.layout[row][col] = new Tile(this.getTile(row, col));
-			}
-		}
-		
-		for(int row = 0; row < this.rows; row++) {
-			for(int col = 0; col < this.columns; col++) {
-				Map<Compass, Tile> adjacent = new HashMap<>();
-				for(Compass compass : Compass.values()) {
-					Tile adjacentTile = this.getTile(row + compass.getRowOffset(), col + compass.getColOffset());
-					if(adjacentTile == null) continue;
-					adjacent.put(compass, adjacentTile);
-				}
-				this.getTile(row, col).setAdjacent(adjacent);
-			}
-		}
-	}
 
 	public int getRows() {
 		return this.rows;
@@ -90,10 +90,6 @@ public class Room {
 
 	public Tile getDoorway(Compass compass) {
 		return this.doorways.get(compass);
-	}
-
-	public Map<Compass, Tile> getDoorways() {
-		return this.doorways;
 	}
 
 	public void addConnection(int row, int col, Room targetRoom) {
@@ -217,6 +213,10 @@ public class Room {
 			builder.append("\n");
 		}
 		return builder.toString();
+	}
+
+	public Map<Tile,Room> getConnections () {
+		return this.connections;
 	}
 
 }

@@ -1,43 +1,39 @@
 package multiuserdungeon;
 
-import java.util.List;
+import java.util.*;
 
 import multiuserdungeon.authentication.User;
-import multiuserdungeon.clock.Clock;
-import multiuserdungeon.clock.Day;
-import multiuserdungeon.clock.Night;
-import multiuserdungeon.clock.Time;
-import multiuserdungeon.inventory.Inventory;
-import multiuserdungeon.inventory.InventoryElement;
-import multiuserdungeon.inventory.elements.Bag;
-import multiuserdungeon.map.Compass;
-import multiuserdungeon.map.Map;
-import multiuserdungeon.map.Room;
-import multiuserdungeon.map.Tile;
-import multiuserdungeon.map.tiles.Chest;
-import multiuserdungeon.map.tiles.NPC;
-import multiuserdungeon.map.tiles.Player;
+import multiuserdungeon.clock.*;
+import multiuserdungeon.inventory.*;
+import multiuserdungeon.inventory.elements.*;
+import multiuserdungeon.map.*;
+import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.map.tiles.shrine.Shrine;
-import multiuserdungeon.map.tiles.shrine.Snapshot;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.persistence.PersistenceManager;
+import multiuserdungeon.map.tiles.shrine.Snapshot;
 
 public class Game {
 
 	private static Game instance;
 	private Player player;
-	private Map map;
+	private GameMap map;
 	private Clock clock;
 	private Shrine shrine;
 	private boolean quit;
 	private boolean browsing; // true or false
 
-	public Game(Player player, Map map, User user) {
+	public Game(Player player, GameMap map, User user) {
 		instance = this;
 		this.player = player;
-		this.map = new Map();
+		this.map = map;
 		this.clock = new Clock();
+		this.shrine = null;
 		this.quit = false;
+	}
+
+	public void setMap(GameMap map) {
+		this.map = map;
 	}
 
 	public static Game getInstance() {
@@ -48,7 +44,7 @@ public class Game {
 		return this.player;
 	}
 
-	public Map getMap() {
+	public GameMap getMap() {
 		return this.map;
 	}
 
@@ -70,6 +66,7 @@ public class Game {
 		int damage = this.player.attack(direction);
 		if(damage != -1) endTurn();
 		return damage;
+		//TODO{add functionality here or in NPC to make corpse if it dies}
 	}
 
 	public boolean handleMove(Compass direction) {
@@ -98,7 +95,10 @@ public class Game {
 	}
 
 	public boolean handleExitRoom(Compass direction) {
-		// TODO handle exiting room based on type of map
+		if (this.map instanceof EndlessMap) {
+			EndlessMap o = (EndlessMap)this.map;
+			o.handleExitRoom(direction);
+		}
 		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
 			endTurn();
 			return true;
@@ -122,10 +122,18 @@ public class Game {
 		return trap.disarmAttempt();
 	}
 
-	public List<InventoryElement> handleTalkToMerchant(Compass direction) {
-		// TODO
-		return null;
-	} 
+	public boolean handlePray(){
+		Shrine newShrine = this.player.getTile().getShrine();
+		if(map.getPlayerRoom().isSafe() && shrine != null){
+			this.shrine = newShrine;
+			shrine.storeSnapshot();
+			return true;
+		}
+		else{
+			return false;
+		}
+
+	}
 
 	public boolean handleBuyItem(int index) {
 		// TODO;
@@ -218,7 +226,7 @@ public class Game {
 	public Snapshot createSnapshot(){
 
 		//TODO:copy map
-		Map newMap = null;
+		GameMap newMap = new EndlessMap((EndlessMap)map);
 
 		//player is part of map, so no need to copy again
 		Player newPlayer = newMap.getPlayerRoom().getPlayerTile().getPlayer();
@@ -244,21 +252,6 @@ public class Game {
 		this.map = snapshot.getMap();
 		this.clock = snapshot.getClock();
 	}
-
-	public boolean handlePray(){
-		if(map.getPlayerRoom().isSafe()){
-			Shrine newShrine = this.player.getTile().getShrine();
-			this.shrine = newShrine;
-			shrine.storeSnapshot();
-			return true;
-		}
-		else{
-			return false;
-		}
-
-	}
-
-
 
 	public void handleQuitGame() {
 		this.quit = true;
