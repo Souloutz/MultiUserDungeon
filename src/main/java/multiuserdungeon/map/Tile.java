@@ -3,6 +3,7 @@ package multiuserdungeon.map;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.map.tiles.shrine.Shrine;
@@ -95,7 +96,13 @@ public class Tile {
 	}
 
 	public char getASCII() {
-		return this.objects.getLast().getASCII();
+		try {
+			TileObject to = this.objects.getLast();
+			return to.getASCII();
+		} catch (NoSuchElementException e) {
+			return '-';
+		}
+		
 	}
 
 	public Player getPlayer() {
@@ -158,7 +165,12 @@ public class Tile {
 
 	@Override
 	public String toString() {
-		return this.objects.getLast().toString();
+		try {
+			TileObject to = this.objects.getLast();
+			return to.toString();
+		} catch(NoSuchElementException e) {
+			return "";
+		}
 	}
 
 }
