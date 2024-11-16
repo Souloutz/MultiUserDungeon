@@ -14,12 +14,12 @@ public class Player extends Character {
 	private final Map<Buff, Integer> buffs;
 	private int gold;
 
-	public Player(String name, String description) {
+	public Player(String name, String description, Inventory inventory, Map<Buff, Integer> buffs) {
 		super(name, description, 100, 10, 0);
-		this.inventory = new Inventory("Your Inventory", "Filled with all of your wonderful items.");
+		this.inventory = inventory;
 		this.weapon = null;
 		this.armor = null;
-		this.buffs = new HashMap<>();
+		this.buffs = buffs;
 		this.gold = 0;
 	}
 
@@ -30,14 +30,14 @@ public class Player extends Character {
 		this.armor = player.getArmor();
 		this.buffs = new HashMap<>();
 		this.gold = player.gold;
-		for(Buff buff : player.buffs.keySet()){
-			this.useBuff(buff);
+		for(Buff buff : player.buffs.keySet()) {
+			this.useBuff(buff); // TODO: fix buff values not copying over
 		}
 		this.setHealth(player.getHealth());
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if(o instanceof Player p) {
 			return getName().equals(p.getName()) && getDescription().equals(p.getDescription()) &&
 					getMaxHealth() == p.getMaxHealth() && getAttack() == p.getAttack() && getDefense() == p.getDefense() &&

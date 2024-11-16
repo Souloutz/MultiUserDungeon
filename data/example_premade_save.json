@@ -4,6 +4,8 @@
 		"players": [
 			{
 				"username": "Jack",
+				"description": "A cool player",
+				"health": 80,
 				"inventory": {
 					"name": "Your Inventory",
 					"description": "Filled with all of your wonderful items.",
@@ -13,26 +15,26 @@
 							"description": "Default bag you start with",
 							"goldValue": 0,
 							"capacity": 6,
-							"isEquipped": true,
-							"items": [0, 7, 2, 3]
+							"items": [1, 2, 3]
 						}
 					]
 				},
-				"weapon": 8,
-				"armor": 9,
+				"weapon": 4,
+				"armor": 74,
 				"buffs": [
 					{
-						"key": 4,
-						"value": 10
+						"item": 95,
+						"turnsLeft": 10
 					}
-				]
+				],
+				"gold": 100
 			}
 		],
 		"rooms": [
 			{
 				"rows": 2,
 				"cols": 4,
-				"description": "Starting room",
+				"description": "Starting Room",
 				"tiles": [
 					[
 						[
@@ -56,7 +58,7 @@
 							{
 								"type": "chest",
 								"name": "Large Chest",
-								"contents": [4, 8, 7, 1]
+								"contents": [1, 2, 3]
 							}
 						],
 						[],
@@ -111,7 +113,7 @@
 				"toTile": "3,1"
 			}
 		],
-		"playerRooms": [
+		"playerStartRooms": [
 			{
 				"player": 0,
 				"room": 0

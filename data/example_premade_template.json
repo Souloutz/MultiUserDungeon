@@ -58,7 +58,7 @@
 				"toTile": "3,1"
 			}
 		],
-		"playerRooms": [],
+		"playerStartRooms": [],
 		"goalRoom": 1
 	},
 	"clock": {

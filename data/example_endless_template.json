@@ -24,7 +24,7 @@
 			}
 		],
 		"connections": [],
-		"playerRooms": [],
+		"playerStartRooms": [],
 		"goalRoom": -1
 	},
 	"clock": {

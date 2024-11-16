@@ -12,14 +12,14 @@ public class Inventory implements InventoryElement {
     private final String description;
 	private final List<Bag> bags;
 
-	public Inventory(String name, String description) {
+	public Inventory(String name, String description, boolean starterBag) {
 		this.name = name;
 		this.description = description;
 		this.bags = new ArrayList<>();
-		addBag(new Bag("Starter Bag", "Default bag you start with", 0, 6));
+		if(starterBag) addBag(new Bag("Starter Bag", "Default bag you start with", 0, 6));
 	}
 
-	public Inventory(Inventory inventory){
+	public Inventory(Inventory inventory) {
 		this.name = inventory.getName();
 		this.description = inventory.getDescription();
 		this.bags = new ArrayList<>();

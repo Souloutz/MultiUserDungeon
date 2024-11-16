@@ -22,10 +22,10 @@ public class Game {
 	private boolean quit;
 	private boolean browsing;
 
-	public Game(GameMap map) {
+	public Game(GameMap map, Clock clock) {
 		instance = this;
 		this.map = map;
-		this.clock = new Clock();
+		this.clock = clock;
 		this.shrine = null;
 		this.quit = false;
 		this.browsing = false;
@@ -59,21 +59,11 @@ public class Game {
 		return this.clock.getCurrentTime();
 	}
 
-	public boolean handleLoadMap(String uri) {
-		Game loaded = PersistenceManager.getInstance().loadGame(uri);
-		if(loaded != null) {
-			instance = loaded;
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public int handleAttack(Compass direction) {
 		int damage = this.player.attack(direction);
 		if(damage != -1) endTurn();
 		return damage;
-		//TODO{add functionality here or in NPC to make corpse if it dies}
+		// TODO: Corpses?
 	}
 
 	public boolean handleMove(Compass direction) {
@@ -85,7 +75,6 @@ public class Game {
 		Tile newTile = playerRoom.getTile(playerRow + direction.getRowOffset(), playerCol + direction.getColOffset());
 		if(newTile == null || !newTile.passable()) return false;
 
-		playerRoom.setPlayerTile(newTile);
 		this.player.setTile(newTile);
 		playerTile.removeObject(this.player);
 		newTile.addObject(this.player);
@@ -102,9 +91,7 @@ public class Game {
 	}
 
 	public boolean handleExitRoom(Compass direction) {
-		if (this.map instanceof EndlessMap o) {
-			o.handleExitRoom(direction);
-		}
+		this.map.handleExitRoom(direction);
 		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
 			endTurn();
 			return true;
@@ -250,21 +237,14 @@ public class Game {
 		return this.player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
 	}
 
-	public Snapshot createSnapshot(){
-		EndlessMap newMap = new EndlessMap((EndlessMap)map);
-
-		Player newPlayer = newMap.getCurrentPlayer();
+	public Snapshot createSnapshot() {
+		EndlessMap newMap = new EndlessMap((EndlessMap) this.map);
+		Player newPlayer = new Player(this.player);
 
 		Clock newClock = new Clock();
-		Time newTime;
-		if(clock.getCurrentTime().isDay()){
-			newTime = new Day(newClock);
-		}
-		else{
-			newTime = new Night(newClock);
-		}
+		Time newTime = this.clock.getCurrentTime().isDay() ? new Day(newClock) : new Night(newClock);
 		newClock.setCurrentTime(newTime);
-		newClock.setTurnCounter(clock.getTurnCounter());
+		newClock.setTurnCounter(this.clock.getTurnCounter());
 
 		return new Snapshot(newPlayer, newMap, newClock);
 	}
@@ -294,21 +274,12 @@ public class Game {
 	}
 
 	public boolean isOver() {
-		if (this.map instanceof PremadeMap) {
-			PremadeMap m = (PremadeMap)this.map;
-			if (m.playerReachedGoal()) {
-				return true;
-			}
-		}
-		return this.quit || (this.player.getHealth() <= 0 && !(map instanceof EndlessMap));
+		if(this.map instanceof PremadeMap m) return m.playerReachedGoal();
+		return this.quit || (this.player.getHealth() <= 0 && this.shrine == null);
 	}
 
 	public void respawn() {
-		if (this.player.getHealth() <= 0) {
-			//TODO{check if there is a snapshot, if not end game, if yes then restore}
-			//Don't forget to make corpse of yourself
-			//Finish this when Shrine is complete
-		}
+		// TODO: Restore via snapshot OR create corpse, call from handleAttack or something
 	}
 
 }

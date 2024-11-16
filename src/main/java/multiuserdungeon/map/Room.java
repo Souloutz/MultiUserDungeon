@@ -16,7 +16,6 @@ public class Room {
 	private final Map<Compass, Tile> doorways;
 	private final Map<Tile, Room> connections;
 	private final Tile[][] layout;
-	private Tile playerTile;
 
 	public Room(int rows, int columns, String description) {
 		this.rows = rows;
@@ -25,7 +24,6 @@ public class Room {
 		this.doorways = new HashMap<>();
 		this.connections = new HashMap<>();
 		this.layout = new Tile[rows][columns];
-		this.playerTile = null;
 
 		for(int row = 0; row < this.rows; row++){
 			for(int col = 0; col < this.columns; col++){
@@ -46,19 +44,16 @@ public class Room {
 		}
 	}
 
-	//copy constructor
-	public Room(Room room){
+	public Room(Room room) {
 		this.rows = room.getRows();
 		this.columns = room.getColumns();
+		this.description = room.getDescription();
 		this.doorways = new HashMap<>();
 		this.connections = new HashMap<>();
 		this.layout = new Tile[this.rows][this.columns];
-		this.playerTile = null;
 
-		this.description = room.getDescription();
-
-		for(int row = 0; row < this.rows; row++){
-			for(int col = 0; col < this.columns; col++){
+		for(int row = 0; row < this.rows; row++) {
+			for(int col = 0; col < this.columns; col++) {
 				this.layout[row][col] = new Tile(room.getTile(row, col));
 			}
 		}
@@ -73,6 +68,11 @@ public class Room {
 				}
 				this.getTile(row, col).setAdjacent(adjacent);
 			}
+		}
+
+		// Regenerate connections
+		for(Map.Entry<Tile, Room> entry : room.connections.entrySet()) {
+			addConnection(entry.getKey().getRow(), entry.getKey().getCol(), new Room(entry.getValue()));
 		}
 	}
 
@@ -112,6 +112,10 @@ public class Room {
 		this.connections.put(tile, targetRoom);
 	}
 
+	public boolean isConnectionLoaded(Tile tile) {
+		return this.connections.containsKey(tile);
+	}
+
 	public Tile getTile(int row, int col) {
 		try {
 			return this.layout[row][col];
@@ -120,20 +124,12 @@ public class Room {
 		}
 	}
 
-	public Tile getPlayerTile() {
-		return this.playerTile;
-	}
-
-	public void setPlayerTile(Tile playerTile) {
-		this.playerTile = playerTile;
-	}
-
-	public boolean isSafe(){
-		for(int i = 0; i < layout.length; i++){
-			for(int j = 0; j < layout[j].length; j++){
-				List<TileObject> tileobjects = layout[i][j].getObjects();
-				for(TileObject tileobject : tileobjects){
-					if(tileobject instanceof NPC){
+	public boolean isSafe() {
+		for(Tile[] tiles : this.layout) {
+			for(int j = 0; j < this.layout[j].length; j++) {
+				List<TileObject> tileObjects = tiles[j].getObjects();
+				for(TileObject tileobject : tileObjects) {
+					if(tileobject instanceof NPC) {
 						return false;
 					}
 				}
@@ -153,9 +149,7 @@ public class Room {
 
 		Player player = Game.getInstance().getPlayer();
 		Game.getInstance().getMap().setPlayerRoom(newRoom);
-		newRoom.setPlayerTile(newTile);
 		player.setTile(newTile);
-		this.playerTile = null;
 
 		player.getTile().removeObject(player);
 		newTile.addObject(player);
@@ -213,10 +207,6 @@ public class Room {
 			builder.append("\n");
 		}
 		return builder.toString();
-	}
-
-	public Map<Tile,Room> getConnections () {
-		return this.connections;
 	}
 
 }

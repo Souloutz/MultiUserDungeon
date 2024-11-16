@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PersistenceManager {
 
-	public static final String DATA_FOLDER = "data/";
+	public static final String DATA_FOLDER = "data\\";
 
 	private static PersistenceManager INSTANCE = null;
 	private final List<FileAdapter> adapters;

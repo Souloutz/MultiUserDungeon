@@ -13,6 +13,11 @@ public class NPC extends Character {
 		this.creatureBuff = creatureBuff;
 	}
 
+	public NPC(String name, String description, int baseMaxHealth, int baseAttack, int baseDefense, CreatureBuff creatureBuff) {
+		super(name, description, baseMaxHealth, baseAttack, baseDefense);
+		this.creatureBuff = creatureBuff;
+	}
+
 	public NPC(NPC npc){
 		super(npc.getName(), npc.getDescription(), npc.getMaxHealth(), npc.getAttack(), npc.getDefense());
 		this.creatureBuff = npc.getCreatureBuff();

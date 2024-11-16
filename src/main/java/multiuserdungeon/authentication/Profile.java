@@ -56,10 +56,8 @@ public class Profile extends User {
     }
 
     public Game handleJoinGame(String filename) {
-        Game game = PersistenceManager.getInstance().loadGame(filename);
-        game.setPlayer(new Player(getUsername(), "A player."));
-        // TODO: place player in new attached room
-        return game;
+	    // TODO: place player in new attached room
+        return PersistenceManager.getInstance().loadGame(filename);
     }
 
 }
