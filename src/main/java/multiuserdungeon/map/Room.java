@@ -1,9 +1,11 @@
 package multiuserdungeon.map;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Player;
 
 public class Room {
@@ -96,6 +98,20 @@ public class Room {
 		this.playerTile = playerTile;
 	}
 
+	public boolean isSafe(){
+		for(int i = 0; i < layout.length; i++){
+			for(int j = 0; j < layout[j].length; j++){
+				List<TileObject> tileobjects = layout[i][j].getObjects();
+				for(TileObject tileobject : tileobjects){
+					if(tileobject instanceof NPC){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	public boolean handleExitRoom(Compass direction) {
 		Room newRoom = this.connections.get(this.doorways.get(direction));
 		if(newRoom == null) return false;
@@ -167,6 +183,10 @@ public class Room {
 			builder.append("\n");
 		}
 		return builder.toString();
+	}
+
+	public Map<Tile,Room> getConnections () {
+		return this.connections;
 	}
 
 }

@@ -15,6 +15,7 @@ public class Player extends Character {
 	private Weapon weapon;
 	private Armor armor;
 	private final Map<Buff, Integer> buffs;
+	private int gold;
 
 	public Player(String name, String description) {
 		super(name, description, 100, 10, 0);
@@ -22,6 +23,21 @@ public class Player extends Character {
 		this.weapon = null;
 		this.armor = null;
 		this.buffs = new HashMap<>();
+		this.gold = 0;
+	}
+
+	@Override
+	public boolean equals (Object o) {
+		if (o instanceof Player) {
+			Player p = (Player)o;
+			if (p.gold == this.gold &&
+				p.armor.equals(this.armor) &&
+				p.weapon.equals(this.weapon));
+		//TODO{Finish this method, make weapons and armor individually comparable}
+		//TODO{Make sure that you are comparing attributes from Character as well}
+
+		}
+		return false;
 	}
 
 	@Override
@@ -110,6 +126,15 @@ public class Player extends Character {
 		this.inventory.addItem(this.armor);
 		this.armor = null;
 		return true;
+	}
+	public int getGold() {
+		return gold;
+	}
+	public void loseGold(int spent) {
+		this.gold -= spent;
+	}
+	public void gainGold(int gain) {
+		this.gold += gain;
 	}
 
 	@Override

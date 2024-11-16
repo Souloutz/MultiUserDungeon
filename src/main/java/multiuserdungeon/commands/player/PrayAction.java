@@ -4,16 +4,15 @@ import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
-import multiuserdungeon.map.EndlessMap;
-import multiuserdungeon.map.Map;
+import multiuserdungeon.map.*;
 
 public class PrayAction implements Action<Boolean> {
     
     private final Game receiver;
     private final User user;
-    private final Map map;
+    private final EndlessMap map;
 
-    public PrayAction(Game game, User user, Map map) {
+    public PrayAction(Game game, User user, EndlessMap map) {
         this.receiver = game;
         this.user = user;
         this.map = map;
@@ -30,6 +29,7 @@ public class PrayAction implements Action<Boolean> {
 
     @Override
     public boolean canExecute() {
+        //TODO{Make very specific to determine if this action should be an option}
         if (user instanceof Profile && map instanceof EndlessMap)
 			return true;
 

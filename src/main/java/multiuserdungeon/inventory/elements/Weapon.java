@@ -25,6 +25,20 @@ public class Weapon implements InventoryElement {
         this.goldValue = weapon.goldValue;
         this.attack = weapon.attack;
 	}
+
+	@Override
+	public boolean equals (Object o) {
+		if (o instanceof Weapon) {
+			Weapon w = (Weapon)o;
+			if (w.name.equals(this.name) &&
+			w.description.equals(description) &&
+			w.goldValue == this.goldValue &&
+			w.attack == this.attack) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	@Override
 	public String getName() {

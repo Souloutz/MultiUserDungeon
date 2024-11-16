@@ -15,5 +15,9 @@ public interface InventoryElement {
 	boolean handleEquip(Player player);
 
 	boolean handleUse(Player player);
+
+	boolean equals(Object o);
+
+	//TODO{make an equals method for each inventory element}
     
 }

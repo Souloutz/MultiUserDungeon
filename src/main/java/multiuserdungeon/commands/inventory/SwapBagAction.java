@@ -31,6 +31,7 @@ public class SwapBagAction implements Action<Boolean> {
 
 	@Override
 	public boolean canExecute() {
+		//TODO{Make very specific to determine if this action should be an option}
 		if (user instanceof Profile)
 			return true;
 

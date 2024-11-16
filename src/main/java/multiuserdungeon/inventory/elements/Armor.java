@@ -26,6 +26,20 @@ public class Armor implements InventoryElement {
 	}
 
 	@Override
+	public boolean equals (Object o) {
+		if (o instanceof Armor) {
+			Armor a = (Armor)o;
+			if (a.name.equals(this.name) &&
+			a.description.equals(this.description) && 
+			a.goldValue == this.goldValue &&
+			a.defense == this.defense) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
 	public String getName() {
 		return this.name;
 	}

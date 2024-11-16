@@ -107,5 +107,611 @@
         "description": "Pointy.",
         "goldValue": 20,
         "attack": 20
+    },
+    {
+        "id": 15,
+        "name": "Sack",
+        "description": "It’s a sack. It holds things.",
+        "goldValue": 15,
+        "capacity": 6
+    },
+    {
+        "id": 16,
+        "name": "Pouch",
+        "description": "Too small for your ambitions.",
+        "goldValue": 10,
+        "capacity": 4
+    },
+    {
+        "id": 17,
+        "name": "Satchel",
+        "description": "Good for a little more loot.",
+        "goldValue": 20,
+        "capacity": 8
+    },
+    {
+        "id": 18,
+        "name": "Bag",
+        "description": "It’s just a bag.",
+        "goldValue": 15,
+        "capacity": 6
+    },
+    {
+        "id": 19,
+        "name": "Knapsack",
+        "description": "Decent for short trips.",
+        "goldValue": 25,
+        "capacity": 10
+    },
+    {
+        "id": 20,
+        "name": "Pack",
+        "description": "Holds a respectable amount.",
+        "goldValue": 30,
+        "capacity": 12
+    },
+    {
+        "id": 21,
+        "name": "Bundle",
+        "description": "Simple but effective.",
+        "goldValue": 18,
+        "capacity": 7
+    },
+    {
+        "id": 22,
+        "name": "Carrier",
+        "description": "Better than your pockets.",
+        "goldValue": 30,
+        "capacity": 12
+    },
+    {
+        "id": 23,
+        "name": "Tote",
+        "description": "Light and functional.",
+        "goldValue": 15,
+        "capacity": 6
+    },
+    {
+        "id": 24,
+        "name": "Haversack",
+        "description": "Holds all your unnecessary items.",
+        "goldValue": 50,
+        "capacity": 20
+    },
+    {
+        "id": 25,
+        "name": "Bread",
+        "description": "Staple of any adventurer.",
+        "goldValue": 6,
+        "health": 24
+    },
+    {
+        "id": 26,
+        "name": "Cheese",
+        "description": "Aged to perfection.",
+        "goldValue": 8,
+        "health": 30
+    },
+    {
+        "id": 27,
+        "name": "Meat",
+        "description": "Looks safe to eat... probably.",
+        "goldValue": 10,
+        "health": 40
+    },
+    {
+        "id": 28,
+        "name": "Fish",
+        "description": "Caught fresh. Smells suspicious.",
+        "goldValue": 8,
+        "health": 36
+    },
+    {
+        "id": 29,
+        "name": "Berries",
+        "description": "Sweet and tangy.",
+        "goldValue": 6,
+        "health": 24
+    },
+    {
+        "id": 30,
+        "name": "Soup",
+        "description": "Warm and hearty.",
+        "goldValue": 12,
+        "health": 48
+    },
+    {
+        "id": 31,
+        "name": "Egg",
+        "description": "Cracked but intact.",
+        "goldValue": 6,
+        "health": 24
+    },
+    {
+        "id": 32,
+        "name": "Pie",
+        "description": "Baked with love.",
+        "goldValue": 16,
+        "health": 60
+    },
+    {
+        "id": 33,
+        "name": "Stew",
+        "description": "A full meal in a bowl.",
+        "goldValue": 14,
+        "health": 56
+    },
+    {
+        "id": 34,
+        "name": "Honey",
+        "description": "Sticky and sweet.",
+        "goldValue": 10,
+        "health": 36
+    },
+    {
+        "id": 35,
+        "name": "Carrot",
+        "description": "Crunchy and fresh.",
+        "goldValue": 6,
+        "health": 24
+    },
+    {
+        "id": 36,
+        "name": "Cabbage",
+        "description": "Leafy and wholesome.",
+        "goldValue": 8,
+        "health": 32
+    },
+    {
+        "id": 37,
+        "name": "Jerky",
+        "description": "Tough but tasty.",
+        "goldValue": 10,
+        "health": 40
+    },
+    {
+        "id": 38,
+        "name": "Mushroom",
+        "description": "Definitely not poisonous.",
+        "goldValue": 8,
+        "health": 32
+    },
+    {
+        "id": 39,
+        "name": "Porridge",
+        "description": "Boring but filling.",
+        "goldValue": 12,
+        "health": 48
+    },
+    {
+        "id": 40,
+        "name": "Cookie",
+        "description": "Baked with too much sugar.",
+        "goldValue": 6,
+        "health": 24
+    },
+    {
+        "id": 41,
+        "name": "Onion",
+        "description": "Tears guaranteed.",
+        "goldValue": 6,
+        "health": 18
+    },
+    {
+        "id": 42,
+        "name": "Grapes",
+        "description": "Juicy and sweet.",
+        "goldValue": 8,
+        "health": 32
+    },
+    {
+        "id": 43,
+        "name": "Pepper",
+        "description": "Spicy, just like you.",
+        "goldValue": 10,
+        "health": 24
+    },
+    {
+        "id": 44,
+        "name": "Health Brew",
+        "description": "A potion that tastes like healing.",
+        "goldValue": 12,
+        "stat": "HEALTH",
+        "statAmount": 30
+    },
+    {
+        "id": 45,
+        "name": "Attack Elixir",
+        "description": "For when you need to hit harder.",
+        "goldValue": 15,
+        "stat": "ATTACK",
+        "statAmount": 20
+    },
+    {
+        "id": 46,
+        "name": "Defense Tonic",
+        "description": "Perfect for when you're feeling fragile.",
+        "goldValue": 10,
+        "stat": "DEFENSE",
+        "statAmount": 25
+    },
+    {
+        "id": 47,
+        "name": "Healing Flask",
+        "description": "Drink and feel better immediately.",
+        "goldValue": 18,
+        "stat": "HEALTH",
+        "statAmount": 40
+    },
+    {
+        "id": 48,
+        "name": "Power Potion",
+        "description": "Boost your strength... temporarily.",
+        "goldValue": 20,
+        "stat": "ATTACK",
+        "statAmount": 30
+    },
+    {
+        "id": 49,
+        "name": "Fortitude Brew",
+        "description": "For when life gets too hard.",
+        "goldValue": 14,
+        "stat": "DEFENSE",
+        "statAmount": 18
+    },
+    {
+        "id": 50,
+        "name": "Vitality Serum",
+        "description": "Feeling low? This will help.",
+        "goldValue": 22,
+        "stat": "HEALTH",
+        "statAmount": 50
+    },
+    {
+        "id": 51,
+        "name": "Striking Solution",
+        "description": "Because sometimes you need that extra oomph.",
+        "goldValue": 17,
+        "stat": "ATTACK",
+        "statAmount": 25
+    },
+    {
+        "id": 52,
+        "name": "Armor Elixir",
+        "description": "For when you need to tank a little more.",
+        "goldValue": 16,
+        "stat": "DEFENSE",
+        "statAmount": 20
+    },
+    {
+        "id": 53,
+        "name": "Regeneration Drink",
+        "description": "Drink this, and feel like new.",
+        "goldValue": 19,
+        "stat": "HEALTH",
+        "statAmount": 35
+    },
+    {
+        "id": 54,
+        "name": "Rusty Blade",
+        "description": "Barely holds together, but it's sharp enough.",
+        "goldValue": 5,
+        "attack": 10
+    },
+    {
+        "id": 55,
+        "name": "Frying Pan",
+        "description": "Perfect for cooking and clobbering.",
+        "goldValue": 15,
+        "attack": 20
+    },
+    {
+        "id": 56,
+        "name": "Golden Frying Pan",
+        "description": "A masterpiece of cookware and destruction.",
+        "goldValue": 500,
+        "attack": 100
+    },
+    {
+        "id": 57,
+        "name": "Inferno Dagger",
+        "description": "Burns hotter than your ex's insults.",
+        "goldValue": 50,
+        "attack": 45
+    },
+    {
+        "id": 58,
+        "name": "Ice Halberd",
+        "description": "Cold as your adventuring partner's attitude.",
+        "goldValue": 60,
+        "attack": 50
+    },
+    {
+        "id": 59,
+        "name": "Singing Bow",
+        "description": "Plays a tune with every shot.",
+        "goldValue": 40,
+        "attack": 35
+    },
+    {
+        "id": 60,
+        "name": "Thunder Hammer",
+        "description": "It’s shocking how strong this is.",
+        "goldValue": 70,
+        "attack": 55
+    },
+    {
+        "id": 61,
+        "name": "Shadow Spear",
+        "description": "So dark, it might be brooding.",
+        "goldValue": 65,
+        "attack": 50
+    },
+    {
+        "id": 62,
+        "name": "Emerald Rapier",
+        "description": "Elegant, yet deadly.",
+        "goldValue": 80,
+        "attack": 60
+    },
+    {
+        "id": 63,
+        "name": "Cursed Club",
+        "description": "Swings harder if you laugh maniacally.",
+        "goldValue": 25,
+        "attack": 30
+    },
+    {
+        "id": 64,
+        "name": "Iron Skillet",
+        "description": "Great for breakfast and bandits.",
+        "goldValue": 20,
+        "attack": 25
+    },
+    {
+        "id": 65,
+        "name": "Dragon Slayer",
+        "description": "Overkill for anything smaller than a dragon.",
+        "goldValue": 100,
+        "attack": 60
+    },
+    {
+        "id": 66,
+        "name": "Cactus Sword",
+        "description": "A prickly way to deal damage.",
+        "goldValue": 15,
+        "attack": 20
+    },
+    {
+        "id": 67,
+        "name": "Pocket Knife",
+        "description": "Handy for small enemies and opening letters.",
+        "goldValue": 10,
+        "attack": 10
+    },
+    {
+        "id": 68,
+        "name": "Meteor Hammer",
+        "description": "Swings like a comet, lands like an asteroid.",
+        "goldValue": 75,
+        "attack": 55
+    },
+    {
+        "id": 69,
+        "name": "Rainbow Scimitar",
+        "description": "Takes down enemies in style.",
+        "goldValue": 50,
+        "attack": 40
+    },
+    {
+        "id": 70,
+        "name": "Bone Crusher",
+        "description": "Made for smashing skeletons. And everything else.",
+        "goldValue": 30,
+        "attack": 35
+    },
+    {
+        "id": 71,
+        "name": "Stormcaller Staff",
+        "description": "Summons storms, occasionally by accident.",
+        "goldValue": 80,
+        "attack": 60
+    },
+    {
+        "id": 72,
+        "name": "Chisel of Precision",
+        "description": "Hits with the accuracy of an artist.",
+        "goldValue": 35,
+        "attack": 30
+    },
+    {
+        "id": 73,
+        "name": "Banana Blade",
+        "description": "Slippery, yet sharp.",
+        "goldValue": 12,
+        "attack": 15
+    },
+    {
+        "id": 74,
+        "name": "Leather Vest",
+        "description": "Flexible and lightweight.",
+        "goldValue": 15,
+        "defense": 10
+    },
+    {
+        "id": 75,
+        "name": "Iron Chestplate",
+        "description": "Solid and reliable.",
+        "goldValue": 25,
+        "defense": 20
+    },
+    {
+        "id": 76,
+        "name": "Steel Armor",
+        "description": "Tough and shiny.",
+        "goldValue": 35,
+        "defense": 30
+    },
+    {
+        "id": 77,
+        "name": "Golden Breastplate",
+        "description": "Luxurious, but surprisingly sturdy.",
+        "goldValue": 50,
+        "defense": 40
+    },
+    {
+        "id": 78,
+        "name": "Chainmail Shirt",
+        "description": "A classic choice for adventurers.",
+        "goldValue": 20,
+        "defense": 15
+    },
+    {
+        "id": 79,
+        "name": "Wooden Shield",
+        "description": "Not great against fire.",
+        "goldValue": 12,
+        "defense": 8
+    },
+    {
+        "id": 80,
+        "name": "Spiked Shoulder Pads",
+        "description": "Intimidating and effective.",
+        "goldValue": 28,
+        "defense": 18
+    },
+    {
+        "id": 81,
+        "name": "Dragonhide Armor",
+        "description": "The best defense money can buy.",
+        "goldValue": 75,
+        "defense": 50
+    },
+    {
+        "id": 82,
+        "name": "Cloak of Shadows",
+        "description": "Provides defense and a sense of mystery.",
+        "goldValue": 30,
+        "defense": 22
+    },
+    {
+        "id": 83,
+        "name": "Silver Chestplate",
+        "description": "Stylish and effective.",
+        "goldValue": 45,
+        "defense": 38
+    },
+    {
+        "id": 84,
+        "name": "Bronze Helm",
+        "description": "Protects your head, mostly.",
+        "goldValue": 15,
+        "defense": 10
+    },
+    {
+        "id": 85,
+        "name": "Knight’s Armor",
+        "description": "Built for battle and chivalry.",
+        "goldValue": 60,
+        "defense": 45
+    },
+    {
+        "id": 86,
+        "name": "Reinforced Tunic",
+        "description": "A cloth tunic with a little extra.",
+        "goldValue": 10,
+        "defense": 5
+    },
+    {
+        "id": 87,
+        "name": "Obsidian Plate",
+        "description": "Sharp-looking and almost unbreakable.",
+        "goldValue": 70,
+        "defense": 48
+    },
+    {
+        "id": 88,
+        "name": "Hunter’s Vest",
+        "description": "Lightweight and sturdy.",
+        "goldValue": 18,
+        "defense": 12
+    },
+    {
+        "id": 89,
+        "name": "Mage’s Robes",
+        "description": "Not just for show, surprisingly durable.",
+        "goldValue": 22,
+        "defense": 16
+    },
+    {
+        "id": 90,
+        "name": "Enchanted Mail",
+        "description": "Glows faintly with protective magic.",
+        "goldValue": 50,
+        "defense": 42
+    },
+    {
+        "id": 91,
+        "name": "Warden’s Plate",
+        "description": "Heavy armor for serious defense.",
+        "goldValue": 55,
+        "defense": 48
+    },
+    {
+        "id": 92,
+        "name": "Studded Leather",
+        "description": "Flexible but reinforced.",
+        "goldValue": 18,
+        "defense": 12
+    },
+    {
+        "id": 93,
+        "name": "Berserker’s Chestplate",
+        "description": "Protects you, but just barely.",
+        "goldValue": 20,
+        "defense": 15
+    },
+    {
+        "id": 94,
+        "name": "Phoenix Feather Cloak",
+        "description": "Warm and slightly magical.",
+        "goldValue": 60,
+        "defense": 35
+    },
+    {
+        "id": 95,
+        "name": "Shimmering Elixir",
+        "description": "Restores your glow.",
+        "goldValue": 30,
+        "stat": "HEALTH",
+        "statAmount": 25
+    },
+    {
+        "id": 96,
+        "name": "Onyx Dagger",
+        "description": "Perfect for quick strikes in the dark.",
+        "goldValue": 40,
+        "attack": 50
+    },
+    {
+        "id": 97,
+        "name": "Mystic Satchel",
+        "description": "Expands slightly when nobody is looking.",
+        "goldValue": 40,
+        "capacity": 12
+    },
+    {
+        "id": 98,
+        "name": "Spicy Ration",
+        "description": "Burns going down but energizes.",
+        "goldValue": 5,
+        "health": 20
+    },
+    {
+        "id": 99,
+        "name": "Stalwart Helm",
+        "description": "For the headstrong.",
+        "goldValue": 55,
+        "defense": 45
     }
 ]
