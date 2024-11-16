@@ -212,12 +212,8 @@ public class Game {
 	}
 
 	public String handleViewInventory() {
-		StringBuilder inventoryString = new StringBuilder();
-		Inventory inventory = this.player.getInventory();
-
-		for (int index = 0; index < 6; index++)
-			inventoryString.append("\n").append(inventory.viewBag(index));
-		
+		StringBuilder inventoryString = new StringBuilder(this.player.getInventory().toString());
+		inventoryString.append("\n\n\tWeapon: ").append(player.getWeapon()).append("\n\tArmor: ").append(player.getArmor());
 		return inventoryString.toString();
 	}
 
