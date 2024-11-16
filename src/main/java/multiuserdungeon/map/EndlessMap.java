@@ -49,8 +49,8 @@ public class EndlessMap implements GameMap {
         Tile tile = Game.getInstance().getPlayer().getTile();
         if(!room.isConnectionLoaded(tile)) {
             Room newRoom = RoomGenerator.generateRoom(direction, room);
-            this.rooms.add(newRoom);
             room.addConnection(tile.getRow(), tile.getCol(), newRoom);
+            this.rooms.add(newRoom);
         }
     }
 

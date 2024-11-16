@@ -24,15 +24,20 @@ import multiuserdungeon.map.EndlessMap;
 import multiuserdungeon.map.GameMap;
 import multiuserdungeon.map.PremadeMap;
 import multiuserdungeon.map.Room;
+import multiuserdungeon.map.RoomGenerator;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.tiles.Chest;
+import multiuserdungeon.map.tiles.Merchant;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
 import multiuserdungeon.map.tiles.Player;
+import multiuserdungeon.map.tiles.shrine.Shrine;
+import multiuserdungeon.map.tiles.trap.DetectedTrap;
+import multiuserdungeon.map.tiles.trap.DisarmedTrap;
+import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.persistence.FileAdapter;
 import multiuserdungeon.persistence.PersistenceManager;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -188,7 +193,36 @@ public class JSONAdapter implements FileAdapter {
 								chest.setTile(tile);
 								tile.addObject(chest);
 							}
-							// TODO: Parse rest of tile objects
+							case "merchant" -> {
+								String name = tileObjectJson.get("name").getAsString();
+								List<InventoryElement> store = new ArrayList<>();
+								for(JsonElement storeElement : tileObjectJson.getAsJsonArray("store")) {
+									int itemId = storeElement.getAsInt();
+									InventoryElement item = Items.getInstance().getItem(itemId);
+									store.add(item);
+								}
+								Merchant merchant = new Merchant(name, store);
+								merchant.setTile(tile);
+								tile.addObject(merchant);
+							}
+							case "trap" -> {
+								int damage = tileObjectJson.get("damage").getAsInt();
+								Trap trap = new Trap(damage);
+								String status = tileObjectJson.get("status").getAsString();
+								if(status.equals("detected")) {
+									trap.setStatus(new DetectedTrap(trap));
+								} else if(status.equals("disarmed")) {
+									trap.setStatus(new DisarmedTrap());
+								}
+								trap.setTile(tile);
+								tile.addObject(trap);
+							}
+							case "shrine" -> {
+								String name = tileObjectJson.get("name").getAsString();
+								Shrine shrine = new Shrine(name);
+								shrine.setTile(tile);
+								tile.addObject(shrine);
+							}
 						}
 					}
 					col++;
@@ -236,15 +270,15 @@ public class JSONAdapter implements FileAdapter {
 
 		if(currentPlayer == null) {
 			// Joining game for the first time
-			if(type.equals("premade")) {
-				if(!players.isEmpty()) return null; // Cannot join a premade game
+			User user = Authenticator.getInstance().getUser();
+			currentPlayer = new Player(
+					user.getUsername(),
+					user.getDescription(),
+					new Inventory("Your Inventory", "A safe place for your items and bags.", true),
+					new HashMap<>());
 
-				User user = Authenticator.getInstance().getUser();
-				currentPlayer = new Player(
-						user.getUsername(),
-						user.getDescription(),
-						new Inventory("Your Inventory", "A safe place for your items and bags.", true),
-						new HashMap<>());
+			if(type.equals("premade")) {
+				if(!players.isEmpty()) return null; // Cannot load a premade game with others
 
 				Room playerRoom = rooms.get(0);
 				Tile startingTile = playerRoom.getTile(playerRoom.getRows() - 1, playerRoom.getColumns() - 1);
@@ -253,7 +287,28 @@ public class JSONAdapter implements FileAdapter {
 				playerRooms.put(currentPlayer, 0);
 			} else {
 				if(!Authenticator.getInstance().loggedIn()) return null; // Cannot browse endless game
-				// TODO: Create starting room and connect
+
+				Room playerRoom = new Room(3, 5, user.getUsername() + "'s Starting Room");
+
+				Tile merchantTile = playerRoom.getTile(1, 0);
+				Merchant merchant = RoomGenerator.generateMerchant();
+				if(merchant == null) return null; // Error generating merchant
+				merchant.setTile(merchantTile);
+				merchantTile.addObject(merchant);
+
+				Tile shrineTile = playerRoom.getTile(1, 4);
+				Shrine shrine = RoomGenerator.generateShrine();
+				if(shrine == null) return null; // Error generating shrine
+				shrine.setTile(shrineTile);
+				shrineTile.addObject(shrine);
+
+				playerRoom.addConnection(0, 2, null);
+				rooms.add(playerRoom);
+
+				Tile startingTile = playerRoom.getTile(2, 2);
+				currentPlayer.setTile(startingTile);
+				startingTile.addObject(currentPlayer);
+				playerRooms.put(currentPlayer, rooms.size() - 1);
 			}
 		}
 

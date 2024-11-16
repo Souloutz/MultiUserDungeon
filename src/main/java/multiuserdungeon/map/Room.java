@@ -1,7 +1,6 @@
 package multiuserdungeon.map;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import multiuserdungeon.Game;
@@ -113,7 +112,7 @@ public class Room {
 	}
 
 	public boolean isConnectionLoaded(Tile tile) {
-		return this.connections.containsKey(tile);
+		return this.connections.get(tile) != null;
 	}
 
 	public Tile getTile(int row, int col) {
@@ -125,14 +124,11 @@ public class Room {
 	}
 
 	public boolean isSafe() {
-		for(Tile[] tiles : this.layout) {
-			for(int j = 0; j < this.layout[j].length; j++) {
-				List<TileObject> tileObjects = tiles[j].getObjects();
-				for(TileObject tileobject : tileObjects) {
-					if(tileobject instanceof NPC) {
-						return false;
-					}
-				}
+		for(Tile[] row : this.layout) {
+			for(Tile tile : row) {
+				NPC npc = tile.getNPC();
+				if(npc == null) continue;
+				if(npc.getHealth() > 0) return false;
 			}
 		}
 		return true;

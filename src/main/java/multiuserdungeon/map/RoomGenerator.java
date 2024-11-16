@@ -164,7 +164,7 @@ public class RoomGenerator {
         }
     }
 
-    private static Merchant generateMerchant(){
+    public static Merchant generateMerchant(){
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/merchants.csv"))) {
             String line;
             int cindex = 0;
@@ -277,7 +277,7 @@ public class RoomGenerator {
         return new Trap(new Random().nextInt(5,50));
     }
 
-    private static Shrine generateShrine() {
+    public static Shrine generateShrine() {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/shrines.csv"))) {
             String line;
             int cindex = 0;

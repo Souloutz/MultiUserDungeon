@@ -2,27 +2,7 @@
 	"type": "endless",
 	"map": {
 		"players": [],
-		"rooms": [
-			{
-				"rows": 2,
-				"cols": 4,
-				"description": "Starting Room",
-				"tiles": [
-					[
-						[],
-						[],
-						[],
-						[]
-					],
-					[
-						[],
-						[],
-						[],
-						[]
-					]
-				]
-			}
-		],
+		"rooms": [],
 		"connections": [],
 		"playerStartRooms": [],
 		"goalRoom": -1

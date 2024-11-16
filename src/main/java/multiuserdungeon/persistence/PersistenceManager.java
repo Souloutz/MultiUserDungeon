@@ -50,7 +50,6 @@ public class PersistenceManager {
 	}
 
 	public String saveProfile(Profile profile) {
-		System.out.println("Saving profile");
 		List<String> files = new LinkedList<>();
 		for(FileAdapter adapter : this.adapters) {
 			String uri = adapter.saveProfile(profile);

@@ -123,8 +123,8 @@ public class Game {
 	public boolean handleBuyItem(Compass direction, int index) {
 		Tile merchantTile = this.player.getTile().getTile(direction);
 		Merchant merchant = merchantTile.getMerchant();
-		if (merchant == null || !merchant.isOpen()) return false;
-		if (this.player.getGold() < merchant.getStore().get(index).getGoldValue()) return false;
+		if(merchant == null || !merchant.isOpen()) return false;
+		if(this.player.getGold() < merchant.getStore().get(index).getGoldValue()) return false;
 
 		InventoryElement newItem = merchant.handleSale(index);
 		if(newItem == null) return false;

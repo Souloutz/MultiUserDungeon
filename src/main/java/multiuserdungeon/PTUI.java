@@ -99,6 +99,7 @@ public class PTUI {
 			try {
 				processGameCommand();
 			} catch(IndexOutOfBoundsException | IllegalArgumentException ignored) {
+				ignored.printStackTrace();
 				printBlock("Unable to parse command arguments, please try again.");
 			}
 		}
@@ -196,13 +197,13 @@ public class PTUI {
 					new StartGameAction(Authenticator.getInstance(), args[1]).execute();
 				}
 				if(Game.getInstance() == null) {
-					printBlock("Error starting the game!");
+					printBlock("Error starting the game! Are you logged in?");
 				}
 			}
 			case "join" -> {
 				new JoinGameAction(Authenticator.getInstance(), args[1]).execute();
 				if(Game.getInstance() == null) {
-					printBlock("Error joining the game! Is it an endless save?");
+					printBlock("Error joining the game! Are you logged in? Is it an endless save?");
 				}
 			}
 			case "quit" -> {
@@ -292,11 +293,11 @@ public class PTUI {
 			}
 			case "talk" -> {
 				Compass direction = Compass.valueOf(args[1].toUpperCase());
-				List<InventoryElement> contents = new TalkToMerchantAction(Game.getInstance(), direction).execute();
-				if(contents != null) {
-					StringBuilder builder = new StringBuilder("Items for Sale (" + contents.size() + " items)");
-					for(int i = 0; i < contents.size(); i++) {
-						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
+				List<InventoryElement> store = new TalkToMerchantAction(Game.getInstance(), direction).execute();
+				if(store != null) {
+					StringBuilder builder = new StringBuilder("Items for Sale (" + store.size() + " items)");
+					for(int i = 0; i < store.size(); i++) {
+						builder.append("\n\t").append(i).append(": ").append(store.get(i));
 					}
 					printBlock(builder.toString());
 					inMenu = true;
@@ -320,7 +321,7 @@ public class PTUI {
 				if(result) {
 					printBlock("Successfully bought the item.");
 				} else {
-					printBlock("A merchant is not open in that direction, your inventory is full, or the merchant item is incorrect, please try again.");
+					printBlock("A merchant is not open in that direction, you cannot afford the item, your inventory is full, or the merchant item is incorrect, please try again.");
 				}
 			}
 			case "sell" -> {
