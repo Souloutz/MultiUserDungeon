@@ -5,9 +5,10 @@ import multiuserdungeon.map.GameMap;
 import multiuserdungeon.map.tiles.Player;
 
 public class Snapshot {
-    private Player player;
-    private GameMap map;
-    private Clock clock;
+
+    private final Player player;
+    private final GameMap map;
+    private final Clock clock;
 
     public Snapshot(Player player, GameMap map, Clock clock){
         this.player = player;
@@ -16,15 +17,15 @@ public class Snapshot {
     }
 
     public Player getPlayer(){
-        return player;
+        return this.player;
     }
 
     public GameMap getMap() {
-        return map;
-    }
-    public Clock getClock() {
-        return clock;
+        return this.map;
     }
 
-    
+    public Clock getClock() {
+        return this.clock;
+    }
+
 }

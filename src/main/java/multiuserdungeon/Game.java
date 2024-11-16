@@ -22,13 +22,13 @@ public class Game {
 	private boolean quit;
 	private boolean browsing;
 
-	public Game(GameMap map, boolean browsing) {
+	public Game(GameMap map) {
 		instance = this;
 		this.map = map;
 		this.clock = new Clock();
 		this.shrine = null;
 		this.quit = false;
-		this.browsing = browsing;
+		this.browsing = false;
 	}
 
 	public static Game getInstance() {
@@ -43,6 +43,10 @@ public class Game {
 		this.player = player;
 	}
 
+	public void setBrowsing(boolean browsing) {
+		this.browsing = browsing;
+	}
+
 	public Player getPlayer() {
 		return this.player;
 	}
@@ -53,10 +57,6 @@ public class Game {
 
 	public Time getCurrentTime() {
 		return this.clock.getCurrentTime();
-	}
-
-	public boolean isBrowsing() {
-		return this.browsing;
 	}
 
 	public boolean handleLoadMap(String uri) {
@@ -130,58 +130,48 @@ public class Game {
 
 	public boolean handlePray() {
 		Shrine shrine = this.player.getTile().getShrine();
-		if(shrine == null) {
-			return false;
-		}
-		if(this.map.getPlayerRoom().isSafe()){
-			this.shrine = shrine;
-			shrine.storeSnapshot();
-			endTurn();
-			return true;
-		}
+		if(shrine == null) return false;
+		if(!this.map.getPlayerRoom().isSafe()) return false;
+
+		this.shrine = shrine;
+		shrine.storeSnapshot();
 		endTurn();
-		return false;
+		return true;
 	}
 
-	public Map<InventoryElement, Integer> handleTalkToMerchant(Compass direction) {
+	public List<InventoryElement> handleTalkToMerchant(Compass direction) {
 		Tile merchantTile = this.player.getTile().getTile(direction);
-		if (merchantTile.getObjects().get(0) instanceof Merchant) {
-			Merchant m = (Merchant)merchantTile.getObjects().get(0);
-			return m.getStore();
-		}
-		return null;
-	} 
+		Merchant merchant = merchantTile.getMerchant();
+		if(merchant == null || !merchant.isOpen()) return null;
+		return merchant.getStore();
+	}
 
-	public boolean handleBuyItem(Merchant merchant, InventoryElement item) {
-		try {
-			if (player.getGold() < merchant.getStore().get(item)) {
-				return false;
-			}
-		} catch (NullPointerException e) {
-			return false;
-		}
-		Map<InventoryElement,Integer> bought = merchant.handleSale(item);
+	public boolean handleBuyItem(Compass direction, int index) {
+		Tile merchantTile = this.player.getTile().getTile(direction);
+		Merchant merchant = merchantTile.getMerchant();
+		if(merchant == null || !merchant.isOpen()) return false;
+		if(this.player.getGold() < merchant.getStore().get(index).getGoldValue()) return false;
 
-		player.loseGold((Integer)bought.values().toArray()[0]);
-		player.getInventory().addItem((InventoryElement)bought.keySet().toArray()[0]);
+		InventoryElement newItem = merchant.handleSale(index);
+		this.player.loseGold(newItem.getGoldValue());
+		this.player.getInventory().addItem(newItem);
 		return true;
 	}
 
-	public boolean handleSellItem(int bagPos, int itemPos, Merchant merchant) {
-		InventoryElement selling = player.getInventory().getItem(bagPos,itemPos);
-		if (selling == null) {
-			return false;
-		}
-		player.getInventory().removeItem(bagPos,itemPos);
-		player.gainGold(merchant.buyItem(selling));
+	public boolean handleSellItem(Compass direction, int bagPos, int itemPos) {
+		Tile merchantTile = this.player.getTile().getTile(direction);
+		Merchant merchant = merchantTile.getMerchant();
+		if(merchant == null || !merchant.isOpen()) return false;
+
+		InventoryElement selling = this.player.getInventory().getItem(bagPos,itemPos);
+		if(selling == null) return false;
+
+		this.player.getInventory().removeItem(bagPos, itemPos);
+		this.player.gainGold(merchant.buyItem(selling));
 		return true;
 	}
 
-	public void handleLeaveMerchant() {
-		endTurn();
-	}
-
-	public List<InventoryElement> handleOpen() {
+	public List<InventoryElement> handleOpenChest() {
 		Chest chest = this.player.getTile().getChest();
 		if (chest == null) return null;
 		
@@ -218,13 +208,11 @@ public class Game {
 	}
 
 	public String handleViewInventory() {
-		StringBuilder inventoryString = new StringBuilder(this.player.getInventory().toString());
-		inventoryString.append("\n\n\tWeapon: ").append(player.getWeapon()).append("\n\tArmor: ").append(player.getArmor());
-		return inventoryString.toString();
+		return this.player.getInventory().toString() + "\n\n\tWeapon: " + this.player.getWeapon() + "\n\tArmor: " + this.player.getArmor();
 	}
 
 	public String handleViewBag(int bagPos) {
-		String bagString = player.getInventory().viewBag(bagPos);
+		String bagString = this.player.getInventory().viewBag(bagPos);
 
 		if (bagString != null) return bagString;
 		return "Invalid bag specified, please try again.";
@@ -244,12 +232,12 @@ public class Game {
 
 	public boolean handleUseItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
-		if (item == null) return false;
+		if(item == null) return false;
 
-		if (item.handleUse(this.player)) {
+		if(item.handleUse(this.player)) {
 			handleDestroyItem(bagPos, itemPos);
 			return true;
-		} 
+		}
 
 		return false;
 	}
@@ -263,7 +251,6 @@ public class Game {
 	}
 
 	public Snapshot createSnapshot(){
-
 		EndlessMap newMap = new EndlessMap((EndlessMap)map);
 
 		Player newPlayer = newMap.getCurrentPlayer();
@@ -279,7 +266,6 @@ public class Game {
 		newClock.setCurrentTime(newTime);
 		newClock.setTurnCounter(clock.getTurnCounter());
 
-
 		return new Snapshot(newPlayer, newMap, newClock);
 	}
 
@@ -291,10 +277,9 @@ public class Game {
 
 	public void handleQuitGame() {
 		this.quit = true;
-	}
-
-	public String handleSaveGame() {
-		return PersistenceManager.getInstance().saveGame(this);
+		if(!this.browsing) {
+			PersistenceManager.getInstance().saveGame(this);
+		}
 	}
 	
 	public void endTurn() {
@@ -325,4 +310,5 @@ public class Game {
 			//Finish this when Shrine is complete
 		}
 	}
+
 }

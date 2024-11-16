@@ -4,33 +4,29 @@ import multiuserdungeon.Game;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.TileObject;
 
-public class Shrine implements TileObject{
+public class Shrine implements TileObject {
 
-    private String name;
+    private final String name;
     private Snapshot snapshot;
-    private Game game;
     private Tile tile;
 
     public Shrine(String name){
-        this.game = Game.getInstance();
         this.name = name;
 		this.tile = null;
     }
 
-	//copy constructor
 	public Shrine(Shrine shrine){
 		this.name = shrine.getName();
 		this.snapshot = shrine.getSnapshot();
-		this.game = Game.getInstance();
 		this.tile = null;
 	}
 
     public void storeSnapshot(){
-        snapshot = game.createSnapshot();
+        this.snapshot = Game.getInstance().createSnapshot();
     }
     
     public void restoreGame(){
-        game.restoreGame(snapshot);
+        Game.getInstance().restoreGame(this.snapshot);
     }
 
     public Snapshot getSnapshot() {
@@ -41,6 +37,7 @@ public class Shrine implements TileObject{
 	public String getName() {
 		return this.name;
 	}
+
 	@Override
 	public Tile getTile() {
 		return this.tile;

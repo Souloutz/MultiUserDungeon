@@ -1,18 +1,17 @@
-package multiuserdungeon.commands.game;
+package multiuserdungeon.commands.authentication;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Authenticator;
 import multiuserdungeon.authentication.Profile;
-import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 import multiuserdungeon.persistence.PersistenceManager;
 
-public class QuitGameAction implements Action<Void> {
+public class QuitAction implements Action<Void> {
 
 	private final Authenticator auth;
 	private final Game game;
 
-	public QuitGameAction(Authenticator auth, Game game) {
+	public QuitAction(Authenticator auth, Game game) {
 		this.auth = auth;
 		this.game = game;
 	}
@@ -23,9 +22,7 @@ public class QuitGameAction implements Action<Void> {
 		if(this.auth.loggedIn()) {
 			PersistenceManager.getInstance().saveProfile((Profile) this.auth.getUser());
 		}
-		if(this.game != null) {
-			PersistenceManager.getInstance().saveGame(this.game);
-		}
+		if(this.game != null) this.game.handleQuitGame();
 		return null;
 	}	
 

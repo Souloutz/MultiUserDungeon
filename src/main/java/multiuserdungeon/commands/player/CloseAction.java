@@ -17,19 +17,14 @@ public class CloseAction implements Action<Void> {
 
     @Override
     public Void execute() {
-        if (canExecute()) {
-            this.receiver.handleClose();
-        }
-
-        return null;
+	    if(!canExecute()) return null;
+	    this.receiver.handleClose();
+	    return null;
     }
 
     @Override
     public boolean canExecute() {
-        //TODO{Make very specific to determine if this action should be an option}
-        if (user instanceof Profile)
-			return true;
-
-		return false;
+        return this.receiver != null;
     }
+    
 }

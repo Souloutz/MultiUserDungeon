@@ -1,8 +1,8 @@
-package multiuserdungeon;
+package multiuserdungeon.map;
 
 import multiuserdungeon.clock.CreatureBuff;
 import multiuserdungeon.inventory.InventoryElement;
-import multiuserdungeon.map.*;
+import multiuserdungeon.inventory.Items;
 import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.Merchant;
 import multiuserdungeon.map.tiles.NPC;
@@ -11,8 +11,6 @@ import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
 
 import java.util.Random;
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.io.BufferedReader;
@@ -22,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RoomGenerator {
-
-
 
     private static Random random = new Random();
 

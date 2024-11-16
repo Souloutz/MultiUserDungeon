@@ -20,7 +20,6 @@ public class Buff implements InventoryElement {
         this.statAmount = statAmount;
 	}
 
-	//copy constructor
 	public Buff(Buff buff) {
 		this.name = buff.name;
         this.description = buff.description;
@@ -31,15 +30,12 @@ public class Buff implements InventoryElement {
 
 	@Override
 	public boolean equals (Object o) {
-		if (o instanceof Buff) {
-			Buff b = (Buff)o;
-			if (b.name.equals(this.name) &&
-			b.description.equals(this.description) &&
-			b.goldValue == this.goldValue &&
-			b.stat == this.stat &&
-			b.statAmount == this.statAmount) {
-				return true;
-			}
+		if (o instanceof Buff b) {
+			return b.name.equals(this.name) &&
+					b.description.equals(this.description) &&
+					b.goldValue == this.goldValue &&
+					b.stat == this.stat &&
+					b.statAmount == this.statAmount;
 		}
 		return false;
 	}

@@ -1,4 +1,4 @@
-package multiuserdungeon;
+package multiuserdungeon.inventory;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,8 +10,6 @@ import java.util.Random;
 
 import com.fasterxml.jackson.databind.*;
 
-import multiuserdungeon.inventory.BuffStat;
-import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.inventory.elements.Bag;
 import multiuserdungeon.inventory.elements.Food;
 import multiuserdungeon.inventory.elements.Weapon;

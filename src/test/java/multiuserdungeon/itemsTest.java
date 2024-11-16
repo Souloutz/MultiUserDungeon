@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import multiuserdungeon.inventory.InventoryElement;
+import multiuserdungeon.inventory.Items;
 import multiuserdungeon.inventory.elements.Armor;
 import multiuserdungeon.inventory.elements.Bag;
 import multiuserdungeon.inventory.elements.Buff;

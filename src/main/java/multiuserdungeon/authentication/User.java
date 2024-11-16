@@ -25,9 +25,11 @@ public class User {
         return this.description;
     }
 
-    public void handleBrowseMap(String filePath) {
+    public Game handleBrowseMap(String filePath) {
         // TODO: choose room and put player at start
         Game game = PersistenceManager.getInstance().loadGame(filePath);
+        game.setBrowsing(true);
+        return game;
     }
 
 }

@@ -2,7 +2,7 @@ package multiuserdungeon;
 
 import multiuserdungeon.commands.player.AttackAction;
 import multiuserdungeon.commands.player.BuyItemAction;
-import multiuserdungeon.commands.game.QuitGameAction;
+import multiuserdungeon.commands.authentication.QuitAction;
 import multiuserdungeon.commands.inventory.DestroyItemAction;
 import multiuserdungeon.commands.inventory.EquipItemAction;
 import multiuserdungeon.commands.inventory.SwapBagAction;
@@ -17,7 +17,7 @@ import multiuserdungeon.commands.authentication.ChangePasswordAction;
 import multiuserdungeon.commands.authentication.LoginAction;
 import multiuserdungeon.commands.authentication.LogoutAction;
 import multiuserdungeon.commands.authentication.RegisterAction;
-import multiuserdungeon.commands.player.OpenAction;
+import multiuserdungeon.commands.player.OpenChestAction;
 import multiuserdungeon.commands.player.ExitRoomAction;
 import multiuserdungeon.commands.player.MoveAction;
 import multiuserdungeon.commands.player.PickupItemAction;
@@ -365,7 +365,7 @@ public class PTUI {
 				}
 			}
 			case "open" -> {
-				List<InventoryElement> contents = new OpenAction(game, authenticator.getUser()).execute();
+				List<InventoryElement> contents = new OpenChestAction(game, authenticator.getUser()).execute();
 				
 				if (contents != null) {
 					StringBuilder builder = new StringBuilder("Contents (" + contents.size() + " items)");
@@ -509,7 +509,7 @@ public class PTUI {
 				printBlock("Successfully saved the game.");
 			}
 			case "quit" -> {
-				new QuitGameAction(game, authenticator.getUser()).execute();
+				new QuitAction(game, authenticator.getUser()).execute();
 				printBlock("Successfully quit the game.");
 			}
 			default -> printBlock("Unrecognized command, please try again.");

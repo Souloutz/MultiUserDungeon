@@ -23,41 +23,33 @@ public class Tile {
 		this.adjacent = null;
 	}
 
-	//copy constructor
 	public Tile(Tile tile){
 		this.row = tile.getRow();
 		this.col = tile.getCol();
 		this.objects = new LinkedList<>();
-		for(TileObject tileObject : tile.getObjects()){
-			TileObject newTileObject = new EmptyTile((EmptyTile)tileObject);
+		for(TileObject tileObject : tile.getObjects()) {
+			TileObject newTileObject = null;
 			if(tileObject instanceof Chest){
 				newTileObject = new Chest((Chest)tileObject);
-			}
-			else if(tileObject instanceof EmptyTile){
-				newTileObject = new EmptyTile((EmptyTile)tileObject);
-			}
-			else if(tileObject instanceof NPC){
+			} else if(tileObject instanceof NPC){
 				newTileObject = new NPC((NPC)tileObject);
-			}
-			else if(tileObject instanceof Obstacle){
+			} else if(tileObject instanceof Obstacle){
 				newTileObject = new Obstacle((Obstacle)tileObject);
-			}
-			else if(tileObject instanceof Player){
+			} else if(tileObject instanceof Player){
 				continue; //skip, creating new player object and setting player tile handled in EndlessMap
-			}
-			else if(tileObject instanceof Shrine){
+			} else if(tileObject instanceof Shrine){
 				newTileObject = new Shrine((Shrine)tileObject);
-			}
-			else if(tileObject instanceof Trap){
+			} else if(tileObject instanceof Trap){
 				newTileObject = new Trap((Trap)tileObject);
-			}
-			else if (tileObject instanceof Merchant){
+			} else if (tileObject instanceof Merchant){
 				newTileObject = new Merchant((Merchant)tileObject);
 			}
-			newTileObject.setTile(this);
-			this.objects.add(newTileObject);
+			if(newTileObject != null) {
+				newTileObject.setTile(this);
+				this.objects.add(newTileObject);
+			}
 		}
-		this.adjacent = null; //will be set in room constructor
+		this.adjacent = null;
 	}
 
 	public int getRow() {
@@ -150,6 +142,15 @@ public class Tile {
 		for (TileObject object: objects) {
 			if (object instanceof Shrine shrine) {
 				return shrine;
+			}
+		}
+		return null;
+	}
+
+	public Merchant getMerchant() {
+		for (TileObject object: objects) {
+			if (object instanceof Merchant merchant) {
+				return merchant;
 			}
 		}
 		return null;

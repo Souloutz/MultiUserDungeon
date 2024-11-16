@@ -19,13 +19,9 @@ public class Chest implements TileObject {
 		this.tile = null;
 	}
 
-	//copy constructor
 	public Chest(Chest chest){
 		this.name = chest.getName();
-		this.contents = new ArrayList<InventoryElement>();
-		for (InventoryElement item : chest.getContents()){
-			this.contents.add(item);
-		}
+		this.contents = new ArrayList<>(chest.getContents());
 		this.tile = null;
 	}
 

@@ -26,8 +26,8 @@ public class Player extends Character {
 	public Player(Player player) {
 		super(player.getName(), player.getDescription(), player.getMaxHealth(), player.getAttack(), player.getDefense());
 		this.inventory = new Inventory(player.getInventory());
-		this.weapon= (player.getWeapon());
-		this.armor= (player.getArmor());
+		this.weapon = player.getWeapon();
+		this.armor = player.getArmor();
 		this.buffs = new HashMap<>();
 		this.gold = player.gold;
 		for(Buff buff : player.buffs.keySet()){
@@ -38,14 +38,10 @@ public class Player extends Character {
 
 	@Override
 	public boolean equals (Object o) {
-		if (o instanceof Player) {
-			Player p = (Player)o;
-			if (p.gold == this.gold &&
-				p.armor.equals(this.armor) &&
-				p.weapon.equals(this.weapon));
-		//TODO{Finish this method, make weapons and armor individually comparable}
-		//TODO{Make sure that you are comparing attributes from Character as well}
-
+		if(o instanceof Player p) {
+			return getName().equals(p.getName()) && getDescription().equals(p.getDescription()) &&
+					getMaxHealth() == p.getMaxHealth() && getAttack() == p.getAttack() && getDefense() == p.getDefense() &&
+					this.weapon == p.weapon && this.armor == p.armor && this.buffs.equals(p.buffs) && this.gold == p.gold;
 		}
 		return false;
 	}

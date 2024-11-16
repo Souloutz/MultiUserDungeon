@@ -4,9 +4,8 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import multiuserdungeon.Game;
 import multiuserdungeon.map.tiles.*;
-import multiuserdungeon.RoomGenerator;
+
 import java.util.List;
 
 public class EndlessMap implements GameMap {

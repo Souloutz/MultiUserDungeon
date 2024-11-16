@@ -17,8 +17,6 @@ public class Weapon implements InventoryElement {
         this.attack = attack;
 	}
 
-
-	//copy constructor
 	public Weapon(Weapon weapon){
 		this.name = weapon.name;
         this.description = weapon.description;
@@ -28,14 +26,11 @@ public class Weapon implements InventoryElement {
 
 	@Override
 	public boolean equals (Object o) {
-		if (o instanceof Weapon) {
-			Weapon w = (Weapon)o;
-			if (w.name.equals(this.name) &&
-			w.description.equals(description) &&
-			w.goldValue == this.goldValue &&
-			w.attack == this.attack) {
-				return true;
-			}
+		if (o instanceof Weapon w) {
+			return w.name.equals(this.name) &&
+					w.description.equals(description) &&
+					w.goldValue == this.goldValue &&
+					w.attack == this.attack;
 		}
 		return false;
 	}

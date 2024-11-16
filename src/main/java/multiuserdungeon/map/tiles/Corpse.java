@@ -7,10 +7,11 @@ public class Corpse extends Chest {
 
     @Override
     public char getASCII() {
-        return 'c';
+        return 'X';
     }
 
     public Corpse(String name, List<InventoryElement> contents) {
         super(name,contents);
     }
+
 }
