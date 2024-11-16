@@ -17,7 +17,7 @@ public class JoinGameAction implements Action<Game> {
 
     @Override
     public Game execute() {
-	    if (!canExecute()) return null;
+	    if(!canExecute()) return null;
 	    return ((Profile) this.auth.getUser()).handleJoinGame(filePath);
     }
 

@@ -1,10 +1,9 @@
 package multiuserdungeon.commands.authentication;
 
-import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Authenticator;
 import multiuserdungeon.commands.Action;
 
-public class BrowseMapAction implements Action<Game> {
+public class BrowseMapAction implements Action<Boolean> {
     
     private final Authenticator auth;
     private final String filePath;
@@ -15,9 +14,10 @@ public class BrowseMapAction implements Action<Game> {
     }
 
     @Override
-    public Game execute() {
-	    if(!canExecute()) return null;
-	    return this.auth.getUser().handleBrowseMap(this.filePath);
+    public Boolean execute() {
+	    if(!canExecute()) return false;
+	    this.auth.getUser().handleBrowseMap(this.filePath);
+        return true;
     }
 
     @Override

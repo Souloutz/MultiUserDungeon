@@ -32,6 +32,7 @@ import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.persistence.FileAdapter;
 import multiuserdungeon.persistence.PersistenceManager;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -235,20 +236,23 @@ public class JSONAdapter implements FileAdapter {
 
 		if(currentPlayer == null) {
 			// Joining game for the first time
-			User user = Authenticator.getInstance().getUser();
-			currentPlayer = new Player(
-					user.getUsername(),
-					user.getDescription(),
-					new Inventory("Your Inventory", "A safe place for your items and bags.", true),
-					new HashMap<>());
-
 			if(type.equals("premade")) {
+				if(!players.isEmpty()) return null; // Cannot join a premade game
+
+				User user = Authenticator.getInstance().getUser();
+				currentPlayer = new Player(
+						user.getUsername(),
+						user.getDescription(),
+						new Inventory("Your Inventory", "A safe place for your items and bags.", true),
+						new HashMap<>());
+
 				Room playerRoom = rooms.get(0);
 				Tile startingTile = playerRoom.getTile(playerRoom.getRows() - 1, playerRoom.getColumns() - 1);
 				currentPlayer.setTile(startingTile);
 				startingTile.addObject(currentPlayer);
 				playerRooms.put(currentPlayer, 0);
 			} else {
+				if(!Authenticator.getInstance().loggedIn()) return null; // Cannot browse endless game
 				// TODO: Create starting room and connect
 			}
 		}

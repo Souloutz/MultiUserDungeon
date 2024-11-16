@@ -4,7 +4,6 @@ import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.map.tiles.Player;
 import multiuserdungeon.persistence.GameStatsCSVConverter;
 import multiuserdungeon.persistence.PersistenceManager;
 
@@ -24,7 +23,7 @@ public class Profile extends User {
         this.stats = null;
     }
 
-    public Profile(String username, String password, String description) {
+    public Profile(String username, String description, String password) {
         super(username, description);
         this.password = password;
         this.stats = new ArrayList<>();

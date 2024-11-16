@@ -41,6 +41,11 @@ public class PremadeMap implements GameMap {
 	}
 
 	@Override
+	public boolean isInStartRoom() {
+		return getPlayerRoom().equals(rooms.get(this.playerStartRooms.get(Game.getInstance().getPlayer())));
+	}
+
+	@Override
 	public void handleExitRoom(Compass direction) {
 		// Do nothing
 	}

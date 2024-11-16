@@ -25,8 +25,8 @@ public class User {
         return this.description;
     }
 
-    public Game handleBrowseMap(String filePath) {
-        return PersistenceManager.getInstance().loadGame(filePath);
+    public void handleBrowseMap(String filePath) {
+        PersistenceManager.getInstance().loadGame(filePath);
     }
 
 }

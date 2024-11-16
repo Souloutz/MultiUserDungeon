@@ -1,31 +1,27 @@
 package multiuserdungeon.commands.authentication;
 
+import multiuserdungeon.authentication.Authenticator;
 import multiuserdungeon.authentication.Profile;
-import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
 public class ViewHistoryAction implements Action<String> {
-    
-    private final User receiver;
 
-    public ViewHistoryAction(User user) {
-        this.receiver = user;
+    private final Authenticator auth;
+
+    public ViewHistoryAction(Authenticator auth) {
+        this.auth = auth;
     }
 
     @Override
     // TODO string or some other return type
     public String execute() {
-        if (canExecute())
-            return ((Profile) this.receiver).getStats().toString();
-
-        return null;
+	    if(!canExecute()) return null;
+	    return ((Profile) this.auth.getUser()).getStats().toString();
     }
 
     @Override
     public boolean canExecute() {
-        if (receiver instanceof Profile)
-			return true;
-
-		return false;
+        return this.auth.loggedIn();
     }
+
 }

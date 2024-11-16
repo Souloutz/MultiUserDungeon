@@ -6,6 +6,8 @@ public interface GameMap {
 
     void setPlayerRoom(Room room);
 
+    boolean isInStartRoom();
+
     void handleExitRoom(Compass direction);
 
 }

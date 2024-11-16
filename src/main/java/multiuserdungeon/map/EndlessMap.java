@@ -38,10 +38,12 @@ public class EndlessMap implements GameMap {
         this.playerRooms.put(Game.getInstance().getPlayer(), this.rooms.indexOf(room));
     }
 
-    public boolean isInStartRoom(Player player) {
-        return this.playerRooms.get(player).equals(this.playerStartRooms.get(player));
+    @Override
+    public boolean isInStartRoom() {
+        return getPlayerRoom().equals(rooms.get(this.playerStartRooms.get(Game.getInstance().getPlayer())));
     }
 
+    @Override
     public void handleExitRoom(Compass direction) {
         Room room = getPlayerRoom();
         Tile tile = Game.getInstance().getPlayer().getTile();

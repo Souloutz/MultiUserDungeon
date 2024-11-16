@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PersistenceManager {
 
-	public static final String DATA_FOLDER = "data\\";
+	public static final String DATA_FOLDER = "data/";
 
 	private static PersistenceManager INSTANCE = null;
 	private final List<FileAdapter> adapters;
@@ -36,7 +36,7 @@ public class PersistenceManager {
 		List<String> files = new LinkedList<>();
 		for(FileAdapter adapter : this.adapters) {
 			String uri = adapter.saveGame(game);
-			if(adapter.saveGame(game) != null) files.add(uri);
+			if(uri != null) files.add(uri);
 		}
 		return String.join(", ", files);
 	}
@@ -50,10 +50,11 @@ public class PersistenceManager {
 	}
 
 	public String saveProfile(Profile profile) {
+		System.out.println("Saving profile");
 		List<String> files = new LinkedList<>();
 		for(FileAdapter adapter : this.adapters) {
 			String uri = adapter.saveProfile(profile);
-			if(adapter.saveProfile(profile) != null) files.add(uri);
+			if(uri != null) files.add(uri);
 		}
 		return String.join(", ", files);
 	}

@@ -41,7 +41,8 @@ public class Authenticator {
         return true;
     }
 
-    public boolean register(String username, String password, String description) {
+    public boolean register(String username, String description, String password, String confirmPassword) {
+        if(!password.equals(confirmPassword)) return false;
         Profile newProfile = new Profile(username, password, description);
         PersistenceManager.getInstance().saveProfile(newProfile);
         this.currentUser = newProfile;

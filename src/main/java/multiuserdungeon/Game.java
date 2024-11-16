@@ -19,7 +19,6 @@ public class Game {
 	private GameMap map;
 	private Clock clock;
 	private Shrine shrine;
-	private boolean quit;
 	private final boolean browsing;
 
 	public Game(Player player, GameMap map, Clock clock, boolean browsing) {
@@ -28,7 +27,6 @@ public class Game {
 		this.map = map;
 		this.clock = clock;
 		this.shrine = null;
-		this.quit = false;
 		this.browsing = browsing;
 	}
 
@@ -245,10 +243,10 @@ public class Game {
 	}
 
 	public void handleQuitGame() {
-		this.quit = true;
 		if(!this.browsing) {
 			PersistenceManager.getInstance().saveGame(this);
 		}
+		instance = null;
 	}
 	
 	public void endTurn() {
@@ -262,9 +260,16 @@ public class Game {
 		this.clock.completeTurn();
 	}
 
-	public boolean isOver() {
-		if(this.map instanceof PremadeMap m) return m.playerReachedGoal();
-		return this.quit || (this.player.getHealth() <= 0 && this.shrine == null);
+	public boolean isGoal() {
+		if(this.map instanceof PremadeMap m) {
+			return m.playerReachedGoal();
+		} else {
+			return this.map.isInStartRoom();
+		}
+	}
+
+	public boolean isDead() {
+		return this.player.getHealth() <= 0 && this.shrine == null;
 	}
 
 	public void respawn() {
