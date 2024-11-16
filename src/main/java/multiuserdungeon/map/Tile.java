@@ -19,9 +19,6 @@ public class Tile {
 		this.row = row;
 		this.col = col;
 		this.objects = new LinkedList<>();
-		EmptyTile emptyTile = new EmptyTile();
-		emptyTile.setTile(this);
-		this.objects.add(emptyTile);
 		this.adjacent = null;
 	}
 
