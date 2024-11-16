@@ -9,6 +9,7 @@ import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
+import multiuserdungeon.map.TileObject;
 
 import java.util.Random;
 
@@ -23,10 +24,6 @@ import java.util.Arrays;
 
 public class RoomGenerator {
 
-
-
-    private static Random random = new Random();
-
     private static long xorshift(long state) {
         state ^= state << 13;
         state ^= state >>> 7;
@@ -36,7 +33,7 @@ public class RoomGenerator {
 
     private static int[] permutation(int len) {
         long[] pre = new long[len];
-        pre[0] = random.nextLong((long)Math.pow(2,64));
+        pre[0] = new Random().nextLong((long)Math.pow(2,64));
         for (int i = 1;i < len; i++){
             pre[i] = xorshift(pre[i-1]);
         }
@@ -54,8 +51,10 @@ public class RoomGenerator {
     
     public static Room generateRoom (Compass direction, Room attached) {
 
-        int[] x = permutation(random.nextInt(6) + 4);
-        int[] y = permutation(random.nextInt(6) + 4);
+        Random random = new Random();
+
+        int[] x = permutation(random.nextInt(7) + 4);
+        int[] y = permutation(random.nextInt(7) + 4);
         int max = (x.length > y.length) ? y.length : x.length;
 
         Room room = new Room(x.length,y.length,grabDescription());
@@ -83,8 +82,8 @@ public class RoomGenerator {
         int[] objects = permutation(32);
 
         for (int i = 0;i < max;i++) {
-            Tile tile = room.getTile(y[i],x[i]);
-            int place = objects[i] % 4;
+            Tile tile = room.getTile(x[i],y[i]);
+            int place = objects[i] % 5;
             TileObject object = null;
 
             if (objects[i] == 31) {
@@ -93,7 +92,7 @@ public class RoomGenerator {
                 object = (TileObject)generateShrine();
             } else if (place == 0) {
                 object = (TileObject)generateObstacle();
-            } else if (place == 1) {
+            } else if (place == 1 || place == 4) {
                 object = (TileObject)generateNPC();
             } else if (place == 2) {
                 object = (TileObject)generateTrap();
@@ -104,7 +103,7 @@ public class RoomGenerator {
             object.setTile(tile);
         }
 
-        int maxc = new Random().nextInt(1,4);
+        int maxc = random.nextInt(1,4);
         List<Compass> ways = new ArrayList<>();
         int count = 0;
         while (true) {
@@ -191,7 +190,7 @@ public class RoomGenerator {
 
             return new Merchant(line,items);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -220,7 +219,7 @@ public class RoomGenerator {
 
             return new Chest(line,items);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -242,7 +241,7 @@ public class RoomGenerator {
 
             return new Obstacle(line);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -251,7 +250,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/npcs.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,67);
+            int rindex = new Random().nextInt(1,66);
 
             br.readLine();
 
@@ -271,7 +270,7 @@ public class RoomGenerator {
 
             return new NPC(tokens[0],tokens[1],cb);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -297,7 +296,7 @@ public class RoomGenerator {
 
             return new Shrine(line);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
