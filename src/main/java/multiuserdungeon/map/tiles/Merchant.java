@@ -55,6 +55,7 @@ public class Merchant implements TileObject {
     }
 
     public InventoryElement handleSale(int index) {
+        if(index >= this.store.size()) return null;
         return this.store.remove(index);
     }
 

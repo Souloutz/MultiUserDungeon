@@ -18,15 +18,20 @@ import multiuserdungeon.commands.inventory.UseItemAction;
 import multiuserdungeon.commands.inventory.ViewBagAction;
 import multiuserdungeon.commands.inventory.ViewInventoryAction;
 import multiuserdungeon.commands.player.AttackAction;
+import multiuserdungeon.commands.player.BuyItemAction;
 import multiuserdungeon.commands.player.CloseAction;
 import multiuserdungeon.commands.player.DisarmTrapAction;
 import multiuserdungeon.commands.player.ExitRoomAction;
 import multiuserdungeon.commands.player.MoveAction;
 import multiuserdungeon.commands.player.OpenChestAction;
 import multiuserdungeon.commands.player.PickupItemAction;
+import multiuserdungeon.commands.player.PrayAction;
+import multiuserdungeon.commands.player.SellItemAction;
+import multiuserdungeon.commands.player.TalkToMerchantAction;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -37,8 +42,12 @@ public class PTUI {
 	private static final String DIVIDER  = "=".repeat(150);
 	private static final int DELAY_MS = 3000;
 	private static final Scanner scanner = new Scanner(System.in);
-	private static boolean inChest = false;
 	private static boolean quit = false;
+
+	private static boolean inMenu = false;
+	private static final List<String> ALLOWED_MENU_COMMANDS = new ArrayList<>(List.of(
+		"open", "talk", "pickup", "buy", "sell", "close"
+	));
 
 	public static void main(String[] args) {
 		printWelcomeMsg();
@@ -119,8 +128,8 @@ public class PTUI {
 				"\tdestroy <bag pos> <item pos> -=- Destroys the specified item to clear space.\n" +
 				"\tswap <src bag pos> <dest bag pos> <dest bag pos> -=- Swaps a larger unequipped bag with an equipped one, copying all items over.\n" +
 				"\topen -=- Opens the chest you are currently standing on.\n" +
-				"\tpickup [chest pos] -=- Pickups all items in a chest, or just specific items.\n" +
 				"\ttalk <direction> -=- Talks to a nearby merchant if they are open.\n" +
+				"\tpickup [chest pos] -=- Pickups all items in a chest, or just specific items.\n" +
 				"\tbuy <direction> <merchant pos> -=- Buys an item from a nearby merchant.\n" +
 				"\tsell <direction> <bag pos> <item pos> -=- Sells an item to a nearby merchant.\n" +
 				"\tclose -=- Closes the chest or merchant you are currently interacting with.\n" +
@@ -204,12 +213,11 @@ public class PTUI {
 	}
 
 	private static void processGameCommand() throws IndexOutOfBoundsException, IllegalArgumentException {
-
 		System.out.print(">>> ");
 		String[] args = scanner.nextLine().toLowerCase().split(" ");
 
-		if(!(args[0].equals("open") || args[0].equals("pickup") || args[0].equals("close")) && inChest) {
-			printBlock("Please either pickup items from the chest or close the chest.");
+		if(inMenu && !ALLOWED_MENU_COMMANDS.contains(args[0])) {
+			printBlock("You cannot run this command without running the \"close\" command first.");
 			return;
 		}
 
@@ -272,14 +280,28 @@ public class PTUI {
 			case "open" -> {
 				List<InventoryElement> contents = new OpenChestAction(Game.getInstance()).execute();
 				if(contents != null) {
-					StringBuilder builder = new StringBuilder("Contents (" + contents.size() + " items)");
+					StringBuilder builder = new StringBuilder("Chest Contents (" + contents.size() + " items)");
 					for(int i = 0; i < contents.size(); i++) {
 						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
 					}
 					printBlock(builder.toString());
-					inChest = true;
+					inMenu = true;
 				} else {
 					printBlock("You are not currently on a chest tile, please try again.");
+				}
+			}
+			case "talk" -> {
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				List<InventoryElement> contents = new TalkToMerchantAction(Game.getInstance(), direction).execute();
+				if(contents != null) {
+					StringBuilder builder = new StringBuilder("Items for Sale (" + contents.size() + " items)");
+					for(int i = 0; i < contents.size(); i++) {
+						builder.append("\n\t").append(i).append(": ").append(contents.get(i));
+					}
+					printBlock(builder.toString());
+					inMenu = true;
+				} else {
+					printBlock("A merchant is not open in that direction, please try again.");
 				}
 			}
 			case "pickup" -> {
@@ -291,23 +313,35 @@ public class PTUI {
 					printBlock("You are not currently on a chest tile, your inventory is full, or the chest position is incorrect, please try again.");
 				}
 			}
-			case "talk" -> {
-				// TODO: Talk command
-			}
 			case "buy" -> {
-				// TODO: Buy command
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				int chestPos = Integer.parseInt(args[2]);
+				boolean result = new BuyItemAction(Game.getInstance(), direction, chestPos).execute();
+				if(result) {
+					printBlock("Successfully bought the item.");
+				} else {
+					printBlock("A merchant is not open in that direction, your inventory is full, or the merchant item is incorrect, please try again.");
+				}
 			}
 			case "sell" -> {
-				// TODO: Sell command
+				Compass direction = Compass.valueOf(args[1].toUpperCase());
+				int bagPos = Integer.parseInt(args[2]);
+				int itemPos = Integer.parseInt(args[3]);
+				boolean result = new SellItemAction(Game.getInstance(), direction, bagPos, itemPos).execute();
+				if(result) {
+					printBlock("Successfully sold the item.");
+				} else {
+					printBlock("A merchant is not open in that direction, or an unknown item was provided, please try again.");
+				}
 			}
 			case "close" -> {
-				if(!inChest) {
+				if(!inMenu) {
 					printBlock("You do not currently have a chest open, please try again.");
 					break;
 				}
 				new CloseAction(Game.getInstance()).execute();
 				printBlock("Successfully closed the chest.");
-				inChest = false;
+				inMenu = false;
 			}
 			case "disarm" -> {
 				Compass direction = Compass.valueOf(args[1].toUpperCase());
@@ -319,7 +353,12 @@ public class PTUI {
 				}
 			}
 			case "pray" -> {
-				// TODO: Pray command
+				boolean result = new PrayAction(Game.getInstance()).execute();
+				if(result) {
+					printBlock("You feel a snapshot of the world around you being captured.");
+				} else {
+					printBlock("You are atop a shrine, or the room is not yet safe to pray here.");
+				}
 			}
 			case "move" -> {
 				Compass direction = Compass.valueOf(args[1].toUpperCase());

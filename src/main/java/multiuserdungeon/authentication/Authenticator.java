@@ -24,9 +24,8 @@ public class Authenticator {
         return this.currentUser != null && this.currentUser instanceof Profile;
     }
 
-    public boolean loginAsGuest(String username, String description) {
+    public void loginAsGuest(String username, String description) {
         this.currentUser = new User(username, description);
-        return true;
     }
 
     public boolean login(String username, String password) {
@@ -58,9 +57,8 @@ public class Authenticator {
         return true;
     }
 
-    public boolean logout() {
+    public void logout() {
         this.currentUser = null;
-        return true;
     }
 
 }

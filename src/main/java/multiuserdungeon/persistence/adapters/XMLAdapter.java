@@ -30,7 +30,6 @@ public class XMLAdapter implements FileAdapter {
 			String path = PersistenceManager.DATA_FOLDER + profile.getUsername() + ".xml";
 			FileWriter writer = new FileWriter(path);
 			mapper.writeValue(writer, profile);
-			System.out.println("Saved profile to XML");
 			return path;
 		} catch(IOException e) {
 			System.out.println("Error saving profile to XML!");

@@ -123,13 +123,26 @@ public class Game {
 	public boolean handleBuyItem(Compass direction, int index) {
 		Tile merchantTile = this.player.getTile().getTile(direction);
 		Merchant merchant = merchantTile.getMerchant();
-		if(merchant == null || !merchant.isOpen()) return false;
-		if(this.player.getGold() < merchant.getStore().get(index).getGoldValue()) return false;
+		if (merchant == null || !merchant.isOpen()) return false;
+		if (this.player.getGold() < merchant.getStore().get(index).getGoldValue()) return false;
 
 		InventoryElement newItem = merchant.handleSale(index);
-		this.player.loseGold(newItem.getGoldValue());
-		this.player.getInventory().addItem(newItem);
-		return true;
+		if(newItem == null) return false;
+		if(newItem instanceof Bag bag) {
+			if (this.player.getInventory().addBag(bag)) {
+				this.player.loseGold(newItem.getGoldValue());
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			if(this.player.getInventory().addItem(newItem)) {
+				this.player.loseGold(newItem.getGoldValue());
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 
 	public boolean handleSellItem(Compass direction, int bagPos, int itemPos) {

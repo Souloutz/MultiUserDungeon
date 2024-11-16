@@ -14,7 +14,8 @@ public class LogoutAction implements Action<Boolean> {
     @Override
     public Boolean execute() {
 	    if(!canExecute()) return false;
-	    return this.receiver.logout();
+	    this.receiver.logout();
+        return true;
     }
 
     @Override
