@@ -42,12 +42,6 @@ import java.util.Map;
 
 public class JSONAdapter implements FileAdapter {
 
-	public static void main(String[] args) {
-		Authenticator.getInstance().register("Jack", "Testing", "A cool player");
-		Game game = new JSONAdapter().loadGame("example_premade_save");
-		System.out.println(game.getMap().getPlayerRoom());
-	}
-
 	@Override
 	public String saveGame(Game game) {
 		return null;
@@ -62,7 +56,6 @@ public class JSONAdapter implements FileAdapter {
 			root = JsonParser.parseReader(reader).getAsJsonObject();
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
 			System.out.println("Error loading game from JSON!");
 			return null;
 		}
@@ -250,6 +243,10 @@ public class JSONAdapter implements FileAdapter {
 					new HashMap<>());
 
 			if(type.equals("premade")) {
+				Room playerRoom = rooms.get(0);
+				Tile startingTile = playerRoom.getTile(playerRoom.getRows() - 1, playerRoom.getColumns() - 1);
+				currentPlayer.setTile(startingTile);
+				startingTile.addObject(currentPlayer);
 				playerRooms.put(currentPlayer, 0);
 			} else {
 				// TODO: Create starting room and connect
@@ -271,9 +268,8 @@ public class JSONAdapter implements FileAdapter {
 		Clock clock = new Clock(clockJson.get("turnCounter").getAsInt());
 		clock.setCurrentTime(clockJson.get("time").getAsString().equals("day") ? new Day(clock) : new Night(clock));
 
-		Game game = new Game(map, clock);
-		game.setPlayer(currentPlayer);
-		return game;
+		boolean browsing = !Authenticator.getInstance().loggedIn();
+		return new Game(currentPlayer, map, clock, browsing);
 	}
 
 	@Override

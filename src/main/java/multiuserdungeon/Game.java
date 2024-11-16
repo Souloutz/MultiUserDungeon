@@ -20,31 +20,20 @@ public class Game {
 	private Clock clock;
 	private Shrine shrine;
 	private boolean quit;
-	private boolean browsing;
+	private final boolean browsing;
 
-	public Game(GameMap map, Clock clock) {
+	public Game(Player player, GameMap map, Clock clock, boolean browsing) {
 		instance = this;
+		this.player = player;
 		this.map = map;
 		this.clock = clock;
 		this.shrine = null;
 		this.quit = false;
-		this.browsing = false;
+		this.browsing = browsing;
 	}
 
 	public static Game getInstance() {
 		return instance;
-	}
-
-	public void setMap(GameMap map) {
-		this.map = map;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-
-	public void setBrowsing(boolean browsing) {
-		this.browsing = browsing;
 	}
 
 	public Player getPlayer() {

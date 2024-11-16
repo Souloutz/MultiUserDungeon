@@ -20,12 +20,13 @@ public class Authenticator {
         return this.currentUser;
     }
 
-    private void setUser(User user) {
-        this.currentUser = user;
-    }
-
     public boolean loggedIn() {
         return this.currentUser != null && this.currentUser instanceof Profile;
+    }
+
+    public boolean loginAsGuest(String username, String description) {
+        this.currentUser = new User(username, description);
+        return true;
     }
 
     public boolean login(String username, String password) {
@@ -36,14 +37,14 @@ public class Authenticator {
         if(profile == null) return false;
         if(!profile.getPassword().equals(password)) return false;
 
-        setUser(profile);
+        this.currentUser = profile;
         return true;
     }
 
     public boolean register(String username, String password, String description) {
         Profile newProfile = new Profile(username, password, description);
         PersistenceManager.getInstance().saveProfile(newProfile);
-        setUser(newProfile);
+        this.currentUser = newProfile;
         return true;
     }
 
@@ -57,7 +58,7 @@ public class Authenticator {
     }
 
     public boolean logout() {
-        setUser(null);
+        this.currentUser = null;
         return true;
     }
 
