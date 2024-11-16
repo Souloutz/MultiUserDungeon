@@ -3,9 +3,6 @@ package multiuserdungeon.map.tiles;
 import java.util.HashMap;
 import java.util.Map;
 
-import multiuserdungeon.inventory.Inventory;
-import multiuserdungeon.inventory.elements.Armor;
-import multiuserdungeon.inventory.elements.Weapon;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.inventory.*;
 
@@ -24,6 +21,21 @@ public class Player extends Character {
 		this.armor = null;
 		this.buffs = new HashMap<>();
 		this.gold = 0;
+	}
+
+	//copy constructor
+	public Player(Player player){
+		super(player.getName(), player.getDescription(), player.getMaxHealth(), player.getAttack(), player.getDefense());
+		this.inventory = new Inventory(player.getInventory());
+		this.weapon=(player.getWeapon());
+		this.armor=(player.getArmor());
+		this.buffs = new HashMap<>();
+		this.gold = player.gold;
+		for(Buff buff : player.buffs.keySet()){
+			this.useBuff(buff);
+		}
+		this.setHealth(player.getHealth());
+
 	}
 
 	@Override
@@ -127,9 +139,11 @@ public class Player extends Character {
 		this.armor = null;
 		return true;
 	}
+
 	public int getGold() {
 		return gold;
 	}
+
 	public void loseGold(int spent) {
 		this.gold -= spent;
 	}

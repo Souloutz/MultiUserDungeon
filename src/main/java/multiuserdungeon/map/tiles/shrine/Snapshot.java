@@ -1,15 +1,15 @@
 package multiuserdungeon.map.tiles.shrine;
 
 import multiuserdungeon.clock.Clock;
-import multiuserdungeon.map.Map;
+import multiuserdungeon.map.GameMap;
 import multiuserdungeon.map.tiles.Player;
 
 public class Snapshot {
     private Player player;
-    private Map map;
+    private GameMap map;
     private Clock clock;
 
-    public Snapshot(Player player, Map map, Clock clock){
+    public Snapshot(Player player, GameMap map, Clock clock){
         this.player = player;
         this.map = map;
         this.clock = clock;
@@ -19,7 +19,7 @@ public class Snapshot {
         return player;
     }
 
-    public Map getMap() {
+    public GameMap getMap() {
         return map;
     }
     public Clock getClock() {

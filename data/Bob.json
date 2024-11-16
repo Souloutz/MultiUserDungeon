@@ -1,0 +1,13 @@
+{
+  "password": "abc123",
+  "stats": [
+    {
+      "livesLost": 0,
+      "monstersSlain": 0,
+      "totalGold": 100,
+      "itemsFound": 0
+    }
+  ],
+  "username": "Bob",
+  "description": "I like trains"
+}

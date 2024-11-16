@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import multiuserdungeon.map.tiles.*;
+import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 
@@ -20,6 +21,43 @@ public class Tile {
 		this.col = col;
 		this.objects = new LinkedList<>();
 		this.adjacent = null;
+	}
+
+	//copy constructor
+	public Tile(Tile tile){
+		this.row = tile.getRow();
+		this.col = tile.getCol();
+		this.objects = new LinkedList<>();
+		for(TileObject tileObject : tile.getObjects()){
+			TileObject newTileObject = new EmptyTile((EmptyTile)tileObject);
+			if(tileObject instanceof Chest){
+				newTileObject = new Chest((Chest)tileObject);
+			}
+			else if(tileObject instanceof EmptyTile){
+				newTileObject = new EmptyTile((EmptyTile)tileObject);
+			}
+			else if(tileObject instanceof NPC){
+				newTileObject = new NPC((NPC)tileObject);
+			}
+			else if(tileObject instanceof Obstacle){
+				newTileObject = new Obstacle((Obstacle)tileObject);
+			}
+			else if(tileObject instanceof Player){
+				continue; //skip, creating new player object and setting player tile handled in EndlessMap
+			}
+			else if(tileObject instanceof Shrine){
+				newTileObject = new Shrine((Shrine)tileObject);
+			}
+			else if(tileObject instanceof Trap){
+				newTileObject = new Trap((Trap)tileObject);
+			}
+			else if (tileObject instanceof Merchant){
+				newTileObject = new Merchant((Merchant)tileObject);
+			}
+			newTileObject.setTile(this);
+			this.objects.add(newTileObject);
+		}
+		this.adjacent = null; //will be set in room constructor
 	}
 
 	public int getRow() {
