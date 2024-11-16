@@ -141,6 +141,39 @@ public class RoomGenerator {
         return room;
     }
 
+    public static Room populateRoom(Room room) {
+
+        int[] x = permutation(room.getRows());
+        int[] y = permutation(room.getColumns());
+        int max = (x.length > y.length) ? y.length : x.length;
+
+        int[] objects = permutation(32);
+
+        for (int i = 0;i < max;i++) {
+            Tile tile = room.getTile(x[i],y[i]);
+            int place = objects[i] % 5;
+            TileObject object = null;
+
+            if (objects[i] == 31) {
+                object = (TileObject)generateMerchant();
+            } else if (objects[i] == 30) {
+                object = (TileObject)generateShrine();
+            } else if (place == 0) {
+                object = (TileObject)generateObstacle();
+            } else if (place == 1 || place == 4) {
+                object = (TileObject)generateNPC();
+            } else if (place == 2) {
+                object = (TileObject)generateTrap();
+            } else if (place == 3) {
+                object = (TileObject)generateChest();
+            }
+            tile.addObject(object);
+            object.setTile(tile);
+        }
+
+        return room;
+    }
+
     private static Compass getCompass() {
         return Compass.values()[new Random().nextInt(1,5)];
     }
