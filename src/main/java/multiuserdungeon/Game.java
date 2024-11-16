@@ -221,6 +221,13 @@ public class Game {
 		return inventoryString.toString();
 	}
 
+	public String handleViewBag(int bagPos) {
+		String bagString = player.getInventory().viewBag(bagPos);
+
+		if (bagString != null) return bagString;
+		return "Invalid bag specified, please try again.";
+	}
+
 	public boolean handleEquipItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
 		if (item == null) return false;

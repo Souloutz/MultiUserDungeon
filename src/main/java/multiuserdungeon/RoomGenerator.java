@@ -1,5 +1,7 @@
 package multiuserdungeon;
 
+import multiuserdungeon.clock.CreatureBuff;
+import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.*;
 import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.Merchant;
@@ -9,10 +11,19 @@ import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
 
 import java.util.Random;
+
+
 import java.util.HashMap;
+import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RoomGenerator {
+
+
 
     private static Random random = new Random();
 
@@ -74,52 +85,221 @@ public class RoomGenerator {
         for (int i = 0;i < max;i++) {
             Tile tile = room.getTile(y[i],x[i]);
             int place = objects[i] % 4;
+            TileObject object = null;
 
-            // was going to use switch case, but considering it needs to check
-            // both real and modular value, not possible
             if (objects[i] == 31) {
-                tile.addObject((TileObject)generateMerchant());
+                object = (TileObject)generateMerchant();
             } else if (objects[i] == 30) {
-                tile.addObject((TileObject)generateShrine());
+                object = (TileObject)generateShrine();
             } else if (place == 0) {
-                tile.addObject((TileObject)generateObstacle());
+                object = (TileObject)generateObstacle();
             } else if (place == 1) {
-                tile.addObject((TileObject)generateNPC());
+                object = (TileObject)generateNPC();
             } else if (place == 2) {
-                tile.addObject((TileObject)generateTrap());
+                object = (TileObject)generateTrap();
             } else if (place == 3) {
-                tile.addObject((TileObject)generateChest());
+                object = (TileObject)generateChest();
             }
-
+            tile.addObject(object);
+            object.setTile(tile);
         }
+
+        int maxc = new Random().nextInt(1,4);
+        List<Compass> ways = new ArrayList<>();
+        int count = 0;
+        while (true) {
+            Compass newc = getCompass();
+            if (ways.contains(newc) || newc == direction) {
+                continue;
+            }
+            if (count >= maxc) {
+                break;
+            }
+            ways.add(newc);
+            count++;
+        }
+
+        for (Compass c : ways) {
+            int nrow;
+            int ncol;
+            if(c == Compass.NORTH) {
+                nrow = 0;
+                ncol = random.nextInt(x.length);
+            } else if (c == Compass.EAST) {
+                nrow = random.nextInt(y.length);
+                ncol = x.length - 1;
+            } else if (c == Compass.SOUTH) {
+                nrow = y.length - 1;
+                ncol = random.nextInt(x.length);
+            } else {
+                nrow = random.nextInt(y.length);
+                ncol = 0;
+            }
+            
+            room.addConnection(nrow,ncol,null);
+        }
+
+        return room;
+    }
+
+    private static Compass getCompass() {
+        return Compass.values()[new Random().nextInt(1,5)];
     }
 
     private static String grabDescription(){
-        //TODO{have chatgpt generate like 50 random descriptions of dungeon rooms and return one}
+
+        try (BufferedReader br = new BufferedReader(new FileReader("data/room/descriptions.csv"))) {
+            String line;
+            int cindex = 0;
+            int rindex = new Random().nextInt(1,100);
+
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                if (cindex == rindex) {
+                    break;
+                }
+                cindex++;
+            }
+            return line;
+        } catch (IOException e) {
+            return "error getting a cool description";
+        }
     }
 
     private static Merchant generateMerchant(){
-        //TODO{Generate merchant, use Itemgenerator for the items}
+        try (BufferedReader br = new BufferedReader(new FileReader("data/room/merchants.csv"))) {
+            String line;
+            int cindex = 0;
+            int rindex = new Random().nextInt(1,16);
+
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                if (cindex == rindex){
+                    break;
+                }
+                cindex++;
+            }
+
+            int count = 3;
+            List<InventoryElement> items = new ArrayList<>();
+            Items collections = Items.getInstance();
+            for (int i = 0; i < count;i++) {
+                items.add(collections.getItem(new Random().nextInt(1,100)));
+            }
+
+            return new Merchant(line,items);
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static Chest generateChest() {
-        //TODO{Generate chest, user Itemgenerator}
+        try (BufferedReader br = new BufferedReader(new FileReader("data/room/chests.csv"))) {
+            String line;
+            int cindex = 0;
+            int rindex = new Random().nextInt(1,16);
+
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                if (cindex == rindex){
+                    break;
+                }
+                cindex++;
+            }
+
+            int count = new Random().nextInt(2,10);
+            List<InventoryElement> items = new ArrayList<>();
+            Items collections = Items.getInstance();
+            for (int i = 0; i < count;i++) {
+                items.add(collections.getItem(new Random().nextInt(1,100)));
+            }
+
+            return new Chest(line,items);
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static Obstacle generateObstacle() {
-        //TODO{ Similar to grab description, select set of predetermined values}
+        try (BufferedReader br = new BufferedReader(new FileReader("data/room/obstacles.csv"))) {
+            String line;
+            int cindex = 0;
+            int rindex = new Random().nextInt(1,101);
+
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                if (cindex == rindex){
+                    break;
+                }
+                cindex++;
+            }
+
+            return new Obstacle(line);
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static NPC generateNPC() {
-        //TODO{Dynamically generate NPCs}
+        try (BufferedReader br = new BufferedReader(new FileReader("data/room/npcs.csv"))) {
+            String line;
+            int cindex = 0;
+            int rindex = new Random().nextInt(1,67);
+
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                if (cindex == rindex){
+                    break;
+                }
+                cindex++;
+            }
+            String[] tokens = line.split(",");
+            CreatureBuff cb;
+            if (new Random().nextBoolean()) {
+                cb = CreatureBuff.DIURNAL;
+            } else {
+                cb = CreatureBuff.NOCTURNAL;
+            }
+
+            return new NPC(tokens[0],tokens[1],cb);
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static Trap generateTrap() {
-        //TODO{generate traps}
+        return new Trap(new Random().nextInt(5,50));
     }
 
     private static Shrine generateShrine() {
-        //TODO{Pretty sure all shhrines are the same}
+        try (BufferedReader br = new BufferedReader(new FileReader("data/room/shrines.csv"))) {
+            String line;
+            int cindex = 0;
+            int rindex = new Random().nextInt(1,16);
+
+            br.readLine();
+
+            while ((line = br.readLine()) != null) {
+                if (cindex == rindex){
+                    break;
+                }
+                cindex++;
+            }
+
+            return new Shrine(line);
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

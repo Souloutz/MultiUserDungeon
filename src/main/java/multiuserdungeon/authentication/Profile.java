@@ -2,7 +2,10 @@ package multiuserdungeon.authentication;
 
 import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
+
+import multiuserdungeon.Game;
 import multiuserdungeon.persistence.GameStatsCSVConverter;
+import multiuserdungeon.persistence.PersistenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,16 +50,18 @@ public class Profile extends User {
     }
 
     public void handleNewGame(String mapType, String filePath) {
-        //TODO: start a new game of either endless or premade maps
-
+        // TODO: start a new game of either endless or premade maps
+        Game game = PersistenceManager.getInstance().loadGame(filePath);
     }
 
     public void handleResumeGame(String filename) {
-        //TODO: load a saved game via whatever format
+        // TODO: load a saved game via whatever format
+        Game game = PersistenceManager.getInstance().loadGame(filename);
     }
 
     public boolean handleJoinGame(String filename) {
-        // TODO persistence loadMap
+        // TODO create a new room connected via unexplored exit and use that as player starting room
+        Game game = PersistenceManager.getInstance().loadGame(filename);
         return false;
     }
 }

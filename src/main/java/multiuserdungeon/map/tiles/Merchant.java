@@ -20,7 +20,7 @@ public class Merchant implements TileObject{
         this.name = name;
         this.store = new HashMap<>();
         for (InventoryElement item: contents) {
-            store.put(item,item.getGoldValue()*2);
+            store.put(item,item.getGoldValue());
             if (store.size() > 3) {
                 break;
             }
@@ -68,6 +68,5 @@ public class Merchant implements TileObject{
     }
     public boolean isOpen() {
         return Game.getInstance().getMap().getPlayerRoom().isSafe() && Game.getInstance().getCurrentTime() instanceof Day;
-        // isSafe() will arrive with the Shrine subsystem.
     }
 }
