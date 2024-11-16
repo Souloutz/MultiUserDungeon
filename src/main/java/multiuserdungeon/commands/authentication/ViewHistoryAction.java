@@ -1,4 +1,4 @@
-package multiuserdungeon.commands.profile;
+package multiuserdungeon.commands.authentication;
 
 import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.authentication.User;

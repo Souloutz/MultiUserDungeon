@@ -1,0 +1,34 @@
+{
+	"type": "endless",
+	"map": {
+		"players": [],
+		"rooms": [
+			{
+				"rows": 2,
+				"cols": 4,
+				"description": "Starting Room",
+				"tiles": [
+					[
+						[],
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[],
+						[]
+					]
+				]
+			}
+		],
+		"connections": [],
+		"playerRooms": [],
+		"goalRoom": -1
+	},
+	"clock": {
+		"turnCounter": 0,
+		"time": "day"
+	}
+}

@@ -41,8 +41,6 @@ public class Authenticator {
     }
 
     public boolean register(String username, String password, String description) {
-        if(loggedIn()) return false;
-
         Profile newProfile = new Profile(username, password, description);
         PersistenceManager.getInstance().saveProfile(newProfile);
         setUser(newProfile);
@@ -50,9 +48,8 @@ public class Authenticator {
     }
 
     public boolean handleChangePassword(String curPassword, String newPassword, String confirmPassword) {
-        if (!loggedIn()) return false;
-        if (curPassword.equals(newPassword)) return false;
-        if (!newPassword.equals(confirmPassword)) return false;
+        if(curPassword.equals(newPassword)) return false;
+        if(!newPassword.equals(confirmPassword)) return false;
         
         ((Profile) this.currentUser).changePassword(curPassword, newPassword);
         PersistenceManager.getInstance().saveProfile((Profile) this.currentUser);
@@ -60,7 +57,6 @@ public class Authenticator {
     }
 
     public boolean logout() {
-        if(!loggedIn()) return false;
         setUser(null);
         return true;
     }

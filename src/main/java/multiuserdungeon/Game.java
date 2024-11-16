@@ -2,7 +2,6 @@ package multiuserdungeon;
 
 import java.util.*;
 
-import multiuserdungeon.authentication.User;
 import multiuserdungeon.clock.*;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.inventory.elements.*;
@@ -21,23 +20,27 @@ public class Game {
 	private Clock clock;
 	private Shrine shrine;
 	private boolean quit;
-	private boolean browsing; // true or false
+	private boolean browsing;
 
-	public Game(Player player, GameMap map, User user) {
+	public Game(GameMap map, boolean browsing) {
 		instance = this;
-		this.player = player;
 		this.map = map;
 		this.clock = new Clock();
 		this.shrine = null;
 		this.quit = false;
+		this.browsing = browsing;
+	}
+
+	public static Game getInstance() {
+		return instance;
 	}
 
 	public void setMap(GameMap map) {
 		this.map = map;
 	}
 
-	public static Game getInstance() {
-		return instance;
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public Player getPlayer() {
@@ -50,6 +53,10 @@ public class Game {
 
 	public Time getCurrentTime() {
 		return this.clock.getCurrentTime();
+	}
+
+	public boolean isBrowsing() {
+		return this.browsing;
 	}
 
 	public boolean handleLoadMap(String uri) {
@@ -95,8 +102,7 @@ public class Game {
 	}
 
 	public boolean handleExitRoom(Compass direction) {
-		if (this.map instanceof EndlessMap) {
-			EndlessMap o = (EndlessMap)this.map;
+		if (this.map instanceof EndlessMap o) {
 			o.handleExitRoom(direction);
 		}
 		if(this.map.getPlayerRoom().handleExitRoom(direction)) {
@@ -124,10 +130,10 @@ public class Game {
 
 	public boolean handlePray() {
 		Shrine shrine = this.player.getTile().getShrine();
-		if (shrine == null) {
+		if(shrine == null) {
 			return false;
 		}
-		if(map.getPlayerRoom().isSafe()){
+		if(this.map.getPlayerRoom().isSafe()){
 			this.shrine = shrine;
 			shrine.storeSnapshot();
 			endTurn();

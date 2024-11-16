@@ -17,15 +17,13 @@ public class RegisterAction implements Action<Boolean> {
 
     @Override
     public Boolean execute() {
-        if (canExecute())
-            return this.receiver.register(username, password, password);
-
-        return false;
+	    if(!canExecute()) return false;
+	    return this.receiver.register(username, password, password);
     }
 
     @Override
     public boolean canExecute() {
-        // checking handled in authenticator class
-        return true;
+        return !this.receiver.loggedIn();
     }
+
 }

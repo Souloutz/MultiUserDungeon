@@ -17,15 +17,13 @@ public class LoginAction implements Action<Boolean> {
 
     @Override
     public Boolean execute() {
-        if (canExecute())
-            return this.receiver.login(username, password);
-
-        return false;
+	    if (!canExecute()) return false;
+	    return this.receiver.login(username, password);
     }
 
     @Override
     public boolean canExecute() {
-        // checking handled in authenticator class
-        return true;
+        return !this.receiver.loggedIn();
     }
+
 }

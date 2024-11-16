@@ -19,15 +19,13 @@ public class ChangePasswordAction implements Action<Boolean> {
 
     @Override
     public Boolean execute() {
-        if (canExecute())
-           return this.receiver.handleChangePassword(curPassword, newPassword, confirmPassword);
-
-        return false;
+	    if (!canExecute()) return false;
+	    return this.receiver.handleChangePassword(this.curPassword, this.newPassword, this.confirmPassword);
     }
 
     @Override
     public boolean canExecute() {
-        // checking handled in authenticator class
-        return true;
-    }  
+        return this.receiver.loggedIn();
+    }
+
 }

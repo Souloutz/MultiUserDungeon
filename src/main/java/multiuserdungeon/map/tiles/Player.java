@@ -23,19 +23,17 @@ public class Player extends Character {
 		this.gold = 0;
 	}
 
-	//copy constructor
-	public Player(Player player){
+	public Player(Player player) {
 		super(player.getName(), player.getDescription(), player.getMaxHealth(), player.getAttack(), player.getDefense());
 		this.inventory = new Inventory(player.getInventory());
-		this.weapon=(player.getWeapon());
-		this.armor=(player.getArmor());
+		this.weapon= (player.getWeapon());
+		this.armor= (player.getArmor());
 		this.buffs = new HashMap<>();
 		this.gold = player.gold;
 		for(Buff buff : player.buffs.keySet()){
 			this.useBuff(buff);
 		}
 		this.setHealth(player.getHealth());
-
 	}
 
 	@Override

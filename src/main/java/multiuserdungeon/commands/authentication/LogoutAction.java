@@ -13,15 +13,13 @@ public class LogoutAction implements Action<Boolean> {
 
     @Override
     public Boolean execute() {
-        if (canExecute())
-            return this.receiver.logout();
-
-        return false;
+	    if(!canExecute()) return false;
+	    return this.receiver.logout();
     }
 
     @Override
     public boolean canExecute() {
-        // checking handled in authenticator class
-        return true;
-    }    
+        return this.receiver.loggedIn();
+    }
+
 }
