@@ -61,17 +61,17 @@ public class RoomGenerator {
         int row;
         int col;
         if(direction == Compass.NORTH) {
-            row = 0;
+            row = y.length - 1;
             col = random.nextInt(x.length);
         } else if (direction == Compass.EAST) {
             row = random.nextInt(y.length);
-            col = x.length - 1;
+            col = 0;
         } else if (direction == Compass.SOUTH) {
-            row = y.length - 1;
+            row = 0;
             col = random.nextInt(x.length);
         } else {
             row = random.nextInt(y.length);
-            col = 0;
+            col =  x.length - 1;
         }
         room.addConnection(row,col,attached);
 
@@ -147,17 +147,15 @@ public class RoomGenerator {
         int[] y = permutation(room.getColumns());
         int max = (x.length > y.length) ? y.length : x.length;
 
-        int[] objects = permutation(32);
+        int[] objects = permutation(31);
 
         for (int i = 0;i < max;i++) {
             Tile tile = room.getTile(x[i],y[i]);
             int place = objects[i] % 5;
             TileObject object = null;
 
-            if (objects[i] == 31) {
+            if (objects[i] == 30) {
                 object = (TileObject)generateMerchant();
-            } else if (objects[i] == 30) {
-                object = (TileObject)generateShrine();
             } else if (place == 0) {
                 object = (TileObject)generateObstacle();
             } else if (place == 1 || place == 4) {
@@ -175,7 +173,7 @@ public class RoomGenerator {
     }
 
     private static Compass getCompass() {
-        return Compass.values()[new Random().nextInt(1,5)];
+        return Compass.values()[(new Random().nextInt(0,4)) *2];
     }
 
     private static String grabDescription(){
@@ -331,6 +329,13 @@ public class RoomGenerator {
 
         } catch (IOException e) {
             return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        while (true) {
+            Room room = new Room(5,5,"sigma");
+            System.out.println(populateRoom(room));
         }
     }
 
