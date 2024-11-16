@@ -1,5 +1,6 @@
 package multiuserdungeon.map.tiles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import multiuserdungeon.inventory.InventoryElement;
@@ -15,6 +16,16 @@ public class Chest implements TileObject {
 	public Chest(String name, List<InventoryElement> contents) {
 		this.name = name;
 		this.contents = contents;
+		this.tile = null;
+	}
+
+	//copy constructor
+	public Chest(Chest chest){
+		this.name = chest.getName();
+		this.contents = new ArrayList<InventoryElement>();
+		for (InventoryElement item : chest.getContents()){
+			this.contents.add(item);
+		}
 		this.tile = null;
 	}
 

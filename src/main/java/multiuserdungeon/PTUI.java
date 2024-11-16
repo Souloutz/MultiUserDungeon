@@ -1,19 +1,19 @@
 package multiuserdungeon;
 
-import multiuserdungeon.commands.AttackAction;
-import multiuserdungeon.commands.QuitGameAction;
+import multiuserdungeon.commands.player.AttackAction;
+import multiuserdungeon.commands.game.QuitGameAction;
 import multiuserdungeon.commands.inventory.DestroyItemAction;
 import multiuserdungeon.commands.inventory.EquipItemAction;
-import multiuserdungeon.commands.inventory.PickupItemAction;
 import multiuserdungeon.commands.inventory.SwapBagAction;
 import multiuserdungeon.commands.inventory.UnequipItemAction;
 import multiuserdungeon.commands.inventory.UseItemAction;
-import multiuserdungeon.commands.map.CloseChestAction;
-import multiuserdungeon.commands.map.DisarmTrapAction;
-import multiuserdungeon.commands.map.LoadMapAction;
-import multiuserdungeon.commands.map.OpenChestAction;
-import multiuserdungeon.commands.movement.ExitRoomAction;
-import multiuserdungeon.commands.movement.MoveAction;
+import multiuserdungeon.commands.player.CloseAction;
+import multiuserdungeon.commands.player.DisarmTrapAction;
+import multiuserdungeon.commands.game.LoadMapAction;
+import multiuserdungeon.commands.player.OpenAction;
+import multiuserdungeon.commands.player.ExitRoomAction;
+import multiuserdungeon.commands.player.MoveAction;
+import multiuserdungeon.commands.player.PickupItemAction;
 import multiuserdungeon.inventory.InventoryElement;
 import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.tiles.Player;
@@ -85,6 +85,7 @@ public class PTUI {
 
 	public static void printAllCommands() {
 		// TODO: Cut down to only contextual relevant commands
+		// This will  be done by checking canExecute of each command
 		String directions = String.join(", ", Arrays.stream(Compass.values()).map(Compass::name).toArray(String[]::new));
 		printBlock("ALL COMMANDS\n\n\tDirections: " + directions + "\n\n" +
 				"\tinventory -=- Views all of your bags and inventory stats.\n" +
@@ -177,7 +178,7 @@ public class PTUI {
 				printBlock("Successfully loaded the map.");
 			}
 			case "open" -> {
-				List<InventoryElement> contents = new OpenChestAction(game).execute();
+				List<InventoryElement> contents = new OpenAction(game).execute();
 				if(contents != null) {
 					StringBuilder builder = new StringBuilder("Contents (" + contents.size() + " items)");
 					for(int i = 0; i < contents.size(); i++) {
@@ -203,7 +204,7 @@ public class PTUI {
 					printBlock("You do not currently have a chest open, please try again.");
 					break;
 				}
-				new CloseChestAction(game).execute();
+				new CloseAction(game).execute();
 				printBlock("Successfully closed the chest.");
 				inChest = false;
 			}

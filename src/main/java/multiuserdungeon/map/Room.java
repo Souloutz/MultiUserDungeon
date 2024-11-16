@@ -1,9 +1,11 @@
 package multiuserdungeon.map;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import multiuserdungeon.Game;
+import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Player;
 
 public class Room {
@@ -40,6 +42,36 @@ public class Room {
 					adjacent.put(compass, adjacentTile);
 				}
 				getTile(row, col).setAdjacent(adjacent);
+			}
+		}
+	}
+
+	//copy constructor
+	public Room(Room room){
+		this.rows = room.getRows();
+		this.columns = room.getColumns();
+		this.doorways = new HashMap<>();
+		this.connections = new HashMap<>();
+		this.layout = new Tile[this.rows][this.columns];
+		this.playerTile = null;
+
+		this.description = room.getDescription();
+
+		for(int row = 0; row < this.rows; row++){
+			for(int col = 0; col < this.columns; col++){
+				this.layout[row][col] = new Tile(room.getTile(row, col));
+			}
+		}
+		
+		for(int row = 0; row < this.rows; row++) {
+			for(int col = 0; col < this.columns; col++) {
+				Map<Compass, Tile> adjacent = new HashMap<>();
+				for(Compass compass : Compass.values()) {
+					Tile adjacentTile = this.getTile(row + compass.getRowOffset(), col + compass.getColOffset());
+					if(adjacentTile == null) continue;
+					adjacent.put(compass, adjacentTile);
+				}
+				this.getTile(row, col).setAdjacent(adjacent);
 			}
 		}
 	}
@@ -94,6 +126,20 @@ public class Room {
 
 	public void setPlayerTile(Tile playerTile) {
 		this.playerTile = playerTile;
+	}
+
+	public boolean isSafe(){
+		for(int i = 0; i < layout.length; i++){
+			for(int j = 0; j < layout[j].length; j++){
+				List<TileObject> tileobjects = layout[i][j].getObjects();
+				for(TileObject tileobject : tileobjects){
+					if(tileobject instanceof NPC){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	public boolean handleExitRoom(Compass direction) {
@@ -167,6 +213,10 @@ public class Room {
 			builder.append("\n");
 		}
 		return builder.toString();
+	}
+
+	public Map<Tile,Room> getConnections () {
+		return this.connections;
 	}
 
 }

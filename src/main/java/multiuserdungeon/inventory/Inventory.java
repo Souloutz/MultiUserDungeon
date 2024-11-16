@@ -19,6 +19,20 @@ public class Inventory implements InventoryElement {
 		addBag(new Bag("Starter Bag", "Default bag you start with", 0, 6));
 	}
 
+	//copy constructor
+	public Inventory(Inventory inventory){
+		this.name = inventory.getName();
+		this.description = inventory.getDescription();
+		this.bags = new ArrayList<>();
+		for(Bag bag: inventory.getBags()){
+			Bag newBag = new Bag(bag.getName(), bag.getDescription(), bag.getGoldValue(), bag.getCapacity());
+			for(InventoryElement item : bag.items()){
+				newBag.addItem(item);
+			}
+			this.addBag(newBag);
+		}
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;
@@ -45,6 +59,10 @@ public class Inventory implements InventoryElement {
 			totalOccupancy += bag.getOccupancy();
 		}
 		return totalOccupancy;
+	}
+
+	public List<Bag> getBags() {
+		return bags;
 	}
 
 	@Override

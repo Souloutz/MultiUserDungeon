@@ -38,6 +38,14 @@ public class Clock {
 		this.time = time;
 	}
 
+	public int getTurnCounter() {
+		return turnCounter;
+	}
+	
+	public void setTurnCounter(int turnCounter) {
+		this.turnCounter = turnCounter;
+	}
+
 	public boolean isDay() {
 		return this.time.isDay();
 	}

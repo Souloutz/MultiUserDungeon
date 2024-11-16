@@ -17,6 +17,28 @@ public class Food implements InventoryElement {
 		this.health = health;
 	}
 
+	//copy constructor
+	public Food(Food food){
+		this.name = food.name;
+		this.description = food.description;
+		this.goldValue = food.goldValue;
+		this.health = food.health;
+	}
+
+	@Override
+	public boolean equals (Object o) {
+		if (o instanceof Food) {
+			Food f = (Food)o;
+			if (f.name.equals(this.name) &&
+			f.description.equals(this.description) &&
+			f.goldValue == this.goldValue &&
+			f.health == this.health) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public String getName() {
 		return this.name;

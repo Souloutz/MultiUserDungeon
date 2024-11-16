@@ -17,6 +17,28 @@ public class Armor implements InventoryElement {
         this.defense = defense;
 	}
 
+	//copy constructor
+	public Armor(Armor armor){
+		this.name = armor.name;
+        this.description = armor.description;
+        this.goldValue = armor.goldValue;
+        this.defense = armor.defense;
+	}
+
+	@Override
+	public boolean equals (Object o) {
+		if (o instanceof Armor) {
+			Armor a = (Armor)o;
+			if (a.name.equals(this.name) &&
+			a.description.equals(this.description) && 
+			a.goldValue == this.goldValue &&
+			a.defense == this.defense) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public String getName() {
 		return this.name;

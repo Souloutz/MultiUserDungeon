@@ -1,0 +1,68 @@
+{
+	"type": "premade",
+	"map": {
+		"players": [],
+		"rooms": [
+			{
+				"rows": 2,
+				"cols": 4,
+				"description": "Starting room",
+				"tiles": [
+					[
+						[],
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[],
+						[]
+					]
+				]
+			},
+			{
+				"rows": 4,
+				"cols": 3,
+				"description": "Goal Room",
+				"tiles": [
+					[
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[]
+					]
+				]
+			}
+		],
+		"connections": [
+			{
+				"fromRoom": 0,
+				"toRoom": 1,
+				"fromTile": "0,2",
+				"toTile": "3,1"
+			}
+		],
+		"playerRooms": [],
+		"goalRoom": 1
+	},
+	"clock": {
+		"turnCounter": 0,
+		"time": "day"
+	}
+}

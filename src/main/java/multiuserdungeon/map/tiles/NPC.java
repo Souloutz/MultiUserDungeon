@@ -2,7 +2,6 @@ package multiuserdungeon.map.tiles;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.CreatureBuff;
-
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NPC extends Character {
@@ -12,6 +11,13 @@ public class NPC extends Character {
 	public NPC(String name, String description, CreatureBuff creatureBuff) {
 		super(name, description, ThreadLocalRandom.current().nextInt(50, 151), ThreadLocalRandom.current().nextInt(5, 16), ThreadLocalRandom.current().nextInt(0, 11));
 		this.creatureBuff = creatureBuff;
+	}
+
+	//copy constructor
+	public NPC(NPC npc){
+		super(npc.getName(), npc.getDescription(), npc.getMaxHealth(), npc.getAttack(), npc.getDefense());
+		this.creatureBuff = npc.getCreatureBuff();
+		this.setHealth(npc.getHealth());
 	}
 
 	@Override
@@ -31,6 +37,10 @@ public class NPC extends Character {
 	@Override
 	public char getASCII() {
 		return 'N';
+	}
+
+	public CreatureBuff getCreatureBuff() {
+		return creatureBuff;
 	}
 
 }
