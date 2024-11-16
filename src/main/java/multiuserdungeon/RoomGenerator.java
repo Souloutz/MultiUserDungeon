@@ -57,7 +57,7 @@ public class RoomGenerator {
         int[] y = permutation(random.nextInt(7) + 4);
         int max = (x.length > y.length) ? y.length : x.length;
 
-        Room room = new Room(x.length,y.length,grabDescription());
+        Room room = new Room(y.length,x.length,grabDescription());
         int row;
         int col;
         if(direction == Compass.NORTH) {
@@ -82,7 +82,7 @@ public class RoomGenerator {
         int[] objects = permutation(32);
 
         for (int i = 0;i < max;i++) {
-            Tile tile = room.getTile(x[i],y[i]);
+            Tile tile = room.getTile(y[i],x[i]);
             int place = objects[i] % 5;
             TileObject object = null;
 
@@ -107,12 +107,12 @@ public class RoomGenerator {
         List<Compass> ways = new ArrayList<>();
         int count = 0;
         while (true) {
-            Compass newc = getCompass();
-            if (ways.contains(newc) || newc == direction) {
-                continue;
-            }
             if (count >= maxc) {
                 break;
+            }
+            Compass newc = getCompass();
+            if (ways.contains(newc) || newc == direction.getOpposite()) {
+                continue;
             }
             ways.add(newc);
             count++;
@@ -329,13 +329,6 @@ public class RoomGenerator {
 
         } catch (IOException e) {
             return null;
-        }
-    }
-
-    public static void main(String[] args) {
-        while (true) {
-            Room room = new Room(5,5,"sigma");
-            System.out.println(populateRoom(room));
         }
     }
 
