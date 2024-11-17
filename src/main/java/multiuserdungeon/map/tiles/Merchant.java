@@ -20,7 +20,7 @@ public class Merchant implements TileObject {
         this.tile = null;
     }
 
-    public Merchant(Merchant merchant){
+    public Merchant(Merchant merchant) {
         this.name = merchant.name;
         this.store = new ArrayList<>(merchant.store);
         this.tile = null;

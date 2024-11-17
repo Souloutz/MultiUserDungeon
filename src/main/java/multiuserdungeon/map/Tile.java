@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import multiuserdungeon.Game;
 import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
-import multiuserdungeon.map.tiles.shrine.Shrine;
 
 public class Tile {
 
@@ -24,27 +24,34 @@ public class Tile {
 		this.adjacent = null;
 	}
 
-	public Tile(Tile tile){
+	public Tile(Tile tile) {
 		this.row = tile.getRow();
 		this.col = tile.getCol();
 		this.objects = new LinkedList<>();
 		for(TileObject tileObject : tile.getObjects()) {
 			TileObject newTileObject = null;
-			if(tileObject instanceof Chest){
-				newTileObject = new Chest((Chest)tileObject);
-			} else if(tileObject instanceof NPC){
-				newTileObject = new NPC((NPC)tileObject);
-			} else if(tileObject instanceof Obstacle){
-				newTileObject = new Obstacle((Obstacle)tileObject);
-			} else if(tileObject instanceof Player){
-				continue; //skip, creating new player object and setting player tile handled in EndlessMap
-			} else if(tileObject instanceof Shrine){
-				newTileObject = new Shrine((Shrine)tileObject);
-			} else if(tileObject instanceof Trap){
-				newTileObject = new Trap((Trap)tileObject);
-			} else if (tileObject instanceof Merchant){
-				newTileObject = new Merchant((Merchant)tileObject);
+
+			if(tileObject instanceof Corpse corpse) {
+				newTileObject = new Corpse(corpse);
+			} else if(tileObject instanceof Chest chest) {
+				newTileObject = new Chest(chest);
+			} else if(tileObject instanceof NPC npc) {
+				newTileObject = new NPC(npc);
+			} else if(tileObject instanceof Obstacle obstacle) {
+				newTileObject = new Obstacle(obstacle);
+			} else if(tileObject instanceof Player player) {
+				if(player.getName().equals(Game.getInstance().getPlayer().getName())) {
+					continue;
+				}
+				newTileObject = new Player(player);
+			} else if(tileObject instanceof Shrine shrine) {
+				newTileObject = new Shrine(shrine);
+			} else if(tileObject instanceof Trap trap) {
+				newTileObject = new Trap(trap);
+			} else if(tileObject instanceof Merchant merchant) {
+				newTileObject = new Merchant(merchant);
 			}
+
 			if(newTileObject != null) {
 				newTileObject.setTile(this);
 				this.objects.add(newTileObject);

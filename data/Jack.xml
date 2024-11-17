@@ -2,34 +2,5 @@
   <username>Jack</username>
   <description>abc</description>
   <password>abc</password>
-  <stats>
-    <stats>
-      <gamesPlayed>1</gamesPlayed>
-      <livesLost>0</livesLost>
-      <monstersSlain>0</monstersSlain>
-      <goldEarned>0</goldEarned>
-      <itemsFound>0</itemsFound>
-    </stats>
-    <stats>
-      <gamesPlayed>1</gamesPlayed>
-      <livesLost>0</livesLost>
-      <monstersSlain>1</monstersSlain>
-      <goldEarned>0</goldEarned>
-      <itemsFound>4</itemsFound>
-    </stats>
-    <stats>
-      <gamesPlayed>0</gamesPlayed>
-      <livesLost>0</livesLost>
-      <monstersSlain>0</monstersSlain>
-      <goldEarned>0</goldEarned>
-      <itemsFound>0</itemsFound>
-    </stats>
-    <stats>
-      <gamesPlayed>0</gamesPlayed>
-      <livesLost>0</livesLost>
-      <monstersSlain>0</monstersSlain>
-      <goldEarned>0</goldEarned>
-      <itemsFound>0</itemsFound>
-    </stats>
-  </stats>
+  <stats/>
 </Profile>

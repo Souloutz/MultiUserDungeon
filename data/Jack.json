@@ -1,35 +1,6 @@
 {
   "password": "abc",
-  "stats": [
-    {
-      "gamesPlayed": 1,
-      "livesLost": 0,
-      "monstersSlain": 0,
-      "goldEarned": 0,
-      "itemsFound": 0
-    },
-    {
-      "gamesPlayed": 1,
-      "livesLost": 0,
-      "monstersSlain": 1,
-      "goldEarned": 0,
-      "itemsFound": 4
-    },
-    {
-      "gamesPlayed": 0,
-      "livesLost": 0,
-      "monstersSlain": 0,
-      "goldEarned": 0,
-      "itemsFound": 0
-    },
-    {
-      "gamesPlayed": 0,
-      "livesLost": 0,
-      "monstersSlain": 0,
-      "goldEarned": 0,
-      "itemsFound": 0
-    }
-  ],
+  "stats": [],
   "username": "Jack",
   "description": "abc"
 }

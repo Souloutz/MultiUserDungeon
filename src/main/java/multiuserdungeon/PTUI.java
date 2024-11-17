@@ -99,6 +99,7 @@ public class PTUI {
 			try {
 				processGameCommand();
 			} catch(IndexOutOfBoundsException | IllegalArgumentException ignored) {
+				ignored.printStackTrace();
 				printBlock("Unable to parse command arguments, please try again.");
 			}
 		}
@@ -141,7 +142,7 @@ public class PTUI {
 				"\tsell <direction> <bag pos> <item pos> -=- Sells an item to a nearby merchant.\n" +
 				"\tclose -=- Closes the chest or merchant you are currently interacting with.\n" +
 				"\tdisarm <direction> -=- Attempts to disarm a detected trap in the specified direction.\n" +
-				"\tpray <direction> -=- Prays at a nearby shrine if the room is safe.\n" +
+				"\tpray -=- Prays at the current shrine if the room is safe.\n" +
 				"\tmove <direction> -=- Moves in the specified direction within the room.\n" +
 				"\tattack <direction> -=- Attacks a nearby creature.\n" +
 				"\texit <direction> -=- Exits the room with the given direction.\n" +
@@ -364,7 +365,7 @@ public class PTUI {
 				if(result) {
 					printBlock("You feel a snapshot of the world around you being captured.");
 				} else {
-					printBlock("You are atop a shrine, or the room is not yet safe to pray here.");
+					printBlock("You are not atop a shrine, or the room is not yet safe to pray here.");
 				}
 			}
 			case "move" -> {

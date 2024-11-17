@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class PremadeMap implements GameMap {
 
-	private final List<Room> rooms;
 	private final List<Player> players;
+	private final List<Room> rooms;
 	private final Map<Integer, Integer> playerRooms;
 	private final Map<Integer, Integer> playerStartRooms;
 	private final int goalRoom;
@@ -22,15 +22,6 @@ public class PremadeMap implements GameMap {
 		this.playerRooms = playerRooms;
 		this.playerStartRooms = playerStartRooms;
 		this.goalRoom = goalRoom;
-	}
-
-	public PremadeMap(PremadeMap oldMap) {
-		// TODO: Refactor copy constructor, should not store currentPlayer at all
-		this.rooms = new ArrayList<>();
-		this.players = new ArrayList<>();
-		this.playerRooms = new HashMap<>();
-		this.playerStartRooms = new HashMap<>();
-		this.goalRoom = oldMap.goalRoom;
 	}
 
 	@Override

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class EndlessMap implements GameMap {
 
-    private final List<Room> rooms;
     private final List<Player> players;
+    private final List<Room> rooms;
     private final Map<Integer, Integer> playerRooms;
     private final Map<Integer, Integer> playerStartRooms;
 
@@ -24,11 +24,29 @@ public class EndlessMap implements GameMap {
     }
 
     public EndlessMap(EndlessMap oldMap) {
-        // TODO: Refactor copy constructor, should not store currentPlayer at all
-        this.rooms = new ArrayList<>();
         this.players = new ArrayList<>();
-        this.playerRooms = new HashMap<>();
-        this.playerStartRooms = new HashMap<>();
+        for(Player player : oldMap.players) {
+            this.players.add(new Player(player));
+        }
+        this.rooms = new ArrayList<>();
+        for(Room room : oldMap.rooms) {
+            this.rooms.add(new Room(room));
+        }
+        for(Room oldRoom : oldMap.rooms) {
+            int oldRoomId = oldMap.rooms.indexOf(oldRoom);
+            Room fromRoom = this.rooms.get(oldRoomId);
+            for(Map.Entry<Tile, Room> connection : oldRoom.getConnections().entrySet()) {
+                int toRoomId = oldMap.rooms.indexOf(connection.getValue());
+                if(toRoomId == -1) {
+                    fromRoom.addConnection(connection.getKey().getRow(), connection.getKey().getCol(), null);
+                } else {
+                    Room toRoom = this.rooms.get(toRoomId);
+                    fromRoom.addConnection(connection.getKey().getRow(), connection.getKey().getCol(), toRoom);
+                }
+            }
+        }
+        this.playerRooms = new HashMap<>(oldMap.playerRooms);
+        this.playerStartRooms = new HashMap<>(oldMap.playerStartRooms);
     }
 
     @Override

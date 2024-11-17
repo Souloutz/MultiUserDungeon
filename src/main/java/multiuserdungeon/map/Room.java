@@ -68,11 +68,6 @@ public class Room {
 				this.getTile(row, col).setAdjacent(adjacent);
 			}
 		}
-
-		// Regenerate connections
-		for(Map.Entry<Tile, Room> entry : room.connections.entrySet()) {
-			addConnection(entry.getKey().getRow(), entry.getKey().getCol(), new Room(entry.getValue()));
-		}
 	}
 
 	public int getRows() {

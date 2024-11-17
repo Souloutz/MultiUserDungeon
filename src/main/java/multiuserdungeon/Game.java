@@ -22,7 +22,7 @@ public class Game {
 	private GameMap map;
 	private Clock clock;
 	private final boolean browsing;
-	private GameStats stats;
+	private final GameStats stats;
 	private Shrine shrine;
 
 	public Game(Player player, GameMap map, Clock clock, boolean browsing) {
@@ -256,24 +256,35 @@ public class Game {
 
 	public Snapshot createSnapshot() {
 		EndlessMap newMap = new EndlessMap((EndlessMap) this.map);
-		Player newPlayer = new Player(this.player);
+
+		Player newPlayer = null;
+		for(Player player : newMap.getPlayers()) {
+			if(player.getName().equals(this.player.getName())) {
+				newPlayer = player;
+			}
+		}
+		if(newPlayer == null) return null;
 
 		Clock newClock = new Clock();
 		Time newTime = this.clock.getCurrentTime().isDay() ? new Day(newClock) : new Night(newClock);
 		newClock.setCurrentTime(newTime);
 		newClock.setTurnCounter(this.clock.getTurn());
 
-		GameStats newStats = new GameStats();
-		newStats.addAll(this.stats);
-
-		return new Snapshot(newPlayer, newMap, newClock, newStats);
+		return new Snapshot(newPlayer, newMap, newClock);
 	}
 
-	public void restoreGame(Snapshot snapshot){
+	public void restoreGame(Snapshot snapshot) {
 		this.player = snapshot.getPlayer();
 		this.map = snapshot.getMap();
 		this.clock = snapshot.getClock();
-		this.stats = snapshot.getStats();
+
+		// Place our player at the shrine
+		this.player.setTile(this.shrine.getTile());
+		this.shrine.getTile().addObject(this.player);
+
+		System.out.println("Restored: " + this.player);
+		System.out.println("Restored: " + this.map.getPlayerRooms());
+		System.out.println("Restored: " + this.clock);
 	}
 
 	public void handleQuitGame() {
@@ -294,10 +305,13 @@ public class Game {
 		if(isDead()) {
 			if(!this.browsing) {
 				this.stats.addToGamesPlayed(1);
-				this.stats.addToLivesLost(1);
 				((Profile) Authenticator.getInstance().getUser()).addToStats(this.stats);
 			}
 			instance = null;
+			return;
+		} else if(this.player.getHealth() <= 0 && this.shrine != null) {
+			this.stats.addToLivesLost(1);
+			this.shrine.restoreGame();
 			return;
 		}
 
@@ -315,10 +329,6 @@ public class Game {
 
 	public boolean isDead() {
 		return this.player.getHealth() <= 0 && this.shrine == null;
-	}
-
-	public void respawn() {
-		// TODO: Restore via snapshot OR create corpse, call from handleAttack or something
 	}
 
 }

@@ -23,12 +23,9 @@ public class Inventory implements InventoryElement {
 		this.name = inventory.getName();
 		this.description = inventory.getDescription();
 		this.bags = new ArrayList<>();
-		for(Bag bag : inventory.getBags()){
-			Bag newBag = new Bag(bag.getName(), bag.getDescription(), bag.getGoldValue(), bag.getCapacity());
-			for(InventoryElement item : bag.items()){
-				newBag.addItem(item);
-			}
-			this.addBag(newBag);
+		for(Bag bag : inventory.getBags()) {
+			Bag newBag = new Bag(bag);
+			addBag(newBag);
 		}
 	}
 	

@@ -19,7 +19,7 @@ public class Chest implements TileObject {
 		this.tile = null;
 	}
 
-	public Chest(Chest chest){
+	public Chest(Chest chest) {
 		this.name = chest.getName();
 		this.contents = new ArrayList<>(chest.getContents());
 		this.tile = null;

@@ -20,7 +20,7 @@ public class NPC extends Character {
 		this.creatureBuff = creatureBuff;
 	}
 
-	public NPC(NPC npc){
+	public NPC(NPC npc) {
 		super(npc.getName(), npc.getDescription(), npc.getMaxHealth(), npc.getAttack(), npc.getDefense());
 		this.creatureBuff = npc.getCreatureBuff();
 		this.setHealth(npc.getHealth());
