@@ -94,15 +94,27 @@ public class RoomGenerator {
             if(c == Compass.NORTH) {
                 nrow = 0;
                 ncol = random.nextInt(x.length);
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    ncol = (ncol == 0) ? ncol++ : ncol--;
+                }
             } else if (c == Compass.EAST) {
                 nrow = random.nextInt(y.length);
                 ncol = x.length - 1;
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    nrow = (nrow == 0) ? nrow++ : nrow--;
+                }
             } else if (c == Compass.SOUTH) {
                 nrow = y.length - 1;
                 ncol = random.nextInt(x.length);
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    ncol = (ncol == 0) ? ncol++ : ncol--;
+                }
             } else {
                 nrow = random.nextInt(y.length);
                 ncol = 0;
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    nrow = (nrow == 0) ? nrow++ : nrow--;
+                }
             }
             
             room.addConnection(nrow,ncol,null);
@@ -152,6 +164,9 @@ public class RoomGenerator {
 
         for (int i = 0;i < max;i++) {
             Tile tile = room.getTile(x[i],y[i]);
+            if (room.getConnections().keySet().contains(tile) || tile.getObjects().size() > 0) {
+                continue;
+            }
             int place = objects[i] % 5;
             TileObject object = null;
 
