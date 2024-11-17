@@ -63,6 +63,7 @@ public class Game {
 		int damage = this.player.attack(direction);
 		if(damage != -1) endTurn();
 		return damage;
+		// TODO: Corpses?
 	}
 
 	public boolean handleMove(Compass direction) {
