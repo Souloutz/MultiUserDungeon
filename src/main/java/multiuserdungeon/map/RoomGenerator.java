@@ -22,6 +22,9 @@ import java.util.Arrays;
 
 public class RoomGenerator {
 
+    static int MIN_ROOM_SIZE = 4;
+    static int MAX_ROOM_SIZE = 10;
+
     private static long xorshift(long state) {
         state ^= state << 13;
         state ^= state >>> 7;
@@ -51,8 +54,8 @@ public class RoomGenerator {
 
         Random random = new Random();
 
-        int[] x = permutation(random.nextInt(7) + 4);
-        int[] y = permutation(random.nextInt(7) + 4);
+        int[] x = permutation(random.nextInt(MAX_ROOM_SIZE - 3) + MIN_ROOM_SIZE);
+        int[] y = permutation(random.nextInt(MAX_ROOM_SIZE - 3) + MIN_ROOM_SIZE);
         int max = (x.length > y.length) ? y.length : x.length;
 
         Room room = new Room(y.length,x.length,grabDescription());
@@ -60,15 +63,15 @@ public class RoomGenerator {
         int col;
         if(direction == Compass.NORTH) {
             row = y.length - 1;
-            col = random.nextInt(x.length);
+            col = random.nextInt(1,x.length-1);
         } else if (direction == Compass.EAST) {
-            row = random.nextInt(y.length);
+            row = random.nextInt(1,y.length-1);
             col = 0;
         } else if (direction == Compass.SOUTH) {
             row = 0;
-            col = random.nextInt(x.length);
+            col = random.nextInt(1,x.length-1);
         } else {
-            row = random.nextInt(y.length);
+            row = random.nextInt(1,y.length-1);
             col =  x.length - 1;
         }
         room.addConnection(row,col,attached);
@@ -93,24 +96,24 @@ public class RoomGenerator {
             int ncol;
             if(c == Compass.NORTH) {
                 nrow = 0;
-                ncol = random.nextInt(x.length);
+                ncol = random.nextInt(1,x.length-1);
                 if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
                     ncol = (ncol == 0) ? ncol++ : ncol--;
                 }
             } else if (c == Compass.EAST) {
-                nrow = random.nextInt(y.length);
+                nrow = random.nextInt(1,y.length-1);
                 ncol = x.length - 1;
                 if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
                     nrow = (nrow == 0) ? nrow++ : nrow--;
                 }
             } else if (c == Compass.SOUTH) {
                 nrow = y.length - 1;
-                ncol = random.nextInt(x.length);
+                ncol = random.nextInt(1,x.length-1);
                 if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
                     ncol = (ncol == 0) ? ncol++ : ncol--;
                 }
             } else {
-                nrow = random.nextInt(y.length);
+                nrow = random.nextInt(1,y.length-1);
                 ncol = 0;
                 if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
                     nrow = (nrow == 0) ? nrow++ : nrow--;
