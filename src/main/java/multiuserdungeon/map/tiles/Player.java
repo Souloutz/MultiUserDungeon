@@ -3,6 +3,7 @@ package multiuserdungeon.map.tiles;
 import java.util.HashMap;
 import java.util.Map;
 
+import multiuserdungeon.Game;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.inventory.*;
 
@@ -144,6 +145,7 @@ public class Player extends Character {
 	}
 	public void gainGold(int gain) {
 		this.gold += gain;
+		Game.getInstance().getStats().addToGoldEarned(gain);
 	}
 
 	@Override

@@ -19,10 +19,10 @@ public class QuitAction implements Action<Void> {
 	@Override
 	public Void execute() {
 		if(!canExecute()) return null;
+		if(this.game != null) this.game.handleQuitGame();
 		if(this.auth.loggedIn()) {
 			PersistenceManager.getInstance().saveProfile((Profile) this.auth.getUser());
 		}
-		if(this.game != null) this.game.handleQuitGame();
 		return null;
 	}	
 

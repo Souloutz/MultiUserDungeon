@@ -2,6 +2,8 @@ package multiuserdungeon.map.tiles;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.clock.CreatureBuff;
+import multiuserdungeon.map.Compass;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NPC extends Character {
@@ -22,6 +24,15 @@ public class NPC extends Character {
 		super(npc.getName(), npc.getDescription(), npc.getMaxHealth(), npc.getAttack(), npc.getDefense());
 		this.creatureBuff = npc.getCreatureBuff();
 		this.setHealth(npc.getHealth());
+	}
+
+	@Override
+	public int attacked(int attack) {
+		int damage = super.attacked(attack);
+		if(getHealth() == 0) {
+			Game.getInstance().getStats().addToMonstersSlain(1);
+		}
+		return damage;
 	}
 
 	@Override

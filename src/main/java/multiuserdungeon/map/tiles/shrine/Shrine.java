@@ -10,12 +10,12 @@ public class Shrine implements TileObject {
     private Snapshot snapshot;
     private Tile tile;
 
-    public Shrine(String name){
+    public Shrine(String name) {
         this.name = name;
 		this.tile = null;
     }
 
-	public Shrine(Shrine shrine){
+	public Shrine(Shrine shrine) {
 		this.name = shrine.getName();
 		this.snapshot = shrine.getSnapshot();
 		this.tile = null;
@@ -25,7 +25,7 @@ public class Shrine implements TileObject {
         this.snapshot = Game.getInstance().createSnapshot();
     }
     
-    public void restoreGame(){
+    public void restoreGame() {
         Game.getInstance().restoreGame(this.snapshot);
     }
 

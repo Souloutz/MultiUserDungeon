@@ -15,8 +15,7 @@ public class ViewHistoryAction implements Action<String> {
     @Override
     public String execute() {
 	    if(!canExecute()) return null;
-        // TODO: Game stats
-	    return ((Profile) this.auth.getUser()).getStats().toString();
+	    return ((Profile) this.auth.getUser()).viewHistory();
     }
 
     @Override

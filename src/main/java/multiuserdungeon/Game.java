@@ -2,6 +2,9 @@ package multiuserdungeon;
 
 import java.util.*;
 
+import multiuserdungeon.authentication.Authenticator;
+import multiuserdungeon.authentication.GameStats;
+import multiuserdungeon.authentication.Profile;
 import multiuserdungeon.clock.*;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.inventory.elements.*;
@@ -18,16 +21,18 @@ public class Game {
 	private Player player;
 	private GameMap map;
 	private Clock clock;
-	private Shrine shrine;
 	private final boolean browsing;
+	private GameStats stats;
+	private Shrine shrine;
 
 	public Game(Player player, GameMap map, Clock clock, boolean browsing) {
 		instance = this;
 		this.player = player;
 		this.map = map;
 		this.clock = clock;
-		this.shrine = null;
 		this.browsing = browsing;
+		this.stats = new GameStats();
+		this.shrine = null;
 	}
 
 	public static Game getInstance() {
@@ -48,6 +53,10 @@ public class Game {
 
 	public Time getCurrentTime() {
 		return this.clock.getCurrentTime();
+	}
+
+	public GameStats getStats() {
+		return this.stats;
 	}
 
 	public int handleAttack(Compass direction) {
@@ -133,7 +142,7 @@ public class Game {
 		InventoryElement newItem = merchant.handleSale(index);
 		if(newItem == null) return false;
 		if(newItem instanceof Bag bag) {
-			if (this.player.getInventory().addBag(bag)) {
+			if(this.player.getInventory().addBag(bag)) {
 				this.player.loseGold(newItem.getGoldValue());
 				return true;
 			} else {
@@ -141,6 +150,7 @@ public class Game {
 			}
 		} else {
 			if(this.player.getInventory().addItem(newItem)) {
+				this.stats.addToItems(1);
 				this.player.loseGold(newItem.getGoldValue());
 				return true;
 			} else {
@@ -175,26 +185,29 @@ public class Game {
 
 	public boolean handlePickupItem(int index) {
 		Chest chest = this.player.getTile().getChest();
-		if (chest == null) return false;
+		if(chest == null) return false;
 
-		if (index == -1) {
+		if(index == -1) {
 			InventoryElement pickedUp;
-			while ((pickedUp = chest.handleLoot(0)) != null) {
-				if (pickedUp instanceof Bag bag) {
-					if (!this.player.getInventory().addBag(bag)) return false;
+			while((pickedUp = chest.handleLoot(0)) != null) {
+				if(pickedUp instanceof Bag bag) {
+					if(!this.player.getInventory().addBag(bag)) return false;
 				} else {
-					if (!this.player.getInventory().addItem(pickedUp)) return false;
+					this.stats.addToItems(1);
+					if(!this.player.getInventory().addItem(pickedUp)) return false;
 				}
 			}
 			return chest.getContents().isEmpty();
 		} else {
 			InventoryElement pickedUp = chest.handleLoot(index);
-			if (pickedUp == null) return false;
+			if(pickedUp == null) return false;
 
-			if (pickedUp instanceof Bag bag)
+			if(pickedUp instanceof Bag bag) {
 				return this.player.getInventory().addBag(bag);
-			else
+			} else {
+				this.stats.addToItems(1);
 				return this.player.getInventory().addItem(pickedUp);
+			}
 		}
 	}
 
@@ -250,17 +263,22 @@ public class Game {
 		newClock.setCurrentTime(newTime);
 		newClock.setTurnCounter(this.clock.getTurn());
 
-		return new Snapshot(newPlayer, newMap, newClock);
+		GameStats newStats = new GameStats();
+		newStats.addAll(this.stats);
+
+		return new Snapshot(newPlayer, newMap, newClock, newStats);
 	}
 
 	public void restoreGame(Snapshot snapshot){
 		this.player = snapshot.getPlayer();
 		this.map = snapshot.getMap();
 		this.clock = snapshot.getClock();
+		this.stats = snapshot.getStats();
 	}
 
 	public void handleQuitGame() {
 		if(!this.browsing) {
+			((Profile) Authenticator.getInstance().getUser()).addToStats(this.stats);
 			PersistenceManager.getInstance().saveGame(this);
 		}
 		instance = null;
@@ -272,6 +290,16 @@ public class Game {
 			if(npc == null) return;
 			npc.attack(direction.getOpposite());
 		});
+
+		if(isDead()) {
+			if(!this.browsing) {
+				this.stats.addToGamesPlayed(1);
+				this.stats.addToLivesLost(1);
+				((Profile) Authenticator.getInstance().getUser()).addToStats(this.stats);
+			}
+			instance = null;
+			return;
+		}
 
 		this.player.depleteBuffs();
 		this.clock.completeTurn();

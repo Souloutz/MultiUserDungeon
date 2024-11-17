@@ -104,6 +104,13 @@ public class PTUI {
 		}
 	}
 
+	private static boolean promptToQuit() {
+		printBlock("Congrats! You have reached your goal or safe room, would you like to quit and save? (Y/N)");
+		System.out.print(">>> ");
+		String response = scanner.nextLine();
+		return response.equals("Y");
+	}
+
 	private static void printStarterCommands() {
 		printBlock("STARTER COMMANDS\n\n" +
 				"\tregister <username> <passwd> <confirm passwd> -=- Register a new profile if logged out.\n" +
@@ -384,6 +391,11 @@ public class PTUI {
 				boolean result = new ExitRoomAction(Game.getInstance(), direction).execute();
 				if(result) {
 					printRoomDescription();
+
+					if(Game.getInstance().isGoal() && promptToQuit()) {
+						new QuitAction(Authenticator.getInstance(), Game.getInstance()).execute();
+						printBlock("Successfully quit the game!");
+					}
 				} else {
 					printBlock("A doorway in that direction does not exist, or you are not at a doorway, please try again.");
 				}
