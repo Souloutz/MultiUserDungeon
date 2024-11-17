@@ -238,7 +238,7 @@ public class JSONAdapter implements FileAdapter {
 		root.add("map", mapJson);
 
 		/*
-		  Load Clock
+		  Save Clock
 		 */
 
 		JsonObject clockJson = new JsonObject();
@@ -527,8 +527,8 @@ public class JSONAdapter implements FileAdapter {
 				currentPlayer.setTile(startingTile);
 				startingTile.addObject(currentPlayer);
 				players.add(currentPlayer);
-				playerRooms.put(players.size() - 1, 0);
-				playerStartRooms.put(players.size() - 1, 0);
+				playerRooms.put(players.size() - 1, rooms.size() - 1);
+				playerStartRooms.put(players.size() - 1, rooms.size() - 1);
 			}
 		}
 
