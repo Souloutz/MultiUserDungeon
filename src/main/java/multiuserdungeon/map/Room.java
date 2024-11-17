@@ -115,6 +115,7 @@ public class Room {
 		Tile tile = getTile(row, col);
 		if(tile == null) return;
 
+		System.out.println("From new room - " + direction + " at " + row + ", " + col + "(size = " + rows + "," + columns + ")");
 		this.doorways.put(direction, getTile(row, col));
 		this.connections.put(tile, targetRoom);
 	}
@@ -150,6 +151,8 @@ public class Room {
 	public boolean handleExitRoom(Compass direction) {
 		Room newRoom = this.connections.get(this.doorways.get(direction));
 		if(newRoom == null) return false;
+		System.out.println(newRoom.getDoorways());
+		System.out.println(newRoom.getConnections());
 		Tile newTile = newRoom.getDoorway(direction.getOpposite());
 		if(newTile == null) {
 			System.out.println("newTile is null");
