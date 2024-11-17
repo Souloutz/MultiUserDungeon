@@ -73,34 +73,6 @@ public class RoomGenerator {
         }
         room.addConnection(row,col,attached);
 
-        // {0: obstacle, 1: NPC, 2: Trap, 3: chest}
-        // Permutation to fill rooms is len = 32
-        // modulo 4, but 30 = shrine and 31 = merchant
-
-        int[] objects = permutation(32);
-
-        for (int i = 0;i < max;i++) {
-            Tile tile = room.getTile(y[i],x[i]);
-            int place = objects[i] % 5;
-            TileObject object = null;
-
-            if (objects[i] == 31) {
-                object = (TileObject)generateMerchant();
-            } else if (objects[i] == 30) {
-                object = (TileObject)generateShrine();
-            } else if (place == 0) {
-                object = (TileObject)generateObstacle();
-            } else if (place == 1 || place == 4) {
-                object = (TileObject)generateNPC();
-            } else if (place == 2) {
-                object = (TileObject)generateTrap();
-            } else if (place == 3) {
-                object = (TileObject)generateChest();
-            }
-            tile.addObject(object);
-            object.setTile(tile);
-        }
-
         int maxc = random.nextInt(1,4);
         List<Compass> ways = new ArrayList<>();
         int count = 0;
@@ -134,6 +106,37 @@ public class RoomGenerator {
             }
             
             room.addConnection(nrow,ncol,null);
+        }
+
+        // {0: obstacle, 1: NPC, 2: Trap, 3: chest}
+        // Permutation to fill rooms is len = 32
+        // modulo 4, but 30 = shrine and 31 = merchant
+
+        int[] objects = permutation(32);
+
+        for (int i = 0;i < max;i++) {
+            Tile tile = room.getTile(y[i],x[i]);
+            if (room.getConnections().keySet().contains(tile) || tile.getObjects().size() > 0) {
+                continue;
+            }
+            int place = objects[i] % 5;
+            TileObject object = null;
+
+            if (objects[i] == 31) {
+                object = (TileObject)generateMerchant();
+            } else if (objects[i] == 30) {
+                object = (TileObject)generateShrine();
+            } else if (place == 0) {
+                object = (TileObject)generateObstacle();
+            } else if (place == 1 || place == 4) {
+                object = (TileObject)generateNPC();
+            } else if (place == 2) {
+                object = (TileObject)generateTrap();
+            } else if (place == 3) {
+                object = (TileObject)generateChest();
+            }
+            tile.addObject(object);
+            object.setTile(tile);
         }
 
         return room;
@@ -327,6 +330,12 @@ public class RoomGenerator {
 
         } catch (IOException e) {
             return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println(generateRoom(Compass.NORTH,null));
         }
     }
 
