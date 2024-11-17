@@ -166,6 +166,9 @@ public class RoomGenerator {
 
         for (int i = 0;i < max;i++) {
             Tile tile = room.getTile(x[i],y[i]);
+            if (room.getConnections().keySet().contains(tile) || tile.getObjects().size() > 0) {
+                continue;
+            }
             int place = objects[i] % 5;
             TileObject object = null;
 
