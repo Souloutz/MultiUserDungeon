@@ -200,7 +200,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/descriptions.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,100);
+            int rindex = new Random().nextInt(99);
 
             br.readLine();
 
@@ -220,7 +220,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/merchants.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,16);
+            int rindex = new Random().nextInt(15);
 
             br.readLine();
 
@@ -249,7 +249,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/chests.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,16);
+            int rindex = new Random().nextInt(15);
 
             br.readLine();
 
@@ -278,7 +278,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/obstacles.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,101);
+            int rindex = new Random().nextInt(100);
 
             br.readLine();
 
@@ -300,7 +300,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/npcs.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,66);
+            int rindex = new Random().nextInt(66);
 
             br.readLine();
 
@@ -333,7 +333,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/shrines.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,16);
+            int rindex = new Random().nextInt(15);
 
             br.readLine();
 
