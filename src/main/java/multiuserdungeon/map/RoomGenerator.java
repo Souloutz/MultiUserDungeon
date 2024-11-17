@@ -55,21 +55,21 @@ public class RoomGenerator {
         int[] y = permutation(random.nextInt(7) + 4);
         int max = (x.length > y.length) ? y.length : x.length;
 
-        Room room = new Room(x.length,y.length,grabDescription());
+        Room room = new Room(y.length,x.length,grabDescription());
         int row;
         int col;
         if(direction == Compass.NORTH) {
-            row = 0;
+            row = y.length - 1;
             col = random.nextInt(x.length);
         } else if (direction == Compass.EAST) {
             row = random.nextInt(y.length);
-            col = x.length - 1;
+            col = 0;
         } else if (direction == Compass.SOUTH) {
-            row = y.length - 1;
+            row = 0;
             col = random.nextInt(x.length);
         } else {
             row = random.nextInt(y.length);
-            col = 0;
+            col =  x.length - 1;
         }
         room.addConnection(row,col,attached);
 
@@ -80,7 +80,7 @@ public class RoomGenerator {
         int[] objects = permutation(32);
 
         for (int i = 0;i < max;i++) {
-            Tile tile = room.getTile(x[i],y[i]);
+            Tile tile = room.getTile(y[i],x[i]);
             int place = objects[i] % 5;
             TileObject object = null;
 
@@ -105,12 +105,12 @@ public class RoomGenerator {
         List<Compass> ways = new ArrayList<>();
         int count = 0;
         while (true) {
-            Compass newc = getCompass();
-            if (ways.contains(newc) || newc == direction) {
-                continue;
-            }
             if (count >= maxc) {
                 break;
+            }
+            Compass newc = getCompass();
+            if (ways.contains(newc) || newc == direction.getOpposite()) {
+                continue;
             }
             ways.add(newc);
             count++;
@@ -139,8 +139,39 @@ public class RoomGenerator {
         return room;
     }
 
+    public static Room populateRoom(Room room) {
+
+        int[] x = permutation(room.getRows());
+        int[] y = permutation(room.getColumns());
+        int max = (x.length > y.length) ? y.length : x.length;
+
+        int[] objects = permutation(31);
+
+        for (int i = 0;i < max;i++) {
+            Tile tile = room.getTile(x[i],y[i]);
+            int place = objects[i] % 5;
+            TileObject object = null;
+
+            if (objects[i] == 30) {
+                object = (TileObject)generateMerchant();
+            } else if (place == 0) {
+                object = (TileObject)generateObstacle();
+            } else if (place == 1 || place == 4) {
+                object = (TileObject)generateNPC();
+            } else if (place == 2) {
+                object = (TileObject)generateTrap();
+            } else if (place == 3) {
+                object = (TileObject)generateChest();
+            }
+            tile.addObject(object);
+            object.setTile(tile);
+        }
+
+        return room;
+    }
+
     private static Compass getCompass() {
-        return Compass.values()[new Random().nextInt(1,5)];
+        return Compass.values()[(new Random().nextInt(0,4)) *2];
     }
 
     private static String grabDescription(){
