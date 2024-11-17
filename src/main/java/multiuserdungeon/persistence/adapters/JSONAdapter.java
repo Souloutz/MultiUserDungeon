@@ -216,7 +216,35 @@ public class JSONAdapter implements FileAdapter {
 		}
 		mapJson.add("connections", connectionsJson);
 
+		/*
+		  Save Player Start Rooms
+		 */
+
+		JsonArray playerStartRoomsJson = new JsonArray();
+		for(Map.Entry<Integer, Integer> playerStartRoom : game.getMap().getPlayerStartRooms().entrySet()) {
+			JsonObject playerStartRoomJson = new JsonObject();
+			playerStartRoomJson.addProperty("player", playerStartRoom.getKey());
+			playerStartRoomJson.addProperty("room", playerStartRoom.getValue());
+			playerStartRoomsJson.add(playerStartRoomJson);
+		}
+		mapJson.add("playerStartRooms", playerStartRoomsJson);
+
+		if(game.getMap() instanceof PremadeMap premadeMap) {
+			mapJson.addProperty("goalRoom", game.getMap().getRooms().indexOf(premadeMap.getGoal()));
+		} else {
+			mapJson.addProperty("goalRoom", -1);
+		}
+
 		root.add("map", mapJson);
+
+		/*
+		  Load Clock
+		 */
+
+		JsonObject clockJson = new JsonObject();
+		clockJson.addProperty("turnCounter", game.getTurn());
+		clockJson.addProperty("time", game.getCurrentTime().isDay() ? "day" : "night");
+		root.add("clock", clockJson);
 
 		try {
 			String path = PersistenceManager.DATA_FOLDER + UUID.randomUUID().toString().split("-")[0] + ".json";
@@ -418,7 +446,7 @@ public class JSONAdapter implements FileAdapter {
 		}
 
 		/*
-		  Connect Rooms
+		  Load Connections
 		 */
 
 		for(JsonElement connectionElement : mapJson.getAsJsonArray("connections")) {
@@ -441,7 +469,7 @@ public class JSONAdapter implements FileAdapter {
 		}
 
 		/*
-		  Player Start Rooms
+		  Load Player Start Rooms
 		 */
 
 		Map<Integer, Integer> playerStartRooms = new HashMap<>();
@@ -474,6 +502,7 @@ public class JSONAdapter implements FileAdapter {
 				startingTile.addObject(currentPlayer);
 				players.add(currentPlayer);
 				playerRooms.put(players.size() - 1, 0);
+				playerStartRooms.put(players.size() - 1, 0);
 			} else {
 				if(!Authenticator.getInstance().loggedIn()) return null; // Cannot browse endless game
 
@@ -498,7 +527,8 @@ public class JSONAdapter implements FileAdapter {
 				currentPlayer.setTile(startingTile);
 				startingTile.addObject(currentPlayer);
 				players.add(currentPlayer);
-				playerRooms.put(players.size() - 1, rooms.size() - 1);
+				playerRooms.put(players.size() - 1, 0);
+				playerStartRooms.put(players.size() - 1, 0);
 			}
 		}
 
@@ -506,7 +536,8 @@ public class JSONAdapter implements FileAdapter {
 		if(type.equals("endless")) {
 			map = new EndlessMap(rooms, players, playerRooms, playerStartRooms);
 		} else {
-			map = new PremadeMap(rooms, players, playerRooms, playerStartRooms, 0);
+			int goalRoomId = mapJson.get("goalRoom").getAsInt();
+			map = new PremadeMap(rooms, players, playerRooms, playerStartRooms, goalRoomId);
 		}
 
 		/*

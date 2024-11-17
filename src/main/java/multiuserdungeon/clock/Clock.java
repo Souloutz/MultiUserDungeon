@@ -37,10 +37,6 @@ public class Clock {
 	public void setCurrentTime(Time time) {
 		this.time = time;
 	}
-
-	public int getTurnCounter() {
-		return turnCounter;
-	}
 	
 	public void setTurnCounter(int turnCounter) {
 		this.turnCounter = turnCounter;

@@ -42,6 +42,10 @@ public class Game {
 		return this.map;
 	}
 
+	public int getTurn() {
+		return this.clock.getTurn();
+	}
+
 	public Time getCurrentTime() {
 		return this.clock.getCurrentTime();
 	}
@@ -244,7 +248,7 @@ public class Game {
 		Clock newClock = new Clock();
 		Time newTime = this.clock.getCurrentTime().isDay() ? new Day(newClock) : new Night(newClock);
 		newClock.setCurrentTime(newTime);
-		newClock.setTurnCounter(this.clock.getTurnCounter());
+		newClock.setTurnCounter(this.clock.getTurn());
 
 		return new Snapshot(newPlayer, newMap, newClock);
 	}

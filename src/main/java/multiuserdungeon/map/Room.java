@@ -156,12 +156,13 @@ public class Room {
 			return false;
 		}
 
-		Player player = Game.getInstance().getPlayer();
-		Game.getInstance().getMap().setPlayerRoom(newRoom);
-		player.setTile(newTile);
+		// TODO: Premade -- populate the new room?
 
+		Player player = Game.getInstance().getPlayer();
 		player.getTile().removeObject(player);
+		player.setTile(newTile);
 		newTile.addObject(player);
+		Game.getInstance().getMap().setPlayerRoom(newRoom);
 		return true;
 	}
 
