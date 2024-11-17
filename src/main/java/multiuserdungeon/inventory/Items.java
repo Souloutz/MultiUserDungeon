@@ -111,6 +111,13 @@ public class Items {
         return null;
     }
 
+    public int getItemId(InventoryElement item) {
+        for(Map.Entry<Integer, InventoryElement> entry : items.entrySet()) {
+            if(entry.getValue().equals(item)) return entry.getKey();
+        }
+        return -1;
+    }
+
     public InventoryElement getRandomItem(){
         Random random = new Random();
         Object[] itemIDs = (items.keySet()).toArray();

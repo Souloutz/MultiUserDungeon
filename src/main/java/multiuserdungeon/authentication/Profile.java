@@ -55,7 +55,6 @@ public class Profile extends User {
     }
 
     public Game handleJoinGame(String filename) {
-	    // TODO: place player in new attached room
         return PersistenceManager.getInstance().loadGame(filename);
     }
 

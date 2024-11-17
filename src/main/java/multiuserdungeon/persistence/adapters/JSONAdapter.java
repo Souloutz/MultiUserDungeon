@@ -2,6 +2,7 @@ package multiuserdungeon.persistence.adapters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -20,12 +21,14 @@ import multiuserdungeon.inventory.elements.Armor;
 import multiuserdungeon.inventory.elements.Bag;
 import multiuserdungeon.inventory.elements.Buff;
 import multiuserdungeon.inventory.elements.Weapon;
+import multiuserdungeon.map.Compass;
 import multiuserdungeon.map.EndlessMap;
 import multiuserdungeon.map.GameMap;
 import multiuserdungeon.map.PremadeMap;
 import multiuserdungeon.map.Room;
 import multiuserdungeon.map.RoomGenerator;
 import multiuserdungeon.map.Tile;
+import multiuserdungeon.map.TileObject;
 import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.Merchant;
 import multiuserdungeon.map.tiles.NPC;
@@ -45,12 +48,187 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class JSONAdapter implements FileAdapter {
 
 	@Override
 	public String saveGame(Game game) {
-		return null;
+		JsonObject root = new JsonObject();
+		root.addProperty("type", game.getMap() instanceof EndlessMap ? "endless" : "premade");
+
+		JsonObject mapJson = new JsonObject();
+
+		/*
+		  Save Players
+		 */
+
+		JsonArray playersJson = new JsonArray();
+		for(Player player : game.getMap().getPlayers()) {
+			JsonObject playerJson = new JsonObject();
+			playerJson.addProperty("username", player.getName());
+			playerJson.addProperty("description", player.getDescription());
+			playerJson.addProperty("health", player.getHealth());
+
+			JsonObject inventoryJson = new JsonObject();
+			inventoryJson.addProperty("name", player.getInventory().getName());
+			inventoryJson.addProperty("description", player.getInventory().getDescription());
+			JsonArray bagsJson = new JsonArray();
+			for(Bag bag : player.getInventory().getBags()) {
+				JsonObject bagJson = new JsonObject();
+				bagJson.addProperty("name", bag.getName());
+				bagJson.addProperty("description", bag.getDescription());
+				bagJson.addProperty("goldValue", bag.getGoldValue());
+				bagJson.addProperty("capacity", bag.getCapacity());
+
+				JsonArray itemsJson = new JsonArray();
+				for(InventoryElement item : bag.items()) {
+					itemsJson.add(Items.getInstance().getItemId(item));
+				}
+				bagJson.add("items", itemsJson);
+
+				bagsJson.add(bagJson);
+			}
+			inventoryJson.add("bags", bagsJson);
+			playerJson.add("inventory", inventoryJson);
+
+			playerJson.addProperty("weapon", Items.getInstance().getItemId(player.getWeapon()));
+			playerJson.addProperty("armor", Items.getInstance().getItemId(player.getArmor()));
+
+			JsonArray buffsJson = new JsonArray();
+			for(Map.Entry<Buff, Integer> buffs : player.getBuffs().entrySet()) {
+				JsonObject buffJson = new JsonObject();
+				buffJson.addProperty("item", Items.getInstance().getItemId(buffs.getKey()));
+				buffJson.addProperty("turnsLeft", buffs.getValue());
+				buffsJson.add(buffJson);
+			}
+			playerJson.add("buffs", buffsJson);
+
+			playersJson.add(playerJson);
+		}
+		mapJson.add("players", playersJson);
+
+		/*
+		  Save Rooms
+		 */
+
+		JsonArray roomsJson = new JsonArray();
+		for(Room room : game.getMap().getRooms()) {
+			JsonObject roomJson = new JsonObject();
+			roomJson.addProperty("rows", room.getRows());
+			roomJson.addProperty("cols", room.getColumns());
+			roomJson.addProperty("description", room.getDescription());
+
+			JsonArray tilesJson = new JsonArray();
+			for(int row = 0; row < room.getRows(); row++) {
+				JsonArray rowJson = new JsonArray();
+				for(int col = 0; col < room.getColumns(); col++) {
+					JsonArray tileJson = new JsonArray();
+					for(TileObject tileObject : room.getTile(row, col).getObjects()) {
+						JsonObject tileObjectJson = new JsonObject();
+
+						if(tileObject instanceof Player player) {
+							tileObjectJson.addProperty("type", "player");
+							tileObjectJson.addProperty("player", game.getMap().getPlayers().indexOf(player));
+						} else if(tileObject instanceof NPC npc) {
+							tileObjectJson.addProperty("type", "npc");
+							tileObjectJson.addProperty("name", npc.getName());
+							tileObjectJson.addProperty("description", npc.getDescription());
+							tileObjectJson.addProperty("health", npc.getHealth());
+							tileObjectJson.addProperty("baseMaxHealth", npc.getMaxHealth());
+							tileObjectJson.addProperty("baseAttack", npc.getBaseAttack());
+							tileObjectJson.addProperty("baseDefense", npc.getBaseDefense());
+							tileObjectJson.addProperty("creatureBuff", npc.getCreatureBuff().name());
+						} else if(tileObject instanceof Obstacle obstacle) {
+							tileObjectJson.addProperty("type", "obstacle");
+							tileObjectJson.addProperty("name", obstacle.getName());
+						} else if(tileObject instanceof Chest chest) {
+							tileObjectJson.addProperty("type", "chest");
+							tileObjectJson.addProperty("name", chest.getName());
+							JsonArray contents = new JsonArray();
+							for(InventoryElement item : chest.getContents()) {
+								contents.add(Items.getInstance().getItemId(item));
+							}
+							tileObjectJson.add("contents", contents);
+						} else if(tileObject instanceof Merchant merchant) {
+							tileObjectJson.addProperty("type", "merchant");
+							tileObjectJson.addProperty("name", merchant.getName());
+							JsonArray store = new JsonArray();
+							for(InventoryElement item : merchant.getStore()) {
+								store.add(Items.getInstance().getItemId(item));
+							}
+							tileObjectJson.add("store", store);
+						} else if(tileObject instanceof Trap trap) {
+							tileObjectJson.addProperty("type", "trap");
+							tileObjectJson.addProperty("damage", trap.getDamage());
+							if(trap.isDisarmed()) {
+								tileObjectJson.addProperty("status", "disarmed");
+							} else if(trap.isDetected()) {
+								tileObjectJson.addProperty("status", "detected");
+							} else {
+								tileObjectJson.addProperty("status", "undetected");
+							}
+						} else if(tileObject instanceof Shrine shrine) {
+							tileObjectJson.addProperty("type", "shrine");
+							tileObjectJson.addProperty("name", shrine.getName());
+						}
+
+						tileJson.add(tileObjectJson);
+					}
+					rowJson.add(tileJson);
+				}
+				tilesJson.add(rowJson);
+			}
+			roomJson.add("tiles", tilesJson);
+
+			roomsJson.add(roomJson);
+		}
+		mapJson.add("rooms", roomsJson);
+
+		/*
+		  Save Connections
+		 */
+
+		JsonArray connectionsJson = new JsonArray();
+		for(Room room : game.getMap().getRooms()) {
+			Map<Compass, Tile> doorways = new HashMap<>(room.getDoorways());
+			Map<Tile, Room> connections = new HashMap<>(room.getConnections());
+			for(Map.Entry<Compass, Tile> connection : doorways.entrySet()) {
+				Compass direction = connection.getKey();
+				Tile tile = connection.getValue();
+				Room toRoom = connections.get(tile);
+
+				JsonObject connectionJson = new JsonObject();
+				connectionJson.addProperty("fromRoom", game.getMap().getRooms().indexOf(room));
+				connectionJson.addProperty("fromTile", tile.getRow() + "," + tile.getCol());
+				if(toRoom != null) {
+					connectionJson.addProperty("toRoom", game.getMap().getRooms().indexOf(toRoom));
+					Tile toTile = toRoom.getDoorway(direction.getOpposite());
+					connectionJson.addProperty("toTile", toTile.getRow() + "," + toTile.getCol());
+					toRoom.removeConnection(toTile.getRow(), toTile.getCol());
+				} else {
+					connectionJson.addProperty("toRoom", -1);
+					connectionJson.addProperty("toTile", "");
+				}
+
+				connectionsJson.add(connectionJson);
+			}
+		}
+		mapJson.add("connections", connectionsJson);
+
+		root.add("map", mapJson);
+
+		try {
+			String path = PersistenceManager.DATA_FOLDER + UUID.randomUUID().toString().split("-")[0] + ".json";
+			FileWriter writer = new FileWriter(path);
+			new GsonBuilder().setPrettyPrinting().create().toJson(root, writer);
+			writer.flush();
+			writer.close();
+			return path;
+		} catch (IOException e) {
+			System.out.println("Error saving game to JSON!");
+			return null;
+		}
 	}
 
 	@Override
@@ -97,6 +275,7 @@ public class JSONAdapter implements FileAdapter {
 				for(JsonElement itemsElement : bagJson.getAsJsonArray("items")) {
 					int itemId = itemsElement.getAsInt();
 					InventoryElement item = Items.getInstance().getItem(itemId);
+					if(item == null) continue;
 					bag.addItem(item);
 				}
 
@@ -114,15 +293,15 @@ public class JSONAdapter implements FileAdapter {
 			Player player = new Player(username, description, inventory, buffs);
 			player.setHealth(health);
 
-			JsonElement weaponElement = playerJson.get("weapon");
-			if(!weaponElement.isJsonNull()) {
-				Weapon weapon = (Weapon) Items.getInstance().getItem(weaponElement.getAsInt());
+			int weaponId = playerJson.get("weapon").getAsInt();
+			if(weaponId != -1) {
+				Weapon weapon = (Weapon) Items.getInstance().getItem(weaponId);
 				player.equipWeapon(weapon);
 			}
 
-			JsonElement armorElement = playerJson.get("armor");
-			if(!armorElement.isJsonNull()) {
-				Armor armor = (Armor) Items.getInstance().getItem(armorElement.getAsInt());
+			int armorId = playerJson.get("armor").getAsInt();
+			if(armorId != -1) {
+				Armor armor = (Armor) Items.getInstance().getItem(armorId);
 				player.equipArmor(armor);
 			}
 
@@ -137,7 +316,7 @@ public class JSONAdapter implements FileAdapter {
 		 */
 
 		List<Room> rooms = new ArrayList<>();
-		Map<Player, Integer> playerRooms = new HashMap<>();
+		Map<Integer, Integer> playerRooms = new HashMap<>();
 		int roomNum = 0;
 		for(JsonElement roomElement : mapJson.getAsJsonArray("rooms")) {
 			JsonObject roomJson = roomElement.getAsJsonObject();
@@ -158,10 +337,11 @@ public class JSONAdapter implements FileAdapter {
 						String tileObjectType = tileObjectJson.get("type").getAsString();
 						switch(tileObjectType) {
 							case "player" -> {
-								Player player = players.get(tileObjectJson.get("player").getAsInt());
+								int playerId = tileObjectJson.get("player").getAsInt();
+								Player player = players.get(playerId);
 								player.setTile(tile);
 								tile.addObject(player);
-								playerRooms.put(player, roomNum);
+								playerRooms.put(playerId, roomNum);
 							}
 							case "npc" -> {
 								String name = tileObjectJson.get("name").getAsString();
@@ -187,6 +367,7 @@ public class JSONAdapter implements FileAdapter {
 								for(JsonElement itemElement : tileObjectJson.getAsJsonArray("contents")) {
 									int itemId = itemElement.getAsInt();
 									InventoryElement item = Items.getInstance().getItem(itemId);
+									if(item == null) continue;
 									contents.add(item);
 								}
 								Chest chest = new Chest(name, contents);
@@ -199,6 +380,7 @@ public class JSONAdapter implements FileAdapter {
 								for(JsonElement storeElement : tileObjectJson.getAsJsonArray("store")) {
 									int itemId = storeElement.getAsInt();
 									InventoryElement item = Items.getInstance().getItem(itemId);
+									if(item == null) continue;
 									store.add(item);
 								}
 								Merchant merchant = new Merchant(name, store);
@@ -244,24 +426,30 @@ public class JSONAdapter implements FileAdapter {
 
 			int fromRoomId = connectionJson.get("fromRoom").getAsInt();
 			Room fromRoom = rooms.get(fromRoomId);
-			int toRoomId = connectionJson.get("toRoom").getAsInt();
-			Room toRoom = rooms.get(toRoomId);
 			String[] fromTile = connectionJson.get("fromTile").getAsString().split(",");
-			String[] toTile = connectionJson.get("toTile").getAsString().split(",");
+			int toRoomId = connectionJson.get("toRoom").getAsInt();
 
-			fromRoom.addConnection(Integer.parseInt(fromTile[0]), Integer.parseInt(fromTile[1]), toRoom);
-			toRoom.addConnection(Integer.parseInt(toTile[0]), Integer.parseInt(toTile[1]), fromRoom);
+			if(toRoomId != -1) {
+				Room toRoom = rooms.get(toRoomId);
+				String[] toTile = connectionJson.get("toTile").getAsString().split(",");
+
+				fromRoom.addConnection(Integer.parseInt(fromTile[0]), Integer.parseInt(fromTile[1]), toRoom);
+				toRoom.addConnection(Integer.parseInt(toTile[0]), Integer.parseInt(toTile[1]), fromRoom);
+			} else {
+				fromRoom.addConnection(Integer.parseInt(fromTile[0]), Integer.parseInt(fromTile[1]), null);
+			}
 		}
 
 		/*
 		  Player Start Rooms
 		 */
 
-		Map<Player, Integer> playerStartRooms = new HashMap<>();
+		Map<Integer, Integer> playerStartRooms = new HashMap<>();
 		for(JsonElement playerStartRoomElement : mapJson.getAsJsonArray("playerStartRooms")) {
 			JsonObject playerStartRoomJson = playerStartRoomElement.getAsJsonObject();
-			Player player = players.get(playerStartRoomJson.get("player").getAsInt());
-			playerStartRooms.put(player, playerStartRoomJson.get("room").getAsInt());
+			int playerId = playerStartRoomJson.get("player").getAsInt();
+			int roomId = playerStartRoomJson.get("room").getAsInt();
+			playerStartRooms.put(playerId, roomId);
 		}
 
 		/*
@@ -284,7 +472,8 @@ public class JSONAdapter implements FileAdapter {
 				Tile startingTile = playerRoom.getTile(playerRoom.getRows() - 1, playerRoom.getColumns() - 1);
 				currentPlayer.setTile(startingTile);
 				startingTile.addObject(currentPlayer);
-				playerRooms.put(currentPlayer, 0);
+				players.add(currentPlayer);
+				playerRooms.put(players.size() - 1, 0);
 			} else {
 				if(!Authenticator.getInstance().loggedIn()) return null; // Cannot browse endless game
 
@@ -308,15 +497,16 @@ public class JSONAdapter implements FileAdapter {
 				Tile startingTile = playerRoom.getTile(2, 2);
 				currentPlayer.setTile(startingTile);
 				startingTile.addObject(currentPlayer);
-				playerRooms.put(currentPlayer, rooms.size() - 1);
+				players.add(currentPlayer);
+				playerRooms.put(players.size() - 1, rooms.size() - 1);
 			}
 		}
 
 		GameMap map;
 		if(type.equals("endless")) {
-			map = new EndlessMap(rooms, playerRooms, playerStartRooms);
+			map = new EndlessMap(rooms, players, playerRooms, playerStartRooms);
 		} else {
-			map = new PremadeMap(rooms, playerRooms, playerStartRooms, 0);
+			map = new PremadeMap(rooms, players, playerRooms, playerStartRooms, 0);
 		}
 
 		/*

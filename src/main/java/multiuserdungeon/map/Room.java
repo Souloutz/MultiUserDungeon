@@ -87,8 +87,16 @@ public class Room {
 		return this.description;
 	}
 
+	public Map<Compass, Tile> getDoorways() {
+		return this.doorways;
+	}
+
 	public Tile getDoorway(Compass compass) {
 		return this.doorways.get(compass);
+	}
+
+	public Map<Tile, Room> getConnections() {
+		return this.connections;
 	}
 
 	public void addConnection(int row, int col, Room targetRoom) {
@@ -109,6 +117,11 @@ public class Room {
 
 		this.doorways.put(direction, getTile(row, col));
 		this.connections.put(tile, targetRoom);
+	}
+
+	public void removeConnection(int row, int col) {
+		this.doorways.values().remove(getTile(row, col));
+		this.connections.remove(getTile(row, col));
 	}
 
 	public boolean isConnectionLoaded(Tile tile) {

@@ -34,18 +34,18 @@ public class Bag implements InventoryElement {
 	}
 
 	@Override
-	public boolean equals (Object o) {
-		if (o instanceof Bag b) {
-			if (b.name.equals(this.name) &&
+	public boolean equals(Object o) {
+		if(o instanceof Bag b) {
+			if(b.name.equals(this.name) &&
 			b.description.equals(this.description) &&
 			b.goldValue == this.goldValue &&
 			b.capacity == this.capacity) {
-				for (int i = 0; i < this.items.size(); i++) {
+				for(int i = 0; i < this.items.size(); i++) {
 					try {
-						if (!b.items.get(i).equals(this.items.get(i))) {
+						if(!b.items.get(i).equals(this.items.get(i))) {
 							break;
 						}
-					} catch (IndexOutOfBoundsException e) {
+					} catch(IndexOutOfBoundsException e) {
 						return false;
 					}
 					if (i++ == this.items.size()) {

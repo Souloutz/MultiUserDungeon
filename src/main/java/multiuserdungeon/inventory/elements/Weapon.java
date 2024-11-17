@@ -25,8 +25,8 @@ public class Weapon implements InventoryElement {
 	}
 
 	@Override
-	public boolean equals (Object o) {
-		if (o instanceof Weapon w) {
+	public boolean equals(Object o) {
+		if(o instanceof Weapon w) {
 			return w.name.equals(this.name) &&
 					w.description.equals(description) &&
 					w.goldValue == this.goldValue &&

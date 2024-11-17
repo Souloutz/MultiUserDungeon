@@ -1,0 +1,86 @@
+{
+  "type": "endless",
+  "map": {
+    "players": [
+      {
+        "username": "Jack",
+        "description": "abc",
+        "health": 100,
+        "inventory": {
+          "name": "Your Inventory",
+          "description": "A safe place for your items and bags.",
+          "bags": [
+            {
+              "name": "Starter Bag",
+              "description": "Default bag you start with",
+              "goldValue": 0,
+              "capacity": 6,
+              "items": []
+            }
+          ]
+        },
+        "weapon": -1,
+        "armor": -1,
+        "buffs": []
+      }
+    ],
+    "rooms": [
+      {
+        "rows": 3,
+        "cols": 5,
+        "description": "Jack\u0027s Starting Room",
+        "tiles": [
+          [
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          [
+            [
+              {
+                "type": "merchant",
+                "name": "\"Nyra the Desert Seller\"",
+                "store": [
+                  75,
+                  93,
+                  32
+                ]
+              }
+            ],
+            [],
+            [],
+            [],
+            [
+              {
+                "type": "shrine",
+                "name": "\"Sunlit Shrine\""
+              }
+            ]
+          ],
+          [
+            [],
+            [],
+            [
+              {
+                "type": "player",
+                "player": 0
+              }
+            ],
+            [],
+            []
+          ]
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "fromRoom": 0,
+        "fromTile": "0,2",
+        "toRoom": -1,
+        "toTile": ""
+      }
+    ]
+  }
+}

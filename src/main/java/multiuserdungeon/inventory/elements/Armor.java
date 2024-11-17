@@ -25,7 +25,7 @@ public class Armor implements InventoryElement {
 	}
 
 	@Override
-	public boolean equals (Object o) {
+	public boolean equals(Object o) {
 		if(o instanceof Armor a) {
 			return a.name.equals(this.name) &&
 					a.description.equals(this.description) &&

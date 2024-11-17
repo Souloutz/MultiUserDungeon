@@ -28,11 +28,8 @@ public class Player extends Character {
 		this.inventory = new Inventory(player.getInventory());
 		this.weapon = player.getWeapon();
 		this.armor = player.getArmor();
-		this.buffs = new HashMap<>();
+		this.buffs = new HashMap<>(player.buffs);
 		this.gold = player.gold;
-		for(Buff buff : player.buffs.keySet()) {
-			this.useBuff(buff); // TODO: fix buff values not copying over
-		}
 		this.setHealth(player.getHealth());
 	}
 
@@ -105,6 +102,10 @@ public class Player extends Character {
 
 	public void equipArmor(Armor armor) {
 		this.armor = armor;
+	}
+
+	public Map<Buff, Integer> getBuffs() {
+		return this.buffs;
 	}
 
 	public void useBuff(Buff buff) {

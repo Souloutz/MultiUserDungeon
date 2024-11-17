@@ -11,12 +11,14 @@ import java.util.Map;
 public class PremadeMap implements GameMap {
 
 	private final List<Room> rooms;
-	private final Map<Player, Integer> playerRooms;
-	private final Map<Player, Integer> playerStartRooms;
+	private final List<Player> players;
+	private final Map<Integer, Integer> playerRooms;
+	private final Map<Integer, Integer> playerStartRooms;
 	private final int goalRoom;
 
-	public PremadeMap(List<Room> rooms, Map<Player, Integer> playerRooms, Map<Player, Integer> playerStartRooms, int goalRoom) {
+	public PremadeMap(List<Room> rooms, List<Player> players, Map<Integer, Integer> playerRooms, Map<Integer, Integer> playerStartRooms, int goalRoom) {
 		this.rooms = rooms;
+		this.players = players;
 		this.playerRooms = playerRooms;
 		this.playerStartRooms = playerStartRooms;
 		this.goalRoom = goalRoom;
@@ -25,6 +27,7 @@ public class PremadeMap implements GameMap {
 	public PremadeMap(PremadeMap oldMap) {
 		// TODO: Refactor copy constructor, should not store currentPlayer at all
 		this.rooms = new ArrayList<>();
+		this.players = new ArrayList<>();
 		this.playerRooms = new HashMap<>();
 		this.playerStartRooms = new HashMap<>();
 		this.goalRoom = oldMap.goalRoom;
@@ -32,22 +35,42 @@ public class PremadeMap implements GameMap {
 
 	@Override
 	public Room getPlayerRoom() {
-		return this.rooms.get(this.playerRooms.get(Game.getInstance().getPlayer()));
+		return this.rooms.get(this.playerRooms.get(this.players.indexOf(Game.getInstance().getPlayer())));
 	}
 
 	@Override
 	public void setPlayerRoom(Room room) {
-		this.playerRooms.put(Game.getInstance().getPlayer(), this.rooms.indexOf(room));
+		this.playerRooms.put(this.players.indexOf(Game.getInstance().getPlayer()), this.rooms.indexOf(room));
 	}
 
 	@Override
 	public boolean isInStartRoom() {
-		return getPlayerRoom().equals(rooms.get(this.playerStartRooms.get(Game.getInstance().getPlayer())));
+		return getPlayerRoom().equals(this.rooms.get(this.playerStartRooms.get(this.players.indexOf(Game.getInstance().getPlayer()))));
 	}
 
 	@Override
 	public void handleExitRoom(Compass direction) {
 		// Do nothing
+	}
+
+	@Override
+	public List<Room> getRooms() {
+		return this.rooms;
+	}
+
+	@Override
+	public List<Player> getPlayers() {
+		return this.players;
+	}
+
+	@Override
+	public Map<Integer, Integer> getPlayerRooms() {
+		return this.playerRooms;
+	}
+
+	@Override
+	public Map<Integer, Integer> getPlayerStartRooms() {
+		return this.playerStartRooms;
 	}
 
 	public Room getGoal() {

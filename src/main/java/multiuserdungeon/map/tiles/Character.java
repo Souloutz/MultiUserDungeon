@@ -88,11 +88,23 @@ public abstract class Character implements TileObject {
 		return this.baseMaxHealth;
 	}
 
-	public int getAttack() {
+	public int getBaseAttack() {
+		// This is used in persistence
 		return this.baseAttack;
 	}
 
+	public int getAttack() {
+		// This version is overridden by Player/NPC
+		return this.baseAttack;
+	}
+
+	public int getBaseDefense() {
+		// This is used in persistence
+		return this.baseDefense;
+	}
+
 	public int getDefense() {
+		// This version is overridden by Player/NPC
 		return this.baseDefense;
 	}
 

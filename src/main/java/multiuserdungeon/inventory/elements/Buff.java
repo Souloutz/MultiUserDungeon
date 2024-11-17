@@ -29,8 +29,8 @@ public class Buff implements InventoryElement {
 	}
 
 	@Override
-	public boolean equals (Object o) {
-		if (o instanceof Buff b) {
+	public boolean equals(Object o) {
+		if(o instanceof Buff b) {
 			return b.name.equals(this.name) &&
 					b.description.equals(this.description) &&
 					b.goldValue == this.goldValue &&
