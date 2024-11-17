@@ -1,5 +1,6 @@
 package multiuserdungeon.map.tiles;
 
+import multiuserdungeon.inventory.Items;
 import multiuserdungeon.map.*;
 
 public abstract class Character implements TileObject {
@@ -77,6 +78,9 @@ public abstract class Character implements TileObject {
 		this.health -= damage;
 
 		if(this.health == 0) {
+			Corpse corpse = new Corpse(this.name + "'s Corpse", Items.getInstance().getRandomList(1));
+			corpse.setTile(this.tile);
+			this.tile.addObject(corpse);
 			this.tile.removeObject(this);
 			this.tile = null;
 		}

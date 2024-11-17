@@ -177,7 +177,7 @@ public class Room {
 		for(int row = 0; row < this.rows; row++) {
 			for(int col = 0; col < this.columns; col++) {
 				Tile tile = getTile(row, col);
-				if(tile.getObjects().size() <= 1) continue;
+				if(tile.getObjects().isEmpty()) continue;
 
 				builder.append("\n\t- ").append(tile);
 			}

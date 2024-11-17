@@ -38,5 +38,19 @@
       <goldEarned>0</goldEarned>
       <itemsFound>0</itemsFound>
     </stats>
+    <stats>
+      <gamesPlayed>0</gamesPlayed>
+      <livesLost>0</livesLost>
+      <monstersSlain>6</monstersSlain>
+      <goldEarned>0</goldEarned>
+      <itemsFound>6</itemsFound>
+    </stats>
+    <stats>
+      <gamesPlayed>0</gamesPlayed>
+      <livesLost>0</livesLost>
+      <monstersSlain>0</monstersSlain>
+      <goldEarned>0</goldEarned>
+      <itemsFound>1</itemsFound>
+    </stats>
   </stats>
 </Profile>

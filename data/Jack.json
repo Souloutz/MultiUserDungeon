@@ -35,6 +35,20 @@
       "monstersSlain": 0,
       "goldEarned": 0,
       "itemsFound": 0
+    },
+    {
+      "gamesPlayed": 0,
+      "livesLost": 0,
+      "monstersSlain": 6,
+      "goldEarned": 0,
+      "itemsFound": 6
+    },
+    {
+      "gamesPlayed": 0,
+      "livesLost": 0,
+      "monstersSlain": 0,
+      "goldEarned": 0,
+      "itemsFound": 1
     }
   ],
   "username": "Jack",
