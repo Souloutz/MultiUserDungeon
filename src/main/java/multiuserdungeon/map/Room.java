@@ -142,13 +142,24 @@ public class Room {
 		return true;
 	}
 
+	public boolean isPopulated() {
+		for(Tile[] row : this.layout) {
+			for(Tile tile : row) {
+				if(!tile.getObjects().isEmpty()) return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean handleExitRoom(Compass direction) {
 		Room newRoom = this.connections.get(this.doorways.get(direction));
 		if(newRoom == null) return false;
 		Tile newTile = newRoom.getDoorway(direction.getOpposite());
 		if(newTile == null) return false;
 
-		// TODO: Premade -- populate the new room?
+		if(!newRoom.isPopulated()) {
+			RoomGenerator.populateRoom(newRoom);
+		}
 
 		Player player = Game.getInstance().getPlayer();
 		player.getTile().removeObject(player);

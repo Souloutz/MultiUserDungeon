@@ -281,10 +281,6 @@ public class Game {
 		// Place our player at the shrine
 		this.player.setTile(this.shrine.getTile());
 		this.shrine.getTile().addObject(this.player);
-
-		System.out.println("Restored: " + this.player);
-		System.out.println("Restored: " + this.map.getPlayerRooms());
-		System.out.println("Restored: " + this.clock);
 	}
 
 	public void handleQuitGame() {
@@ -303,11 +299,8 @@ public class Game {
 		});
 
 		if(isDead()) {
-			if(!this.browsing) {
-				this.stats.addToGamesPlayed(1);
-				((Profile) Authenticator.getInstance().getUser()).addToStats(this.stats);
-			}
-			instance = null;
+			this.stats.addToGamesPlayed(1);
+			handleQuitGame();
 			return;
 		} else if(this.player.getHealth() <= 0 && this.shrine != null) {
 			this.stats.addToLivesLost(1);

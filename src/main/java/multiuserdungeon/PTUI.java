@@ -99,7 +99,6 @@ public class PTUI {
 			try {
 				processGameCommand();
 			} catch(IndexOutOfBoundsException | IllegalArgumentException ignored) {
-				ignored.printStackTrace();
 				printBlock("Unable to parse command arguments, please try again.");
 			}
 		}
