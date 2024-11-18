@@ -2,7 +2,6 @@ package multiuserdungeon.authentication;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-import multiuserdungeon.Game;
 import multiuserdungeon.persistence.PersistenceManager;
 
 public class User {

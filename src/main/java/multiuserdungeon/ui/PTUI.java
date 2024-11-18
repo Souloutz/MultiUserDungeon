@@ -1,5 +1,6 @@
-package multiuserdungeon;
+package multiuserdungeon.ui;
 
+import multiuserdungeon.Game;
 import multiuserdungeon.authentication.Authenticator;
 import multiuserdungeon.commands.authentication.BrowseMapAction;
 import multiuserdungeon.commands.authentication.ChangePasswordAction;
@@ -40,7 +41,6 @@ import java.util.Scanner;
 public class PTUI {
 
 	private static final String DIVIDER  = "=".repeat(150);
-	private static final int DELAY_MS = 3000;
 	private static final Scanner scanner = new Scanner(System.in);
 	private static boolean quit = false;
 
