@@ -77,7 +77,7 @@ public class GuestView extends View {
 		Button browseBtn = new Button("Enter");
 		browseBtn.setOnAction(e -> {
 			new BrowseMapAction(Authenticator.getInstance(), browseSaveFile.getText()).execute();
-			// TODO: Go to game view
+			switchView(new GameView(getGUI()));
 		});
 		browseHBox.getChildren().add(browseLabel);
 		browseHBox.getChildren().add(browseSaveFile);

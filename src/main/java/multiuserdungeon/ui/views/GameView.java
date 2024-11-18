@@ -15,6 +15,8 @@ public class GameView extends View {
 
 		root.getChildren().add(generateHeader());
 
+		root.getChildren().add(generateLabel("GAME IN PROGRESS"));
+
 		this.scene = new Scene(root);
 	}
 

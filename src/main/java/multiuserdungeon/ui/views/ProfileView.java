@@ -42,7 +42,7 @@ public class ProfileView extends View {
 		Button browseBtn = new Button("Enter");
 		browseBtn.setOnAction(e -> {
 			new BrowseMapAction(Authenticator.getInstance(), browseSaveFile.getText()).execute();
-			// TODO: Go to game view
+			switchView(new GameView(getGUI()));
 		});
 		browseHBox.getChildren().add(browseLabel);
 		browseHBox.getChildren().add(browseSaveFile);
@@ -56,12 +56,12 @@ public class ProfileView extends View {
 		Button startBtn = new Button("Enter");
 		startBtn.setOnAction(e -> {
 			new StartGameAction(Authenticator.getInstance(), startSaveFile.getText()).execute();
-			// TODO: Go to game view
+			switchView(new GameView(getGUI()));
 		});
 		Button startEndlessBtn = new Button("Start (Endless)");
 		startEndlessBtn.setOnAction(e -> {
 			new StartGameAction(Authenticator.getInstance(), "endless_template").execute();
-			// TODO: Go to game view
+			switchView(new GameView(getGUI()));
 		});
 		startHBox.getChildren().add(startLabel);
 		startHBox.getChildren().add(startSaveFile);
@@ -76,7 +76,7 @@ public class ProfileView extends View {
 		Button joinBtn = new Button("Enter");
 		joinBtn.setOnAction(e -> {
 			new JoinGameAction(Authenticator.getInstance(), joinSaveFile.getText()).execute();
-			// TODO: Go to game view
+			switchView(new GameView(getGUI()));
 		});
 		startHBox.getChildren().add(joinLabel);
 		startHBox.getChildren().add(joinSaveFile);
