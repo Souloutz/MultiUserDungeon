@@ -9,6 +9,7 @@ import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
+import multiuserdungeon.map.TileObject;
 
 import java.util.Random;
 
@@ -23,9 +24,8 @@ import java.util.Arrays;
 
 public class RoomGenerator {
 
-
-
-    private static Random random = new Random();
+    static int MIN_ROOM_SIZE = 4;
+    static int MAX_ROOM_SIZE = 10;
 
     private static long xorshift(long state) {
         state ^= state << 13;
@@ -36,7 +36,7 @@ public class RoomGenerator {
 
     private static int[] permutation(int len) {
         long[] pre = new long[len];
-        pre[0] = random.nextLong((long)Math.pow(2,64));
+        pre[0] = new Random().nextLong((long)Math.pow(2,64));
         for (int i = 1;i < len; i++){
             pre[i] = xorshift(pre[i-1]);
         }
@@ -54,66 +54,40 @@ public class RoomGenerator {
     
     public static Room generateRoom (Compass direction, Room attached) {
 
-        int[] x = permutation(random.nextInt(6) + 4);
-        int[] y = permutation(random.nextInt(6) + 4);
+        Random random = new Random();
+
+        int[] x = permutation(random.nextInt(MAX_ROOM_SIZE - 3) + MIN_ROOM_SIZE);
+        int[] y = permutation(random.nextInt(MAX_ROOM_SIZE - 3) + MIN_ROOM_SIZE);
         int max = (x.length > y.length) ? y.length : x.length;
 
-        Room room = new Room(x.length,y.length,grabDescription());
+        Room room = new Room(y.length,x.length,grabDescription());
         int row;
         int col;
         if(direction == Compass.NORTH) {
-            row = 0;
-            col = random.nextInt(x.length);
-        } else if (direction == Compass.EAST) {
-            row = random.nextInt(y.length);
-            col = x.length - 1;
-        } else if (direction == Compass.SOUTH) {
             row = y.length - 1;
-            col = random.nextInt(x.length);
-        } else {
-            row = random.nextInt(y.length);
+            col = random.nextInt(1,x.length-1);
+        } else if (direction == Compass.EAST) {
+            row = random.nextInt(1,y.length-1);
             col = 0;
+        } else if (direction == Compass.SOUTH) {
+            row = 0;
+            col = random.nextInt(1,x.length-1);
+        } else {
+            row = random.nextInt(1,y.length-1);
+            col =  x.length - 1;
         }
         room.addConnection(row,col,attached);
 
-        // {0: obstacle, 1: NPC, 2: Trap, 3: chest}
-        // Permutation to fill rooms is len = 32
-        // modulo 4, but 30 = shrine and 31 = merchant
-
-        int[] objects = permutation(32);
-
-        for (int i = 0;i < max;i++) {
-            Tile tile = room.getTile(y[i],x[i]);
-            int place = objects[i] % 4;
-            TileObject object = null;
-
-            if (objects[i] == 31) {
-                object = (TileObject)generateMerchant();
-            } else if (objects[i] == 30) {
-                object = (TileObject)generateShrine();
-            } else if (place == 0) {
-                object = (TileObject)generateObstacle();
-            } else if (place == 1) {
-                object = (TileObject)generateNPC();
-            } else if (place == 2) {
-                object = (TileObject)generateTrap();
-            } else if (place == 3) {
-                object = (TileObject)generateChest();
-            }
-            tile.addObject(object);
-            object.setTile(tile);
-        }
-
-        int maxc = new Random().nextInt(1,4);
+        int maxc = random.nextInt(1,4);
         List<Compass> ways = new ArrayList<>();
         int count = 0;
         while (true) {
-            Compass newc = getCompass();
-            if (ways.contains(newc) || newc == direction) {
-                continue;
-            }
             if (count >= maxc) {
                 break;
+            }
+            Compass newc = getCompass();
+            if (ways.contains(newc) || newc == direction.getOpposite()) {
+                continue;
             }
             ways.add(newc);
             count++;
@@ -124,26 +98,103 @@ public class RoomGenerator {
             int ncol;
             if(c == Compass.NORTH) {
                 nrow = 0;
-                ncol = random.nextInt(x.length);
+                ncol = random.nextInt(1,x.length-1);
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    ncol = (ncol == 0) ? ncol++ : ncol--;
+                }
             } else if (c == Compass.EAST) {
-                nrow = random.nextInt(y.length);
+                nrow = random.nextInt(1,y.length-1);
                 ncol = x.length - 1;
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    nrow = (nrow == 0) ? nrow++ : nrow--;
+                }
             } else if (c == Compass.SOUTH) {
                 nrow = y.length - 1;
-                ncol = random.nextInt(x.length);
+                ncol = random.nextInt(1,x.length-1);
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    ncol = (ncol == 0) ? ncol++ : ncol--;
+                }
             } else {
-                nrow = random.nextInt(y.length);
+                nrow = random.nextInt(1,y.length-1);
                 ncol = 0;
+                if (room.getConnections().keySet().contains(room.getTile(nrow,ncol))) {
+                    nrow = (nrow == 0) ? nrow++ : nrow--;
+                }
             }
             
             room.addConnection(nrow,ncol,null);
+        }
+
+        // {0: obstacle, 1: NPC, 2: Trap, 3: chest}
+        // Permutation to fill rooms is len = 32
+        // modulo 4, but 30 = shrine and 31 = merchant
+
+        int[] objects = permutation(32);
+
+        for (int i = 0;i < max;i++) {
+            Tile tile = room.getTile(y[i],x[i]);
+            if (room.getConnections().keySet().contains(tile) || tile.getObjects().size() > 0) {
+                continue;
+            }
+            int place = objects[i] % 5;
+            TileObject object = null;
+
+            if (objects[i] == 31) {
+                object = (TileObject)generateMerchant();
+            } else if (objects[i] == 30) {
+                object = (TileObject)generateShrine();
+            } else if (place == 0) {
+                object = (TileObject)generateObstacle();
+            } else if (place == 1 || place == 4) {
+                object = (TileObject)generateNPC();
+            } else if (place == 2) {
+                object = (TileObject)generateTrap();
+            } else if (place == 3) {
+                object = (TileObject)generateChest();
+            }
+            tile.addObject(object);
+            object.setTile(tile);
+        }
+
+        return room;
+    }
+
+    public static Room populateRoom(Room room) {
+
+        int[] x = permutation(room.getRows());
+        int[] y = permutation(room.getColumns());
+        int max = (x.length > y.length) ? y.length : x.length;
+
+        int[] objects = permutation(31);
+
+        for (int i = 0;i < max;i++) {
+            Tile tile = room.getTile(x[i],y[i]);
+            if (room.getConnections().keySet().contains(tile) || tile.getObjects().size() > 0) {
+                continue;
+            }
+            int place = objects[i] % 5;
+            TileObject object = null;
+
+            if (objects[i] == 30) {
+                object = (TileObject)generateMerchant();
+            } else if (place == 0) {
+                object = (TileObject)generateObstacle();
+            } else if (place == 1 || place == 4) {
+                object = (TileObject)generateNPC();
+            } else if (place == 2) {
+                object = (TileObject)generateTrap();
+            } else if (place == 3) {
+                object = (TileObject)generateChest();
+            }
+            tile.addObject(object);
+            object.setTile(tile);
         }
 
         return room;
     }
 
     private static Compass getCompass() {
-        return Compass.values()[new Random().nextInt(1,5)];
+        return Compass.values()[(new Random().nextInt(0,4)) *2];
     }
 
     private static String grabDescription(){
@@ -151,7 +202,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/descriptions.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,100);
+            int rindex = new Random().nextInt(99);
 
             br.readLine();
 
@@ -171,7 +222,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/merchants.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,16);
+            int rindex = new Random().nextInt(15);
 
             br.readLine();
 
@@ -191,7 +242,7 @@ public class RoomGenerator {
 
             return new Merchant(line,items);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -200,7 +251,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/chests.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,16);
+            int rindex = new Random().nextInt(15);
 
             br.readLine();
 
@@ -220,7 +271,7 @@ public class RoomGenerator {
 
             return new Chest(line,items);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -229,7 +280,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/obstacles.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,101);
+            int rindex = new Random().nextInt(100);
 
             br.readLine();
 
@@ -242,7 +293,7 @@ public class RoomGenerator {
 
             return new Obstacle(line);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -251,7 +302,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/npcs.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,67);
+            int rindex = new Random().nextInt(66);
 
             br.readLine();
 
@@ -271,7 +322,7 @@ public class RoomGenerator {
 
             return new NPC(tokens[0],tokens[1],cb);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
     }
@@ -284,7 +335,7 @@ public class RoomGenerator {
         try (BufferedReader br = new BufferedReader(new FileReader("data/room/shrines.csv"))) {
             String line;
             int cindex = 0;
-            int rindex = new Random().nextInt(1,16);
+            int rindex = new Random().nextInt(15);
 
             br.readLine();
 
@@ -297,8 +348,14 @@ public class RoomGenerator {
 
             return new Shrine(line);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        while (true) {
+            System.out.println(generateRoom(Compass.NORTH,null));
         }
     }
 

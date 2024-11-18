@@ -9,9 +9,10 @@ import multiuserdungeon.map.TileObject;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.*;
 import multiuserdungeon.clock.*;
+import multiuserdungeon.map.TileObject;
 
+public class Merchant implements TileObject {
 
-public class Merchant implements TileObject{
     private String name;
     private Map<InventoryElement, Integer> store;
     private Tile tile;
