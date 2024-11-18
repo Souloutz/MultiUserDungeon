@@ -63,4 +63,9 @@ public class Merchant implements TileObject {
         return Game.getInstance().getMap().getPlayerRoom().isSafe() && Game.getInstance().getCurrentTime().isDay();
     }
 
+    @Override
+    public String toString() {
+        return this.name + ", who has " + this.store.size() + " items(s) for sale";
+    }
+
 }
