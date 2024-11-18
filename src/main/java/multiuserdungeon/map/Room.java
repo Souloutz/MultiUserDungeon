@@ -1,7 +1,6 @@
 package multiuserdungeon.map;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import multiuserdungeon.Game;
@@ -16,7 +15,6 @@ public class Room {
 	private final Map<Compass, Tile> doorways;
 	private final Map<Tile, Room> connections;
 	private final Tile[][] layout;
-	private Tile playerTile;
 
 	public Room(int rows, int columns, String description) {
 		this.rows = rows;
@@ -25,7 +23,6 @@ public class Room {
 		this.doorways = new HashMap<>();
 		this.connections = new HashMap<>();
 		this.layout = new Tile[rows][columns];
-		this.playerTile = null;
 
 		for(int row = 0; row < this.rows; row++){
 			for(int col = 0; col < this.columns; col++){
@@ -46,19 +43,16 @@ public class Room {
 		}
 	}
 
-	//copy constructor
-	public Room(Room room){
+	public Room(Room room) {
 		this.rows = room.getRows();
 		this.columns = room.getColumns();
+		this.description = room.getDescription();
 		this.doorways = new HashMap<>();
 		this.connections = new HashMap<>();
 		this.layout = new Tile[this.rows][this.columns];
-		this.playerTile = null;
 
-		this.description = room.getDescription();
-
-		for(int row = 0; row < this.rows; row++){
-			for(int col = 0; col < this.columns; col++){
+		for(int row = 0; row < this.rows; row++) {
+			for(int col = 0; col < this.columns; col++) {
 				this.layout[row][col] = new Tile(room.getTile(row, col));
 			}
 		}
@@ -88,8 +82,16 @@ public class Room {
 		return this.description;
 	}
 
+	public Map<Compass, Tile> getDoorways() {
+		return this.doorways;
+	}
+
 	public Tile getDoorway(Compass compass) {
 		return this.doorways.get(compass);
+	}
+
+	public Map<Tile, Room> getConnections() {
+		return this.connections;
 	}
 
 	public void addConnection(int row, int col, Room targetRoom) {
@@ -112,6 +114,15 @@ public class Room {
 		this.connections.put(tile, targetRoom);
 	}
 
+	public void removeConnection(int row, int col) {
+		this.doorways.values().remove(getTile(row, col));
+		this.connections.remove(getTile(row, col));
+	}
+
+	public boolean isConnectionLoaded(Tile tile) {
+		return this.connections.get(tile) != null;
+	}
+
 	public Tile getTile(int row, int col) {
 		try {
 			return this.layout[row][col];
@@ -120,45 +131,41 @@ public class Room {
 		}
 	}
 
-	public Tile getPlayerTile() {
-		return this.playerTile;
-	}
-
-	public void setPlayerTile(Tile playerTile) {
-		this.playerTile = playerTile;
-	}
-
-	public boolean isSafe(){
-		for(int i = 0; i < layout.length; i++){
-			for(int j = 0; j < layout[j].length; j++){
-				List<TileObject> tileobjects = layout[i][j].getObjects();
-				for(TileObject tileobject : tileobjects){
-					if(tileobject instanceof NPC){
-						return false;
-					}
-				}
+	public boolean isSafe() {
+		for(Tile[] row : this.layout) {
+			for(Tile tile : row) {
+				NPC npc = tile.getNPC();
+				if(npc == null) continue;
+				if(npc.getHealth() > 0) return false;
 			}
 		}
 		return true;
+	}
+
+	public boolean isPopulated() {
+		for(Tile[] row : this.layout) {
+			for(Tile tile : row) {
+				if(!tile.getObjects().isEmpty()) return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean handleExitRoom(Compass direction) {
 		Room newRoom = this.connections.get(this.doorways.get(direction));
 		if(newRoom == null) return false;
 		Tile newTile = newRoom.getDoorway(direction.getOpposite());
-		if(newTile == null) {
-			System.out.println("newTile is null");
-			return false;
+		if(newTile == null) return false;
+
+		if(!newRoom.isPopulated()) {
+			RoomGenerator.populateRoom(newRoom);
 		}
 
 		Player player = Game.getInstance().getPlayer();
-		Game.getInstance().getMap().setPlayerRoom(newRoom);
-		newRoom.setPlayerTile(newTile);
-		player.setTile(newTile);
-		this.playerTile = null;
-
 		player.getTile().removeObject(player);
+		player.setTile(newTile);
 		newTile.addObject(player);
+		Game.getInstance().getMap().setPlayerRoom(newRoom);
 		return true;
 	}
 
@@ -170,7 +177,7 @@ public class Room {
 		for(int row = 0; row < this.rows; row++) {
 			for(int col = 0; col < this.columns; col++) {
 				Tile tile = getTile(row, col);
-				if(tile.getObjects().size() <= 1) continue;
+				if(tile.getObjects().isEmpty()) continue;
 
 				builder.append("\n\t- ").append(tile);
 			}
@@ -213,10 +220,6 @@ public class Room {
 			builder.append("\n");
 		}
 		return builder.toString();
-	}
-
-	public Map<Tile,Room> getConnections () {
-		return this.connections;
 	}
 
 }

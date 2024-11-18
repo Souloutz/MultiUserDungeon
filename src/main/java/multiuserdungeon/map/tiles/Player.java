@@ -3,6 +3,7 @@ package multiuserdungeon.map.tiles;
 import java.util.HashMap;
 import java.util.Map;
 
+import multiuserdungeon.Game;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.inventory.*;
 
@@ -14,40 +15,31 @@ public class Player extends Character {
 	private final Map<Buff, Integer> buffs;
 	private int gold;
 
-	public Player(String name, String description) {
+	public Player(String name, String description, Inventory inventory, Map<Buff, Integer> buffs) {
 		super(name, description, 100, 10, 0);
-		this.inventory = new Inventory("Your Inventory", "Filled with all of your wonderful items.");
+		this.inventory = inventory;
 		this.weapon = null;
 		this.armor = null;
-		this.buffs = new HashMap<>();
+		this.buffs = buffs;
 		this.gold = 0;
 	}
 
-	//copy constructor
-	public Player(Player player){
+	public Player(Player player) {
 		super(player.getName(), player.getDescription(), player.getMaxHealth(), player.getAttack(), player.getDefense());
 		this.inventory = new Inventory(player.getInventory());
-		this.weapon=(player.getWeapon());
-		this.armor=(player.getArmor());
-		this.buffs = new HashMap<>();
+		this.weapon = player.getWeapon();
+		this.armor = player.getArmor();
+		this.buffs = new HashMap<>(player.buffs);
 		this.gold = player.gold;
-		for(Buff buff : player.buffs.keySet()){
-			this.useBuff(buff);
-		}
 		this.setHealth(player.getHealth());
-
 	}
 
 	@Override
-	public boolean equals (Object o) {
-		if (o instanceof Player) {
-			Player p = (Player)o;
-			if (p.gold == this.gold &&
-				p.armor.equals(this.armor) &&
-				p.weapon.equals(this.weapon));
-		//TODO{Finish this method, make weapons and armor individually comparable}
-		//TODO{Make sure that you are comparing attributes from Character as well}
-
+	public boolean equals(Object o) {
+		if(o instanceof Player p) {
+			return getName().equals(p.getName()) && getDescription().equals(p.getDescription()) &&
+					getMaxHealth() == p.getMaxHealth() && getAttack() == p.getAttack() && getDefense() == p.getDefense() &&
+					this.weapon == p.weapon && this.armor == p.armor && this.buffs.equals(p.buffs) && this.gold == p.gold;
 		}
 		return false;
 	}
@@ -113,6 +105,10 @@ public class Player extends Character {
 		this.armor = armor;
 	}
 
+	public Map<Buff, Integer> getBuffs() {
+		return this.buffs;
+	}
+
 	public void useBuff(Buff buff) {
 		this.buffs.put(buff, 0);
 	}
@@ -149,6 +145,7 @@ public class Player extends Character {
 	}
 	public void gainGold(int gain) {
 		this.gold += gain;
+		Game.getInstance().getStats().addToGoldEarned(gain);
 	}
 
 	@Override

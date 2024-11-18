@@ -1,38 +1,32 @@
 package multiuserdungeon.commands.player;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.authentication.Profile;
-import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
+import multiuserdungeon.map.Compass;
 
 public class SellItemAction implements Action<Boolean> {
     
     private final Game receiver;
-    private final User user;
+    private final Compass direction;
     private final int bagPos;
     private final int itemPos;
 
-    public SellItemAction(Game game, User user, int bagPos, int itemPos) {
+    public SellItemAction(Game game, Compass direction, int bagPos, int itemPos) {
         this.receiver = game;
-        this.user = user;
+        this.direction = direction;
         this.bagPos = bagPos;
         this.itemPos = itemPos;
     }
 
     @Override
     public Boolean execute() {
-        if (canExecute())
-            return this.receiver.handleSellItem(bagPos, itemPos);
-
-        return false;
+	    if(!canExecute()) return false;
+	    return this.receiver.handleSellItem(this.direction, this.bagPos, this.itemPos);
     }
 
     @Override
     public boolean canExecute() {
-        //TODO{Make very specific to determine if this action should be an option}
-        if (user instanceof Profile)
-			return true;
-
-		return false;
+        return this.receiver != null;
     }
+
 }

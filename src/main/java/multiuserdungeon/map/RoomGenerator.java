@@ -1,22 +1,21 @@
-package multiuserdungeon;
+package multiuserdungeon.map;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 import multiuserdungeon.clock.CreatureBuff;
 import multiuserdungeon.inventory.InventoryElement;
-import multiuserdungeon.map.*;
+import multiuserdungeon.inventory.Items;
 import multiuserdungeon.map.tiles.Chest;
 import multiuserdungeon.map.tiles.Merchant;
 import multiuserdungeon.map.tiles.NPC;
 import multiuserdungeon.map.tiles.Obstacle;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
-import multiuserdungeon.map.TileObject;
 
 import java.util.Random;
-
-
 import java.util.HashMap;
 import java.util.List;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class RoomGenerator {
         int[] y = permutation(random.nextInt(MAX_ROOM_SIZE - 3) + MIN_ROOM_SIZE);
         int max = (x.length > y.length) ? y.length : x.length;
 
-        Room room = new Room(y.length,x.length,grabDescription());
+        Room room = new Room(y.length,x.length, generateRoomDescription());
         int row;
         int col;
         if(direction == Compass.NORTH) {
@@ -197,165 +196,75 @@ public class RoomGenerator {
         return Compass.values()[(new Random().nextInt(0,4)) *2];
     }
 
-    private static String grabDescription(){
-
-        try (BufferedReader br = new BufferedReader(new FileReader("data/room/descriptions.csv"))) {
-            String line;
-            int cindex = 0;
-            int rindex = new Random().nextInt(99);
-
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                if (cindex == rindex) {
-                    break;
-                }
-                cindex++;
-            }
-            return line;
-        } catch (IOException e) {
-            return "error getting a cool description";
-        }
-    }
-
-    private static Merchant generateMerchant(){
-        try (BufferedReader br = new BufferedReader(new FileReader("data/room/merchants.csv"))) {
-            String line;
-            int cindex = 0;
-            int rindex = new Random().nextInt(15);
-
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                if (cindex == rindex){
-                    break;
-                }
-                cindex++;
-            }
-
-            int count = 3;
-            List<InventoryElement> items = new ArrayList<>();
-            Items collections = Items.getInstance();
-            for (int i = 0; i < count;i++) {
-                items.add(collections.getItem(new Random().nextInt(1,100)));
-            }
-
-            return new Merchant(line,items);
-
-        } catch (IOException e) {
+    private static String generateRoomDescription(){
+        try(CSVReader reader = new CSVReaderBuilder(new FileReader("data/room/descriptions.csv")).build()) {
+            List<String[]> lines = reader.readAll();
+            return lines.get(new Random().nextInt(1, lines.size()))[0];
+        } catch (IOException | CsvException e) {
+            System.out.println("Error generating room description!");
             return null;
         }
     }
 
+    public static Merchant generateMerchant(){
+	    try(CSVReader reader = new CSVReaderBuilder(new FileReader("data/room/merchants.csv")).build()) {
+		    List<String[]> lines = reader.readAll();
+            String name = lines.get(new Random().nextInt(1, lines.size()))[0];
+            List<InventoryElement> store = Items.getInstance().getRandomList(3);
+            return new Merchant(name, store);
+	    } catch (IOException | CsvException e) {
+            System.out.println("Error generating merchant!");
+		    return null;
+	    }
+    }
+
     private static Chest generateChest() {
-        try (BufferedReader br = new BufferedReader(new FileReader("data/room/chests.csv"))) {
-            String line;
-            int cindex = 0;
-            int rindex = new Random().nextInt(15);
-
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                if (cindex == rindex){
-                    break;
-                }
-                cindex++;
-            }
-
-            int count = new Random().nextInt(2,10);
-            List<InventoryElement> items = new ArrayList<>();
-            Items collections = Items.getInstance();
-            for (int i = 0; i < count;i++) {
-                items.add(collections.getItem(new Random().nextInt(1,100)));
-            }
-
-            return new Chest(line,items);
-
-        } catch (IOException e) {
+        try(CSVReader reader = new CSVReaderBuilder(new FileReader("data/room/chests.csv")).build()) {
+            List<String[]> lines = reader.readAll();
+            String name = lines.get(new Random().nextInt(1, lines.size()))[0];
+            int items = new Random().nextInt(2, 6);
+            List<InventoryElement> contents = Items.getInstance().getRandomList(items);
+            return new Chest(name, contents);
+        } catch (IOException | CsvException e) {
+            System.out.println("Error generating chest!");
             return null;
         }
     }
 
     private static Obstacle generateObstacle() {
-        try (BufferedReader br = new BufferedReader(new FileReader("data/room/obstacles.csv"))) {
-            String line;
-            int cindex = 0;
-            int rindex = new Random().nextInt(100);
-
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                if (cindex == rindex){
-                    break;
-                }
-                cindex++;
-            }
-
-            return new Obstacle(line);
-
-        } catch (IOException e) {
+        try(CSVReader reader = new CSVReaderBuilder(new FileReader("data/room/obstacles.csv")).build()) {
+            List<String[]> lines = reader.readAll();
+            String name = lines.get(new Random().nextInt(1, lines.size()))[0];
+            return new Obstacle(name);
+        } catch (IOException | CsvException e) {
+            System.out.println("Error generating obstacle!");
             return null;
         }
     }
 
     private static NPC generateNPC() {
-        try (BufferedReader br = new BufferedReader(new FileReader("data/room/npcs.csv"))) {
-            String line;
-            int cindex = 0;
-            int rindex = new Random().nextInt(66);
-
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                if (cindex == rindex){
-                    break;
-                }
-                cindex++;
-            }
-            String[] tokens = line.split(",");
-            CreatureBuff cb;
-            if (new Random().nextBoolean()) {
-                cb = CreatureBuff.DIURNAL;
-            } else {
-                cb = CreatureBuff.NOCTURNAL;
-            }
-
-            return new NPC(tokens[0],tokens[1],cb);
-
-        } catch (IOException e) {
+        try(CSVReader reader = new CSVReaderBuilder(new FileReader("data/room/npcs.csv")).build()) {
+            List<String[]> lines = reader.readAll();
+            String[] line = lines.get(new Random().nextInt(1, lines.size()));
+            return new NPC(line[0], line[1], new Random().nextBoolean() ? CreatureBuff.DIURNAL : CreatureBuff.NOCTURNAL);
+        } catch (IOException | CsvException e) {
+            System.out.println("Error generating NPC!");
             return null;
         }
     }
 
     private static Trap generateTrap() {
-        return new Trap(new Random().nextInt(5,50));
+        return new Trap(new Random().nextInt(5, 50));
     }
 
-    private static Shrine generateShrine() {
-        try (BufferedReader br = new BufferedReader(new FileReader("data/room/shrines.csv"))) {
-            String line;
-            int cindex = 0;
-            int rindex = new Random().nextInt(15);
-
-            br.readLine();
-
-            while ((line = br.readLine()) != null) {
-                if (cindex == rindex){
-                    break;
-                }
-                cindex++;
-            }
-
-            return new Shrine(line);
-
-        } catch (IOException e) {
+    public static Shrine generateShrine() {
+        try(CSVReader reader = new CSVReaderBuilder(new FileReader("data/room/shrines.csv")).build()) {
+            List<String[]> lines = reader.readAll();
+            String name = lines.get(new Random().nextInt(1, lines.size()))[0];
+            return new Shrine(name);
+        } catch (IOException | CsvException e) {
+            System.out.println("Error generating shrine!");
             return null;
-        }
-    }
-
-    public static void main(String[] args) {
-        while (true) {
-            System.out.println(generateRoom(Compass.NORTH,null));
         }
     }
 

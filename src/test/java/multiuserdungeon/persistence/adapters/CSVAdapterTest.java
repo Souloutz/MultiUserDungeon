@@ -14,7 +14,7 @@ public class CSVAdapterTest {
 	public static void setup() {
 		Profile profile = new Profile("Bob", "abc123", "I like trains");
 		GameStats stats = new GameStats();
-		stats.addToGold(100);
+		stats.addToGoldEarned(100);
 		profile.addToStats(stats);
 		new CSVAdapter().saveProfile(profile);
 	}
@@ -59,7 +59,7 @@ public class CSVAdapterTest {
 
 		// Analyze
 		assertEquals(username, profile.getUsername());
-		assertEquals(100, profile.getStats().get(0).getTotalGold());
+		assertEquals(100, profile.getStats().get(0).getGoldEarned());
 	}
 
 }

@@ -1,5 +1,6 @@
 package multiuserdungeon.map.tiles;
 
+import multiuserdungeon.inventory.Items;
 import multiuserdungeon.map.*;
 
 public abstract class Character implements TileObject {
@@ -77,6 +78,9 @@ public abstract class Character implements TileObject {
 		this.health -= damage;
 
 		if(this.health == 0) {
+			Corpse corpse = new Corpse(this.name + "'s Corpse", Items.getInstance().getRandomList(1));
+			corpse.setTile(this.tile);
+			this.tile.addObject(corpse);
 			this.tile.removeObject(this);
 			this.tile = null;
 		}
@@ -88,11 +92,23 @@ public abstract class Character implements TileObject {
 		return this.baseMaxHealth;
 	}
 
-	public int getAttack() {
+	public int getBaseAttack() {
+		// This is used in persistence
 		return this.baseAttack;
 	}
 
+	public int getAttack() {
+		// This version is overridden by Player/NPC
+		return this.baseAttack;
+	}
+
+	public int getBaseDefense() {
+		// This is used in persistence
+		return this.baseDefense;
+	}
+
 	public int getDefense() {
+		// This version is overridden by Player/NPC
 		return this.baseDefense;
 	}
 

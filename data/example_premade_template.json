@@ -6,7 +6,7 @@
 			{
 				"rows": 2,
 				"cols": 4,
-				"description": "Starting room",
+				"description": "Starting Room",
 				"tiles": [
 					[
 						[],
@@ -15,6 +15,48 @@
 						[]
 					],
 					[
+						[],
+						[],
+						[],
+						[]
+					]
+				]
+			},
+			{
+				"rows": 5,
+				"cols": 5,
+				"description": "Intermediate Room",
+				"tiles": [
+					[
+						[],
+						[],
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[],
+						[],
+						[]
+					],
+					[
+						[],
+						[],
+						[],
+						[],
+						[]
+					],
+					[
+						[],
 						[],
 						[],
 						[],
@@ -55,11 +97,17 @@
 				"fromRoom": 0,
 				"toRoom": 1,
 				"fromTile": "0,2",
+				"toTile": "4,1"
+			},
+			{
+				"fromRoom": 1,
+				"toRoom": 2,
+				"fromTile": "0,1",
 				"toTile": "3,1"
 			}
 		],
-		"playerRooms": [],
-		"goalRoom": 1
+		"playerStartRooms": [],
+		"goalRoom": 2
 	},
 	"clock": {
 		"turnCounter": 0,

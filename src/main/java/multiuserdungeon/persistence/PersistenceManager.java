@@ -36,7 +36,7 @@ public class PersistenceManager {
 		List<String> files = new LinkedList<>();
 		for(FileAdapter adapter : this.adapters) {
 			String uri = adapter.saveGame(game);
-			if(adapter.saveGame(game) != null) files.add(uri);
+			if(uri != null) files.add(uri);
 		}
 		return String.join(", ", files);
 	}
@@ -53,7 +53,7 @@ public class PersistenceManager {
 		List<String> files = new LinkedList<>();
 		for(FileAdapter adapter : this.adapters) {
 			String uri = adapter.saveProfile(profile);
-			if(adapter.saveProfile(profile) != null) files.add(uri);
+			if(uri != null) files.add(uri);
 		}
 		return String.join(", ", files);
 	}

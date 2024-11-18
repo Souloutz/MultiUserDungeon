@@ -11,7 +11,7 @@ public class Authenticator {
         this.currentUser = null;
     }
 
-    public static Authenticator instance() {
+    public static Authenticator getInstance() {
         if(INSTANCE == null) INSTANCE = new Authenticator();
         return INSTANCE;
     }
@@ -20,12 +20,12 @@ public class Authenticator {
         return this.currentUser;
     }
 
-    private void setUser(User user) {
-        this.currentUser = user;
-    }
-
     public boolean loggedIn() {
         return this.currentUser != null && this.currentUser instanceof Profile;
+    }
+
+    public void loginAsGuest(String username, String description) {
+        this.currentUser = new User(username, description);
     }
 
     public boolean login(String username, String password) {
@@ -36,31 +36,29 @@ public class Authenticator {
         if(profile == null) return false;
         if(!profile.getPassword().equals(password)) return false;
 
-        setUser(profile);
+        this.currentUser = profile;
         return true;
     }
 
-    public boolean register(String username, String password, String description) {
-        if(loggedIn()) return false;
-
+    public boolean register(String username, String description, String password, String confirmPassword) {
+        if(!password.equals(confirmPassword)) return false;
         Profile newProfile = new Profile(username, password, description);
         PersistenceManager.getInstance().saveProfile(newProfile);
-        setUser(newProfile);
+        this.currentUser = newProfile;
         return true;
     }
 
-    public boolean handleChangePassword(String curPassword, String newPassword) {
-        if (!loggedIn()) return false;
+    public boolean handleChangePassword(String curPassword, String newPassword, String confirmPassword) {
+        if(curPassword.equals(newPassword)) return false;
+        if(!newPassword.equals(confirmPassword)) return false;
         
         ((Profile) this.currentUser).changePassword(curPassword, newPassword);
         PersistenceManager.getInstance().saveProfile((Profile) this.currentUser);
         return true;
     }
 
-    public boolean logout() {
-        if(!loggedIn()) return false;
-        setUser(null);
-        return true;
+    public void logout() {
+        this.currentUser = null;
     }
 
 }

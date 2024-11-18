@@ -2,47 +2,66 @@ package multiuserdungeon.authentication;
 
 public class GameStats {
 
+    private int gamesPlayed;
     private int livesLost;
     private int monstersSlain;
-    private int totalGold;
+    private int goldEarned;
     private int itemsFound;
 
     public GameStats() {
+        this.gamesPlayed = 0;
         this.livesLost = 0;
         this.monstersSlain = 0;
-        this.totalGold = 0;
+        this.goldEarned = 0;
         this.itemsFound = 0;
     }
 
+    public int getGamesPlayed() {
+        return this.gamesPlayed;
+    }
+
     public int getLivesLost() {
-        return livesLost;
+        return this.livesLost;
     }
 
     public int getMonstersSlain() {
-        return monstersSlain;
+        return this.monstersSlain;
     }
 
-    public int getTotalGold() {
-        return totalGold;
+    public int getGoldEarned() {
+        return this.goldEarned;
     }
 
     public int getItemsFound() {
-        return itemsFound;
+        return this.itemsFound;
+    }
+
+    public void addAll(GameStats stats) {
+        this.gamesPlayed += stats.getGamesPlayed();
+        this.livesLost += stats.getLivesLost();
+        this.monstersSlain += stats.getMonstersSlain();
+        this.goldEarned += stats.getGoldEarned();
+        this.itemsFound += stats.getItemsFound();
+    }
+
+    public void addToGamesPlayed(int n) {
+        this.gamesPlayed += n;
     }
     
-    public void addToLives(int n) {
+    public void addToLivesLost(int n) {
         this.livesLost += n;
     }
 
-    public void addToMonsters(int n) {
+    public void addToMonstersSlain(int n) {
         this.monstersSlain += n;
     }
 
-    public void addToGold(int n) {
-        this.totalGold += n;
+    public void addToGoldEarned(int n) {
+        this.goldEarned += n;
     }
 
     public void addToItems(int n) {
         this.itemsFound += n;
     }
+
 }

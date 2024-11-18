@@ -6,110 +6,93 @@ import java.util.HashMap;
 
 import multiuserdungeon.Game;
 import multiuserdungeon.map.tiles.*;
-import multiuserdungeon.RoomGenerator;
+
 import java.util.List;
 
 public class EndlessMap implements GameMap {
-    private Map<Player,Room> playerRooms;
-    private Map<Player,Room> playerStartRooms;
-    private Player currentPlayer;
 
-    private List<Room> rooms;
+    private final List<Player> players;
+    private final List<Room> rooms;
+    private final Map<Integer, Integer> playerRooms;
+    private final Map<Integer, Integer> playerStartRooms;
 
-    public EndlessMap(Player player, List<Room> rooms) {
-        this.playerRooms = new HashMap<>();
-        this.playerStartRooms = new HashMap<>();
-        this.currentPlayer = player;
+    public EndlessMap(List<Room> rooms, List<Player> players, Map<Integer, Integer> playerRooms, Map<Integer, Integer> playerStartRooms) {
         this.rooms = rooms;
+        this.players = players;
+        this.playerRooms = playerRooms;
+        this.playerStartRooms = playerStartRooms;
     }
 
-    //copy constructor 
-    public EndlessMap(EndlessMap oldMap){
-        this.playerRooms = new HashMap<>();
-        this.playerStartRooms = new HashMap<>();
-        this.currentPlayer =  new Player(currentPlayer);
+    public EndlessMap(EndlessMap oldMap) {
+        this.players = new ArrayList<>();
+        for(Player player : oldMap.players) {
+            this.players.add(new Player(player));
+        }
         this.rooms = new ArrayList<>();
-
-        //create all the rooms first
-        for(Room oldRoom : oldMap.rooms){
-            Room newRoom = new Room(oldRoom);
-            this.rooms.add(newRoom);
+        for(Room room : oldMap.rooms) {
+            this.rooms.add(new Room(room));
         }
-        //set the connections
-        for(int i = 0; i < this.rooms.size(); i++){
-            Room newRoom = this.rooms.get(i);
-            Room oldRoom = oldMap.rooms.get(i);
-            Map<Tile,Room> oldConnections = oldRoom.getConnections();
-
-            for(Tile tile : oldConnections.keySet()){
-                int connectingRoomIndex = oldMap.rooms.indexOf(oldConnections.get(tile));
-                newRoom.addConnection(tile.getRow(), tile.getCol(), this.rooms.get(connectingRoomIndex));
+        for(Room oldRoom : oldMap.rooms) {
+            int oldRoomId = oldMap.rooms.indexOf(oldRoom);
+            Room fromRoom = this.rooms.get(oldRoomId);
+            for(Map.Entry<Tile, Room> connection : oldRoom.getConnections().entrySet()) {
+                int toRoomId = oldMap.rooms.indexOf(connection.getValue());
+                if(toRoomId == -1) {
+                    fromRoom.addConnection(connection.getKey().getRow(), connection.getKey().getCol(), null);
+                } else {
+                    Room toRoom = this.rooms.get(toRoomId);
+                    fromRoom.addConnection(connection.getKey().getRow(), connection.getKey().getCol(), toRoom);
+                }
             }
         }
-
-        //set each player's start room, current room, and tiles with the new room and tile instances
-        for(Player player : oldMap.playerStartRooms.keySet()){
-            int startRoomIndex = oldMap.rooms.indexOf(oldMap.playerStartRooms.get(player));
-            int playerRoomIndex = oldMap.rooms.indexOf(oldMap.playerRooms.get(player));
-
-            Room newStartRoom = this.rooms.get(startRoomIndex);
-            Room newPlayerRoom = this.rooms.get(playerRoomIndex);
-
-            if(player == oldMap.currentPlayer){
-                this.playerStartRooms.put(this.currentPlayer, newStartRoom);
-                this.playerRooms.put(this.currentPlayer, newPlayerRoom);
-
-                //setting player tile
-                Tile oldPlayerTile = oldMap.getPlayerRoom().getPlayerTile();
-                newPlayerRoom.setPlayerTile(newPlayerRoom.getTile(oldPlayerTile.getRow(), oldPlayerTile.getCol()));
-                newPlayerRoom.getPlayerTile().addObject(this.currentPlayer);
-                this.currentPlayer.setTile(newPlayerRoom.getPlayerTile());
-
-            }
-            else{
-                this.playerStartRooms.put(player, newStartRoom);
-                this.playerRooms.put(player, newPlayerRoom);
-
-                //setting player tile
-                Tile oldPlayerTile = oldMap.playerRooms.get(player).getPlayerTile();
-                newPlayerRoom.setPlayerTile(newPlayerRoom.getTile(oldPlayerTile.getRow(), oldPlayerTile.getCol()));
-                newPlayerRoom.getPlayerTile().addObject(player);
-                player.setTile(newPlayerRoom.getPlayerTile());
-            }
-        };
+        this.playerRooms = new HashMap<>(oldMap.playerRooms);
+        this.playerStartRooms = new HashMap<>(oldMap.playerStartRooms);
     }
 
     @Override
-    public Room getPlayerRoom () {
-        return playerRooms.get(currentPlayer);
-    }
-    @Override
-    public void setPlayerRoom (Room room) {
-        this.playerRooms.put(currentPlayer,room);
+    public Room getPlayerRoom() {
+        return this.rooms.get(this.playerRooms.get(this.players.indexOf(Game.getInstance().getPlayer())));
     }
 
+    @Override
+    public void setPlayerRoom(Room room) {
+        this.playerRooms.put(this.players.indexOf(Game.getInstance().getPlayer()), this.rooms.indexOf(room));
+    }
+
+    @Override
+    public boolean isInStartRoom() {
+        return getPlayerRoom().equals(this.rooms.get(this.playerStartRooms.get(this.players.indexOf(Game.getInstance().getPlayer()))));
+    }
+
+    @Override
     public void handleExitRoom(Compass direction) {
         Room room = getPlayerRoom();
-        try {
-            if (room.getConnections().get(currentPlayer.getTile()) == null) {
-                Room newRoom = RoomGenerator.generateRoom(direction,room);
-                rooms.add(newRoom);
-                room.getConnections().put(currentPlayer.getTile(),newRoom);
-            }
-        } catch (NullPointerException e) {}
-    }
-
-    public boolean isStartRoom() {
-        return getPlayerRoom().equals(playerStartRooms.get(currentPlayer));
-    }
-
-    public Player getCurrentPlayer(){
-        return this.currentPlayer;
+        Tile tile = Game.getInstance().getPlayer().getTile();
+        if(!room.isConnectionLoaded(tile)) {
+            Room newRoom = RoomGenerator.generateRoom(direction, room);
+            room.addConnection(tile.getRow(), tile.getCol(), newRoom);
+            this.rooms.add(newRoom);
+        }
     }
 
     @Override
     public List<Room> getRooms() {
-        return rooms;
+        return this.rooms;
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        return this.players;
+    }
+
+    @Override
+    public Map<Integer, Integer> getPlayerRooms() {
+        return this.playerRooms;
+    }
+
+    @Override
+    public Map<Integer, Integer> getPlayerStartRooms() {
+        return this.playerStartRooms;
     }
 
 }

@@ -24,30 +24,28 @@ public class Bag implements InventoryElement {
 		this.items = new ArrayList<>();
 	}
 
-	//copy constructor
 	public Bag(Bag bag) {
 		this.name = bag.name;
 		this.description = bag.description;
 		this.goldValue = bag.goldValue;
 		this.capacity = bag.capacity;
-		this.isEquipped = false;
-		this.items = new ArrayList<>();
+		this.isEquipped = bag.isEquipped;
+		this.items = new ArrayList<>(bag.items);
 	}
 
 	@Override
-	public boolean equals (Object o) {
-		if (o instanceof Bag) {
-			Bag b = (Bag)o;
-			if (b.name.equals(this.name) &&
+	public boolean equals(Object o) {
+		if(o instanceof Bag b) {
+			if(b.name.equals(this.name) &&
 			b.description.equals(this.description) &&
 			b.goldValue == this.goldValue &&
 			b.capacity == this.capacity) {
-				for (int i = 0; i < this.items.size(); i++) {
+				for(int i = 0; i < this.items.size(); i++) {
 					try {
-						if (!b.items.get(i).equals(this.items.get(i))) {
+						if(!b.items.get(i).equals(this.items.get(i))) {
 							break;
 						}
-					} catch (IndexOutOfBoundsException e) {
+					} catch(IndexOutOfBoundsException e) {
 						return false;
 					}
 					if (i++ == this.items.size()) {

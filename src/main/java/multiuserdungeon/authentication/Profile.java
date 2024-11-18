@@ -17,13 +17,7 @@ public class Profile extends User {
     @CsvBindAndSplitByPosition(position = 3, elementType = GameStats.class, writeDelimiter = "|", converter = GameStatsCSVConverter.class)
     private final List<GameStats> stats;
 
-    public Profile() {
-        super(null, null);
-        this.password = null;
-        this.stats = null;
-    }
-
-    public Profile(String username, String password, String description) {
+    public Profile(String username, String description, String password) {
         super(username, description);
         this.password = password;
         this.stats = new ArrayList<>();
@@ -34,7 +28,7 @@ public class Profile extends User {
     }
 
     public boolean changePassword(String prevPassword, String newPassword) {
-        if (prevPassword.equals(this.password)) {
+        if(prevPassword.equals(this.password)) {
             this.password = newPassword;
             return true;
         }
@@ -45,23 +39,39 @@ public class Profile extends User {
         return this.stats;
     }
 
+    public String viewHistory() {
+        StringBuilder sb = new StringBuilder();
+        GameStats totals = new GameStats();
+        for(int i = 0; i < this.stats.size(); i++) {
+            GameStats stat = this.stats.get(i);
+            totals.addAll(stat);
+            sb.append("SESSION #").append(i + 1)
+                    .append("\n\tGames Played: ").append(stat.getGamesPlayed())
+                    .append("\n\tLives Lost: ").append(stat.getLivesLost())
+                    .append("\n\tMonsters Slain: ").append(stat.getMonstersSlain())
+                    .append("\n\tGold Earned: ").append(stat.getGoldEarned())
+                    .append("\n\tItems Found: ").append(stat.getItemsFound()).append("\n");
+        }
+        sb.append("TOTALS")
+                .append("\n\tGames Played: ").append(totals.getGamesPlayed())
+                .append("\n\tLives Lost: ").append(totals.getLivesLost())
+                .append("\n\tMonsters Slain: ").append(totals.getMonstersSlain())
+                .append("\n\tGold Earned: ").append(totals.getGoldEarned())
+                .append("\n\tItems Found: ").append(totals.getItemsFound()).append("\n");
+        return sb.toString().trim();
+    }
+
     public void addToStats(GameStats stats) {
+        if(this.stats == null) return;
         this.stats.add(stats);
     }
 
-    public void handleNewGame(String mapType, String filePath) {
-        // TODO: start a new game of either endless or premade maps
-        Game game = PersistenceManager.getInstance().loadGame(filePath);
+    public Game handleStartGame(String filename) {
+        return PersistenceManager.getInstance().loadGame(filename);
     }
 
-    public void handleResumeGame(String filename) {
-        // TODO: load a saved game via whatever format
-        Game game = PersistenceManager.getInstance().loadGame(filename);
+    public Game handleJoinGame(String filename) {
+        return PersistenceManager.getInstance().loadGame(filename);
     }
 
-    public boolean handleJoinGame(String filename) {
-        // TODO create a new room connected via unexplored exit and use that as player starting room
-        Game game = PersistenceManager.getInstance().loadGame(filename);
-        return false;
-    }
 }

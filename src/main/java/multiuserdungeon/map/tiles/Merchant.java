@@ -1,41 +1,28 @@
 package multiuserdungeon.map.tiles;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
+import multiuserdungeon.Game;
 import multiuserdungeon.map.Tile;
 import multiuserdungeon.map.TileObject;
 import multiuserdungeon.inventory.*;
-import multiuserdungeon.*;
-import multiuserdungeon.clock.*;
-import multiuserdungeon.map.TileObject;
 
 public class Merchant implements TileObject {
-
-    private String name;
-    private Map<InventoryElement, Integer> store;
+    
+    private final String name;
+    private final List<InventoryElement> store;
     private Tile tile;
 
     public Merchant (String name, List<InventoryElement> contents) {
         this.name = name;
-        this.store = new HashMap<>();
-        for (InventoryElement item: contents) {
-            store.put(item,item.getGoldValue());
-            if (store.size() > 3) {
-                break;
-            }
-        }
+        this.store = new ArrayList<>(contents);
         this.tile = null;
     }
 
-    //copy constructor
-    public Merchant(Merchant merchant){
+    public Merchant(Merchant merchant) {
         this.name = merchant.name;
-        this.store = new HashMap<>();
-        for (InventoryElement item : merchant.store.keySet()) {
-            store.put(item, merchant.store.get(item));
-        }
+        this.store = new ArrayList<>(merchant.store);
         this.tile = null;
     }
 
@@ -44,30 +31,41 @@ public class Merchant implements TileObject {
     }
 
     public Tile getTile() {
-        return tile;
+        return this.tile;
     }
+
     public void setTile(Tile tile) {
         this.tile = tile;
     }
+
     public boolean passable() {
         return false;
     }
+
     public char getASCII() {
         return 'M';
     }
-    public Map<InventoryElement, Integer> getStore() {
+
+    public List<InventoryElement> getStore() {
         return this.store;
     }
-    public int buyItem (InventoryElement item) {
+
+    public int buyItem(InventoryElement item) {
         return item.getGoldValue() / 2;
     }
-    public Map<InventoryElement,Integer> handleSale(InventoryElement item) {
-        Integer value = store.remove(item);
-        Map<InventoryElement,Integer> sold = new HashMap<>();
-        sold.put(item,value);
-        return sold;
+
+    public InventoryElement handleSale(int index) {
+        if(index >= this.store.size()) return null;
+        return this.store.remove(index);
     }
+
     public boolean isOpen() {
-        return Game.getInstance().getMap().getPlayerRoom().isSafe() && Game.getInstance().getCurrentTime() instanceof Day;
+        return Game.getInstance().getMap().getPlayerRoom().isSafe() && Game.getInstance().getCurrentTime().isDay();
     }
+
+    @Override
+    public String toString() {
+        return this.name + ", who has " + this.store.size() + " items(s) for sale";
+    }
+
 }

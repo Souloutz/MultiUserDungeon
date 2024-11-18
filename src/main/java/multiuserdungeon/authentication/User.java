@@ -26,8 +26,7 @@ public class User {
     }
 
     public void handleBrowseMap(String filePath) {
-        // TODO: choose room and put player at start
-        Game game = PersistenceManager.getInstance().loadGame(filePath);
+        PersistenceManager.getInstance().loadGame(filePath);
     }
 
 }

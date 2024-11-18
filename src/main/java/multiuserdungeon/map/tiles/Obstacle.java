@@ -12,8 +12,7 @@ public class Obstacle implements TileObject {
 		this.name = name;
 	}
 
-	//copy constructor
-	public Obstacle(Obstacle obstacle){
+	public Obstacle(Obstacle obstacle) {
 		this.name = obstacle.getName();
 		this.tile = null;
 	}

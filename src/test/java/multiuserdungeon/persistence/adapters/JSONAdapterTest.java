@@ -14,7 +14,7 @@ public class JSONAdapterTest {
 	public static void setup() {
 		Profile profile = new Profile("Bob", "abc123", "I like trains");
 		GameStats stats = new GameStats();
-		stats.addToGold(100);
+		stats.addToGoldEarned(100);
 		profile.addToStats(stats);
 		new JSONAdapter().saveProfile(profile);
 	}
@@ -43,7 +43,7 @@ public class JSONAdapterTest {
 
 		// Analyze
 		assertEquals(username, profile.getUsername());
-		assertEquals(100, profile.getStats().get(0).getTotalGold());
+		assertEquals(100, profile.getStats().get(0).getGoldEarned());
 	}
 
 }
