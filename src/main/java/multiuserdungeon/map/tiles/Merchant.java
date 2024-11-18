@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import multiuserdungeon.map.Tile;
+import multiuserdungeon.map.TileObject;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.*;
 import multiuserdungeon.clock.*;
 import multiuserdungeon.map.TileObject;
 
-
 public class Merchant implements TileObject {
+
     private String name;
     private Map<InventoryElement, Integer> store;
     private Tile tile;
@@ -24,6 +25,16 @@ public class Merchant implements TileObject {
             if (store.size() > 3) {
                 break;
             }
+        }
+        this.tile = null;
+    }
+
+    //copy constructor
+    public Merchant(Merchant merchant){
+        this.name = merchant.name;
+        this.store = new HashMap<>();
+        for (InventoryElement item : merchant.store.keySet()) {
+            store.put(item, merchant.store.get(item));
         }
         this.tile = null;
     }

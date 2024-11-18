@@ -4,7 +4,6 @@ import java.util.*;
 
 import multiuserdungeon.authentication.User;
 import multiuserdungeon.clock.*;
-import multiuserdungeon.inventory.Inventory;
 import multiuserdungeon.inventory.*;
 import multiuserdungeon.inventory.elements.*;
 import multiuserdungeon.map.*;
@@ -12,13 +11,15 @@ import multiuserdungeon.map.tiles.*;
 import multiuserdungeon.map.tiles.shrine.Shrine;
 import multiuserdungeon.map.tiles.trap.Trap;
 import multiuserdungeon.persistence.PersistenceManager;
+import multiuserdungeon.map.tiles.shrine.Snapshot;
 
 public class Game {
 
 	private static Game instance;
-	private final Player player;
+	private Player player;
 	private GameMap map;
-	private final Clock clock;
+	private Clock clock;
+	private Shrine shrine;
 	private boolean quit;
 	private boolean browsing; // true or false
 
@@ -27,6 +28,7 @@ public class Game {
 		this.player = player;
 		this.map = map;
 		this.clock = new Clock();
+		this.shrine = null;
 		this.quit = false;
 	}
 
@@ -125,9 +127,14 @@ public class Game {
 		if (shrine == null) {
 			return false;
 		}
-		shrine.storeSnapshot();
+		if(map.getPlayerRoom().isSafe()){
+			this.shrine = shrine;
+			shrine.storeSnapshot();
+			endTurn();
+			return true;
+		}
 		endTurn();
-		return true;
+		return false;
 	}
 
 	public Map<InventoryElement, Integer> handleTalkToMerchant(Compass direction) {
@@ -214,6 +221,13 @@ public class Game {
 		return inventoryString.toString();
 	}
 
+	public String handleViewBag(int bagPos) {
+		String bagString = player.getInventory().viewBag(bagPos);
+
+		if (bagString != null) return bagString;
+		return "Invalid bag specified, please try again.";
+	}
+
 	public boolean handleEquipItem(int bagPos, int itemPos) {
 		InventoryElement item = this.player.getInventory().getItem(bagPos, itemPos);
 		if (item == null) return false;
@@ -244,6 +258,33 @@ public class Game {
 
 	public boolean handleSwapBag(int sourceBagPos, int destBagPos, int destItemPos) {
 		return this.player.getInventory().swapBag(sourceBagPos, destBagPos, destItemPos);
+	}
+
+	public Snapshot createSnapshot(){
+
+		EndlessMap newMap = new EndlessMap((EndlessMap)map);
+
+		Player newPlayer = newMap.getCurrentPlayer();
+
+		Clock newClock = new Clock();
+		Time newTime;
+		if(clock.getCurrentTime().isDay()){
+			newTime = new Day(newClock);
+		}
+		else{
+			newTime = new Night(newClock);
+		}
+		newClock.setCurrentTime(newTime);
+		newClock.setTurnCounter(clock.getTurnCounter());
+
+
+		return new Snapshot(newPlayer, newMap, newClock);
+	}
+
+	public void restoreGame(Snapshot snapshot){
+		this.player = snapshot.getPlayer();
+		this.map = snapshot.getMap();
+		this.clock = snapshot.getClock();
 	}
 
 	public void handleQuitGame() {

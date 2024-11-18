@@ -15,6 +15,22 @@ public class Trap implements TileObject {
 		this.tile = null;
 	}
 
+	//copy constructor
+	public Trap(Trap trap){
+		this.damage = trap.getDamage();
+		if(trap.status.isDetected()){
+			this.status = new DetectedTrap(this);
+		}
+		else if(trap.status.isDisarmed()){
+			this.status = new DisarmedTrap();
+		}
+		else{
+			this.status = new UndetectedTrap(this);
+		}
+		this.tile = null;
+		
+	}
+
 	public int getDamage() {
 		return this.damage;
 	}

@@ -46,6 +46,36 @@ public class Room {
 		}
 	}
 
+	//copy constructor
+	public Room(Room room){
+		this.rows = room.getRows();
+		this.columns = room.getColumns();
+		this.doorways = new HashMap<>();
+		this.connections = new HashMap<>();
+		this.layout = new Tile[this.rows][this.columns];
+		this.playerTile = null;
+
+		this.description = room.getDescription();
+
+		for(int row = 0; row < this.rows; row++){
+			for(int col = 0; col < this.columns; col++){
+				this.layout[row][col] = new Tile(room.getTile(row, col));
+			}
+		}
+		
+		for(int row = 0; row < this.rows; row++) {
+			for(int col = 0; col < this.columns; col++) {
+				Map<Compass, Tile> adjacent = new HashMap<>();
+				for(Compass compass : Compass.values()) {
+					Tile adjacentTile = this.getTile(row + compass.getRowOffset(), col + compass.getColOffset());
+					if(adjacentTile == null) continue;
+					adjacent.put(compass, adjacentTile);
+				}
+				this.getTile(row, col).setAdjacent(adjacent);
+			}
+		}
+	}
+
 	public int getRows() {
 		return this.rows;
 	}
