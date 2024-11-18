@@ -1,8 +1,6 @@
 package multiuserdungeon.commands.inventory;
 
 import multiuserdungeon.Game;
-import multiuserdungeon.authentication.Profile;
-import multiuserdungeon.authentication.User;
 import multiuserdungeon.commands.Action;
 
 public class UnequipItemAction implements Action<Boolean> {
