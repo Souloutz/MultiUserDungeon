@@ -9,7 +9,7 @@ import multiuserdungeon.map.TileObject;
 import multiuserdungeon.inventory.*;
 
 public class Merchant implements TileObject {
-
+    
     private final String name;
     private final List<InventoryElement> store;
     private Tile tile;
