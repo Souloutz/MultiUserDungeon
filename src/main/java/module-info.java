@@ -17,5 +17,6 @@ module MultiUserDungeon {
 	exports multiuserdungeon.map;
 	exports multiuserdungeon.persistence;
 	exports multiuserdungeon.ui;
+	exports multiuserdungeon.ui.views;
 
 }

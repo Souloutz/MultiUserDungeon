@@ -6,13 +6,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import multiuserdungeon.authentication.Authenticator;
-import multiuserdungeon.ui.GUI;
+import multiuserdungeon.ui.JavaFXGUI;
 
 public class PreAuthView extends View {
 
 	private final Scene scene;
 
-	public PreAuthView(GUI gui) {
+	public PreAuthView(JavaFXGUI gui) {
 		super(gui);
 
 		VBox root = generateVBox();

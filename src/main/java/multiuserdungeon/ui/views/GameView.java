@@ -2,13 +2,13 @@ package multiuserdungeon.ui.views;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import multiuserdungeon.ui.GUI;
+import multiuserdungeon.ui.JavaFXGUI;
 
 public class GameView extends View {
 
 	private final Scene scene;
 
-	public GameView(GUI gui) {
+	public GameView(JavaFXGUI gui) {
 		super(gui);
 
 		VBox root = generateVBox();

@@ -7,21 +7,21 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import multiuserdungeon.ui.GUI;
+import multiuserdungeon.ui.JavaFXGUI;
 
 public abstract class View {
 
-	private final GUI gui;
+	private final JavaFXGUI gui;
 
-	public View(GUI gui) {
+	public View(JavaFXGUI gui) {
 		this.gui = gui;
 	}
 
 	public void switchView(View view) {
-		this.gui.setScene(view.getScene());
+		this.gui.setView(view);
 	}
 
-	public GUI getGUI() {
+	public JavaFXGUI getGUI() {
 		return gui;
 	}
 

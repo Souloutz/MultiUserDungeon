@@ -73,7 +73,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>multiuserdungeon.ui.GUI</mainClass>
+                            <mainClass>multiuserdungeon.ui.JavaFXGUI</mainClass>
                         </configuration>
                     </execution>
                 </executions>

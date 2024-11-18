@@ -13,13 +13,13 @@ import multiuserdungeon.commands.authentication.LoginAction;
 import multiuserdungeon.commands.authentication.LogoutAction;
 import multiuserdungeon.commands.authentication.QuitAction;
 import multiuserdungeon.commands.authentication.RegisterAction;
-import multiuserdungeon.ui.GUI;
+import multiuserdungeon.ui.JavaFXGUI;
 
 public class GuestView extends View {
 
 	private final Scene scene;
 
-	public GuestView(GUI gui) {
+	public GuestView(JavaFXGUI gui) {
 		super(gui);
 
 		VBox root = generateVBox();
