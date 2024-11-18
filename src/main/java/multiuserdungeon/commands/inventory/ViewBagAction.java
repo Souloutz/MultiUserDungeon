@@ -23,5 +23,4 @@ public class ViewBagAction implements Action<String> {
     public boolean canExecute() {
         return this.receiver != null;
     }
-
 }

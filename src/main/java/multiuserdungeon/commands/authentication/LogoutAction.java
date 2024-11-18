@@ -7,8 +7,8 @@ public class LogoutAction implements Action<Boolean> {
     
     private final Authenticator receiver;
 
-    public LogoutAction(Authenticator authenticator) {
-        this.receiver = authenticator;
+    public LogoutAction(Authenticator auth) {
+        this.receiver = auth;
     }
 
     @Override

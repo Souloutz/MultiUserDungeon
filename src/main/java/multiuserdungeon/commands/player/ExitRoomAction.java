@@ -24,5 +24,4 @@ public class ExitRoomAction implements Action<Boolean> {
 	public boolean canExecute() {
 		return this.receiver != null;
 	}
-
 }

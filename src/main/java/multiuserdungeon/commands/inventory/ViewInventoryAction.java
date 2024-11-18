@@ -22,5 +22,4 @@ public class ViewInventoryAction implements Action<String> {
     public boolean canExecute() {
         return this.receiver != null;
     }
-
 }

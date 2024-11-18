@@ -9,8 +9,8 @@ public class LoginAction implements Action<Boolean> {
     private final String username;
     private final String password;
 
-    public LoginAction(Authenticator authenticator, String username, String password) {
-        this.receiver = authenticator;
+    public LoginAction(Authenticator auth, String username, String password) {
+        this.receiver = auth;
         this.username = username;
         this.password = password;
     }

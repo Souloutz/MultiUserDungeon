@@ -24,5 +24,4 @@ public class AttackAction implements Action<Integer> {
 	public boolean canExecute() {
 		return this.receiver != null;
 	}
-
 }

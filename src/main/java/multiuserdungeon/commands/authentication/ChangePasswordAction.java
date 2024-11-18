@@ -10,8 +10,8 @@ public class ChangePasswordAction implements Action<Boolean> {
     private final String newPassword;
     private final String confirmPassword;
 
-    public ChangePasswordAction(Authenticator authenticator, String curPassword, String newPassword, String confirmPassword) {
-        this.receiver = authenticator;
+    public ChangePasswordAction(Authenticator auth, String curPassword, String newPassword, String confirmPassword) {
+        this.receiver = auth;
         this.curPassword = curPassword;
         this.newPassword = newPassword;
         this.confirmPassword = confirmPassword;

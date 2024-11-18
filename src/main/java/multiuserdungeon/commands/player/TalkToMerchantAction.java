@@ -27,5 +27,4 @@ public class TalkToMerchantAction implements Action<List<InventoryElement>> {
     public boolean canExecute() {
         return this.receiver != null;
     }
-
 }

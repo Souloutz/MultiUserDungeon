@@ -26,5 +26,4 @@ public class BuyItemAction implements Action<Boolean> {
     public boolean canExecute() {
         return this.receiver != null;
     }
-
 }

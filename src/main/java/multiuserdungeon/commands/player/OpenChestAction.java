@@ -24,5 +24,4 @@ public class OpenChestAction implements Action<List<InventoryElement>> {
 	public boolean canExecute() {
 		return this.receiver != null;
 	}
-
 }

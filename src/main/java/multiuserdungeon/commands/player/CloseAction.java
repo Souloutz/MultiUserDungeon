@@ -22,5 +22,4 @@ public class CloseAction implements Action<Void> {
     public boolean canExecute() {
         return this.receiver != null;
     }
-    
 }

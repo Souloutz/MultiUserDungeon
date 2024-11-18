@@ -24,5 +24,4 @@ public class MoveAction implements Action<Boolean> {
 	public boolean canExecute() {
 		return this.receiver != null;
 	}
-
 }

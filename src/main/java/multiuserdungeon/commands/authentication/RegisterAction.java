@@ -11,8 +11,8 @@ public class RegisterAction implements Action<Boolean> {
     private final String password;
     private final String confirmPassword;
     
-    public RegisterAction(Authenticator authenticator, String username, String description, String password, String confirmPassword) {
-        this.receiver = authenticator;
+    public RegisterAction(Authenticator auth, String username, String description, String password, String confirmPassword) {
+        this.receiver = auth;
         this.username = username;
         this.description = description;
         this.password = password;

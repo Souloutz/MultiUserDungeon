@@ -9,17 +9,17 @@ import multiuserdungeon.persistence.PersistenceManager;
 public class QuitAction implements Action<Void> {
 
 	private final Authenticator auth;
-	private final Game game;
+	private final Game receiver;
 
 	public QuitAction(Authenticator auth, Game game) {
 		this.auth = auth;
-		this.game = game;
+		this.receiver = game;
 	}
 
 	@Override
 	public Void execute() {
 		if(!canExecute()) return null;
-		if(this.game != null) this.game.handleQuitGame();
+		if(this.receiver != null) this.receiver.handleQuitGame();
 		if(this.auth.loggedIn()) {
 			PersistenceManager.getInstance().saveProfile((Profile) this.auth.getUser());
 		}
