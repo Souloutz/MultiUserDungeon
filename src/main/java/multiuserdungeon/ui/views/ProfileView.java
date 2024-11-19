@@ -15,13 +15,13 @@ import multiuserdungeon.commands.authentication.QuitAction;
 import multiuserdungeon.commands.authentication.ViewHistoryAction;
 import multiuserdungeon.commands.game.JoinGameAction;
 import multiuserdungeon.commands.game.StartGameAction;
-import multiuserdungeon.ui.JavaFXGUI;
+import multiuserdungeon.ui.GUI;
 
 public class ProfileView extends View {
 
 	private final Scene scene;
 
-	public ProfileView(JavaFXGUI gui) {
+	public ProfileView(GUI gui) {
 		super(gui);
 
 		VBox root = generateVBox();

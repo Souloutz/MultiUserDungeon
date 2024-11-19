@@ -157,7 +157,7 @@ public class Room {
 		Tile newTile = newRoom.getDoorway(direction.getOpposite());
 		if(newTile == null) return false;
 
-		if(!newRoom.isPopulated()) {
+		if(!newRoom.isPopulated() && !Game.getInstance().isBrowsing()) {
 			RoomGenerator.populateRoom(newRoom);
 		}
 

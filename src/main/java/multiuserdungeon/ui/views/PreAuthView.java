@@ -6,13 +6,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import multiuserdungeon.authentication.Authenticator;
-import multiuserdungeon.ui.JavaFXGUI;
+import multiuserdungeon.ui.GUI;
 
 public class PreAuthView extends View {
 
 	private final Scene scene;
 
-	public PreAuthView(JavaFXGUI gui) {
+	public PreAuthView(GUI gui) {
 		super(gui);
 
 		VBox root = generateVBox();
@@ -40,7 +40,7 @@ public class PreAuthView extends View {
 		// Enter
 		Button enter = new Button("Enter");
 		enter.setOnAction(e -> {
-			Authenticator.getInstance().login(username.getText(), description.getText());
+			Authenticator.getInstance().loginAsGuest(username.getText(), description.getText());
 			switchView(new GuestView(getGUI()));
 		});
 		root.getChildren().add(enter);

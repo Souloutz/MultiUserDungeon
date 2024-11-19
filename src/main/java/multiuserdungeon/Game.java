@@ -55,6 +55,10 @@ public class Game {
 		return this.clock.getCurrentTime();
 	}
 
+	public boolean isBrowsing() {
+		return this.browsing;
+	}
+
 	public GameStats getStats() {
 		return this.stats;
 	}

@@ -15,8 +15,13 @@ module MultiUserDungeon {
 	exports multiuserdungeon.commands;
 	exports multiuserdungeon.inventory;
 	exports multiuserdungeon.map;
+	exports multiuserdungeon.map.tiles;
+	exports multiuserdungeon.map.tiles.shrine;
+	exports multiuserdungeon.map.tiles.trap;
 	exports multiuserdungeon.persistence;
+	exports multiuserdungeon.persistence.adapters;
 	exports multiuserdungeon.ui;
 	exports multiuserdungeon.ui.views;
+	exports multiuserdungeon;
 
 }
